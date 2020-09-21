@@ -1,4 +1,5 @@
 <?php
+
 class ControllerApiPallet extends Controller
 {
 	public function info(){
@@ -34,6 +35,9 @@ class ControllerApiPallet extends Controller
 		$productID = $_POST['productID'];
 		$this->load->model('catalog/pallet');
 		$json = $this->model_catalog_pallet->getPalletProduct($palletID,$productID);
+		/*echo "<pre>";
+		var_dump($json);
+		echo "</pre>";*/
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));		 		
 	}
@@ -64,6 +68,8 @@ class ControllerApiPallet extends Controller
 		$this->load->model('catalog/pallet');	
 		error_log("palletID : $palletID, productID: $productID");
 		$json = $this->model_catalog_pallet->getAvailablePositionsCount($palletID,$productID);
+		error_log("json : $json");
+
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
     }

@@ -36,8 +36,10 @@ class ControllerCatalogStockManagement extends Controller
 	
     public function index()
     {	
-		$this->document->addScript('https://code.jquery.com/ui/1.12.1/jquery-ui.js'); /// no need for this at all
-		$this->document->addStyle('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
+		$this->document->addScript('view/javascript/jquery-ui.js');
+		//$this->document->addScript('https://code.jquery.com/ui/1.12.1/jquery-ui.js'); /// no need for this at all
+		//$this->document->addStyle('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
+        $this->document->addStyle('view/stylesheet/jquery-ui.css');
 
         $this->load->language('catalog/stock_management');
         $this->document->setTitle($this->language->get('heading_title'));
@@ -62,9 +64,6 @@ class ControllerCatalogStockManagement extends Controller
 		
 		$data['products'] = array();
 		$data['products'] = $this->model_catalog_product->getProducts();
-		/*echo '<pre>';
-		var_dump($data['products'] );
-		echo '</pre>';**/
         $data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(

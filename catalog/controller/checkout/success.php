@@ -13,7 +13,7 @@ class ControllerCheckoutSuccess extends Controller {
 				$currentArary['quantity'] = $product['quantity'];
 				$currentArary['xPos'] = $product['xPos'];
 				$currentArary['yPos'] = $product['yPos'];
-				$currentArary['unitID'] = $product['unit_id'];
+				$currentArary['unitID'] = $product['unit_id'];/// check this
 				$currentArary['bentCount'] = $product['bent_count'];
 
 		    	// productName as a helper, 
@@ -87,7 +87,7 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 		try {
-			$address="192.168.250.15";//127.0.0.1
+			$address="192.168.1.37";//127.0.0.1
 			$port="11111";
 			$msg="Hello server";
 			

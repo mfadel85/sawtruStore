@@ -51,9 +51,7 @@ class ModelCatalogPallet extends Model {
 		$query = $this->db->query("SELECT * from oc_pallet op left join oc_pallet_product opp
 		on op.pallet_id = opp.start_pallet_id
 		order by unit_id,shelf_id,x_position");
-		/*echo "<pre>";
-		var_dump($query);
-		echo "</pre>";*/
+
 		$skipCount = 0;
 		$i = 0;
 		foreach ($query->rows as $pallet) {
@@ -93,9 +91,7 @@ class ModelCatalogPallet extends Model {
 					on op.product_id = opd.product_id 
 					where opd.product_id=  $productID 
 					and language_id=". (int)$this->config->get('config_language_id'));
-					/*echo "<pre>";
-					var_dump($nameQuery,$productID);
-					echo "</pre>";*/
+
 					$availableSpace = $max = floor(PALLET_DEPTH / $nameQuery->rows[0]["width"]);				
 					$bentCount = $pallet['bent_count'];
 					$pallet = $pallet['pallet_id'];
@@ -153,9 +149,7 @@ class ModelCatalogPallet extends Model {
 		$query = $this->db->query("SELECT * FROM `oc_shelf` ORDER BY `oc_shelf`.`unit_id` ASC, shelf_id ASC");
 		foreach($query->rows as $shelf){
 			$unitID = $shelf['unit_id'];
-			/*echo '<pre>';
-			var_dump($shelf);
-			echo '</pre>';*/
+
 			$map[$unitID][] = $shelf['shelf_id'];
 		}
 

@@ -292,15 +292,15 @@
 			    }
 		}).done(function(json){
 	    productId = json['product_id'];
-      // get product model to name it to use it in selecting cells
-      var model = json['model'];
-      allCells = $("."+model);
-      //$("."+model).effect( "shake", { direction: "left", times: 4, distance: 101}, 2000 );
-      $("."+model).animate({
-        opacity: 0.70,
-        color:"red"
-      }).addClass( "activeCell" );;
-      console.log(allCells);
+      	// get product model to name it to use it in selecting cells
+      	var model = json['model'];
+      	allCells = $("."+model);
+      	//$("."+model).effect( "shake", { direction: "left", times: 4, distance: 101}, 2000 );
+      	$("."+model).animate({
+        	opacity: 0.70,
+        	color:"red"
+      	}).addClass( "activeCell" );;
+      		console.log(allCells);
 			$("#productID").val(productId);
 			$("#bentCount").html(json['bent_count']);
 			$("#length").html(json['length']);
@@ -376,8 +376,8 @@
 			  	  $("#productID").val(palletID);
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
-		  		alert('Get content failure');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				console.log('Get content failure');
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
 	    });	  
 	    // we have to make sure that the productID is set before 
@@ -401,8 +401,9 @@
 				  //clear this form
 				  },
 			  error: function(xhr, ajaxOptions, thrownError) {
-		  		alert('Get space failure');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				console.log('Get space failure');
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    	
 		    }
 	    }).done(function(json){
 	    	if(json < 1)
@@ -419,13 +420,19 @@
 	    	data: {palletID:barCode,productID:productID},
 	    	crossDomain:true,
 	    	success:function(json){
-	    		$("#palletBarcode").val("");
-	    		$("#productBarcode").val("");
+	    		$("#productBarcode").val("");//units
+	    		$("#palletBarcode").val("");//units
+	    		$("#productID").val("");
+	    		$("#length").val("");
+	    		$("#width").val("");
+	    		$("#depth").val("");
+	    		$("#weight").val("");
+	    		$("#bentCount").val("");
 
 	    	},
 	    	error: function(xhr,ajaxOptions,thrownError){
-	    		alert('Update Failure');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				console.log('Update Failure');
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 	    	}
 	    }).done(function(json){
 	    	if(json == 1)
