@@ -361,7 +361,6 @@ class ControllerApiOrder extends Controller {
 	}
 
 	public function edit() {
-		print_r("we are here");
 		$this->load->language('api/order');
 
 		$json = array();
@@ -678,10 +677,6 @@ class ControllerApiOrder extends Controller {
 					}
 
 					$this->model_checkout_order->editOrder($order_id, $order_data);
-					/*echo "<pre>";
-					var_dump($order_data);
-					echo "</pre>";
-					die();*/
 					// Set the order history
 					if (isset($this->request->post['order_status_id'])) {
 						$order_status_id = $this->request->post['order_status_id'];
