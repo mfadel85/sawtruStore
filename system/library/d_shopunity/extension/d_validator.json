@@ -1,0 +1,72 @@
+{
+  "codename": "d_validator",
+  "version": "1.0.6",
+  "name": "Shopunity Module Validator",
+  "description": "Shopunity Module Validator",
+  "index": "extension/module/d_validator",
+  "author": {
+    "name": "Dreamvention",
+    "email": "info@dreamvention.com",
+    "url": "https://dreamvention.com"
+  },
+  "opencart_version": "2.0.1.0-4",
+  "type": "library",
+  "license": {
+    "type": "free",
+    "url": "https://shopunity.net/licenses/free"
+  },
+  "install": {
+    "url": "extension/module/install&extension=d_validator"
+  },
+  "uninstall": {
+    "url": "extension/module/uninstall&extension=d_validator"
+  },
+  "support": {
+    "email": "support@dreamvention.com",
+    "url": "https:/dreamvention.com/support"
+  },
+  "required": {
+    "d_opencart_patch": ">= 1.0.11",
+    "d_simple_html_dom": ">= 2.0.0",
+    "d_event_manager": ">= 1.3.1"
+  },
+  "files": [
+    "system/library/d_shopunity/extension/d_validator.json",
+    "system/config/d_validator.php",
+
+    "admin/controller/extension/d_shopunity/d_validator.php",
+    "admin/model/extension/d_shopunity/d_validator.php",
+    "admin/view/template/extension/d_shopunity/d_validator.twig",
+    "admin/language/en-gb/extension/d_shopunity/d_validator.php"
+  ],
+  "changelog": [
+    {
+      "version": "1.0.6",
+      "change": "Remind later button work well"
+    },
+    {
+      "version": "1.0.5",
+      "change": "Clean config and order events fix"
+    },
+    {
+      "version": "1.0.4",
+      "change": "Send correct Url in request to API"
+    },
+    {
+      "version": "1.0.3",
+      "change": "Request Url to production"
+    },
+    {
+      "version": "1.0.2",
+      "change": "Add config, more flexible find .json file, more data into config, right path to load model"
+    },
+    {
+      "version": "1.0.1",
+      "change": "Right columns in table, fix remind me later button"
+    },
+    {
+      "version": "1.0.0",
+      "change": "release"
+    }
+  ]
+}

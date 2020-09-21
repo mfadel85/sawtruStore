@@ -1,0 +1,43 @@
+{
+    "codename": "d_browser",
+    "version": "1.0.3",
+    "name": "Browser Php library",
+    "description": "A simple php class to detact the browser name and version",
+   
+    "author": {
+        "name": "Chris Schuld",
+        "email": "chris@chrisschuld.com",
+        "url": "hhttps://github.com/cbschuld/Browser.php"
+    },
+    "opencart_version": "2-4",
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@dreamvention.com",
+        "url": "https:/dreamvention.com/support"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_browser.json",
+        "system/library/d_browser.php"
+            ],
+    "changelog": [
+        {
+            "version": "1.0.3",
+            "change": "sem var"
+        },{
+            "version": "1.0.2",
+            "change": "Updated library from github"
+        },
+        {
+            "version": "1.0.1",
+            "change": "Added support OC v3.0.3.1"
+        },
+        {
+            "version": "1.0.0",
+            "change": ""
+        }
+    ]
+}

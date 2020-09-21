@@ -1,0 +1,44 @@
+{
+    "codename": "libphonenumber",
+    "version": "8.10.5",
+    "name": "FirePHP debugger",
+    "description": "PHP version of Google's phone number handling library",
+    "author": {
+        "name": "giggsey",
+        "url": "https://giggsey.com/libphonenumber/"
+    },
+    "opencart_version": "2-4",
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/libphonenumber.json"
+    ],
+    "dirs":[
+        "system/library/libphonenumber"
+    ],
+    "changelog": [
+        {
+            "varsion":"8.10.5",
+            "change": "sem var"
+        },
+        {
+            "varsion":"8.10.4",
+            "change": "Updated library to version 8.10.4"
+        },
+        {
+            "varsion":"8.9.9",
+            "change": "Added support OC v3.0.3.1"
+        },
+        {
+            "varsion":"8.9.8",
+            "change": "initial commit."
+        }
+    ]
+}

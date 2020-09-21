@@ -1,0 +1,42 @@
+{
+    "codename": "d_alertify",
+    "version": "1.11.3",
+    "name": "AlertifyJS",
+    "description": "AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.",
+    "author": {
+        "name": "Dreamvention",
+        "email": "info@dreamvention.com",
+        "url": "https://dreamvention.com"
+    },
+    "opencart_version": "2-4",
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@dreamvention.com",
+        "url": "https:/dreamvention.com/support"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_alertify.json"
+            ],
+    "dirs": [
+        "admin/view/javascript/d_alertify",
+        "catalog/view/javascript/d_alertify"
+    ],
+    "changelog": [
+        {
+            "version": "1.11.1",
+            "change": "sem vars"
+        },
+        {
+            "version": "1.11.2",
+            "change": "Added support OC v3.0.3.1"
+        },
+        {
+            "version": "1.11.1",
+            "change": ""
+        }
+    ]
+}

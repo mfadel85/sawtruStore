@@ -1,5 +1,7 @@
 <?php
 // HTTP
+//error_reporting(E_ERROR | E_PARSE);
+
 define('HTTP_SERVER', 'http://localhost/store/admin/');
 define('HTTP_CATALOG', 'http://localhost/store/');
 

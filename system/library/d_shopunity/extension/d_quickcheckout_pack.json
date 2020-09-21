@@ -1,0 +1,114 @@
+{
+    "codename": "d_quickcheckout_pack",
+    "version": "7.2.2",
+    "name": "Ajax Quick Checkout PRO",
+    "index": "extension/module/d_quickcheckout",
+    "description": "The #1 one page checkout solution for opencart with amazing visual editor.",
+    "author": {
+        "name": "Dreamvention",
+        "email": "info@dreamvention.com",
+        "url": "https://dreamvention.com/"
+    },
+    "opencart_version": "2.0.1.0-4",
+    "type": "module",
+    "license": {
+        "type": "commercial",
+        "url": "https://shopunity.net/licenses/commercial"
+    },
+    "install": {
+        "url": "extension/extension/module/install&extension=d_quickcheckout"
+    },
+    "uninstall": {
+        "url": "extension/extension/module/uninstall&extension=d_quickcheckout"
+    },
+    "support": {
+        "email": "info@dreamvention.com",
+        "url": "https://dreamvention.com/support"
+    },
+    "required": {
+        "d_quickcheckout": ">=7.0.0"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_quickcheckout_pack.json",
+
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_account_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_cart_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_confirm_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_custom_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_payment_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_payment_address_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_payment_method_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_shipping_address_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/step_setting/qc_shipping_method_setting.tag",
+
+        "catalog/view/theme/default/template/extension/d_quickcheckout/component/qc_page_nav_add.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/component/qc_page_nav_setting.tag",
+
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_checkbox_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_datetime_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_date_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_time_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_email_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_heading_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_label_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_password_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_radio_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_select_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_tel_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_text_setting.tag",
+        "catalog/view/theme/default/template/extension/d_quickcheckout/field_setting/qc_textarea_setting.tag",
+
+        "system/config/d_quickcheckout_layout/twopage.php",
+        "system/config/d_quickcheckout_layout/threepage.php"
+
+    ],
+    "dirs": [
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/black",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/blue",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/green",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/orange",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/pink",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/purple",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/red",
+        "catalog/view/theme/default/stylesheet/d_quickcheckout/skin/yellow"
+    ],
+    "changelog": [
+        {
+            "version": "7.2.2",
+            "change": "Fix shipping_metod_setting"
+        }, {
+            "version": "7.2.1",
+            "change": "Added 'file' custom field"
+        }, {
+            "version": "7.2.0",
+            "change": "fix checkbox and payment_method settings. up to 7.2.0"
+        }, {
+            "version": "7.1.5",
+            "change": "Added shipping method select by default"
+        }, {
+            "version": "7.1.4",
+            "change": "fix popup for the logged customers."
+        }, {
+        
+            "version": "7.1.3",
+            "change": "Added setting popup for payment method"
+        }, {
+
+            "varsion": "7.1.2",
+            "change": "Added type switch, date field mobile fix"
+        }, {
+            "varsion": "7.1.1",
+            "change": "Removed Continue step"
+        }, {
+            "varsion": "7.1.0",
+            "change": "Added RipeCSS, removed bootstrap"
+        }, {
+            "varsion": "7.0.1",
+            "change": "Added rtl theme, Fix bugs, fix free checkout bug, fix custom fields bug, new fields"
+        },
+        {
+            "varsion": "7.0.0",
+            "change": "Added settings to d_quickcheckout v7.0.0"
+        }
+    ]
+}

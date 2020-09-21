@@ -1,0 +1,45 @@
+{
+    "codename": "d_bootstrap_select",
+    "version": "1.13.3",
+    "name": "Bootstrap Select",
+    "description": "Implementation of bootstrap-select https://silviomoreto.github.io/bootstrap-select/",
+    "author": {
+        "name": "Shopunity",
+        "email": "info@shopunity.com",
+        "url": "https://silviomoreto.github.io/bootstrap-select/"
+    },
+    "opencart_version": "2-4",
+    "type": "library",
+    "license": {
+        "type": "free",
+        "url": "https://shopunity.net/licenses/free"
+    },
+    "support": {
+        "email": "support@shopunity.com",
+        "url": "https://shopunity.net/"
+    },
+    "files": [
+        "system/library/d_shopunity/extension/d_bootstrap_select.json"
+    ],
+    "dirs": [
+        "admin/view/javascript/d_bootstrap_select",
+        "catalog/view/javascript/d_bootstrap_select"
+    ],
+    "changelog": [
+        {
+            "varsion":"1.13.3",
+            "change": "sem var"
+        },{
+            "varsion":"1.13.2",
+            "change": "Updated libray to v1.13.2"
+        },
+        {
+            "varsion":"1.12.5",
+            "change": "Added support OC v3.0.3.1"
+        },
+        {
+            "varsion":"1.12.4",
+            "change": "initial commit"
+        }
+    ]
+}
