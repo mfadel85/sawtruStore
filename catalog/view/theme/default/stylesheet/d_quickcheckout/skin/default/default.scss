@@ -1,0 +1,81 @@
+$color: #23a1d1 !default;
+.qc .ve-btn,
+.qc a.ve-btn,
+.qc-btn.ve-btn {
+    &--primary {
+        background: $color !important;
+        color: #fff !important;
+        >* {
+            color: #fff !important;
+        }
+        &.ve-btn--loading {
+            color: transparent !important;
+            >* {
+                color: transparent !important;
+            }
+            &:after {
+                border-right-color: transparent !important;
+                border-top-color: transparent !important;
+            }
+        }
+        &:after {
+            border-color: #fff !important;
+        }
+        &:hover {
+            background: lighten($color, 2%) !important;
+        }
+        &:active,
+        &.active {
+            background: darken($color, 15%) !important;
+        }
+    }
+}
+
+.qc-loader {
+    background: $color;
+}
+
+.qc-spinner:before {
+    border-top: 3px solid $color;
+}
+
+.qc {
+    .ve-radio--selected {
+        color: $color !important;
+    }
+    .ve-radio [type=radio]:checked+i:before {
+        border-color: $color !important;
+        background-color: #fff;
+    }
+    .ve-radio [type=radio]:checked+i:after {
+        background-color: $color !important;
+    }
+    .ve-checkbox [type=checkbox]:checked+i:before {
+        border: 1px solid $color !important;
+        background-color: $color !important;
+    }
+    .qc-name a,
+    label a {
+        color: $color !important;
+    }
+    .process-page {
+        &-progress-bar,
+        .process-page-dot {
+            background-color: lighten($color, 30%);
+        }
+        .process-page-dot:after {
+            background-color: $color;
+        }
+        &.disabled .process-page-dot {
+            background-color: #f5f5f5;
+        }
+        @media (max-width: 767.98px) {
+            &.active {
+                background: lighten($color, 48%);
+            }
+            &.active .process-page-label {
+                color: $color;
+            }
+        }
+    }
+}

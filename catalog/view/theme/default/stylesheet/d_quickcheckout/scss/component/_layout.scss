@@ -1,0 +1,32 @@
+.qc-row,
+.step {
+    clear: both;
+}
+
+.show {
+    display: block;
+}
+
+.qc {
+    max-width: 1200px;
+    margin: auto;
+    .tab-pane {
+        &.active {
+            display: block;
+            .tab-pane {
+                display: block;
+            }
+        }
+    }
+    .process {
+        margin-top: 10px;
+    }
+}
+
+.qc-logo {
+    text-align: center;
+    margin-bottom: 30px;
+    img {
+        margin: auto;
+    }
+}

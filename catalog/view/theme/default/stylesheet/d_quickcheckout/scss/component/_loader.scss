@@ -1,0 +1,40 @@
+.qc-loader {
+    position: fixed;
+    top: 12px;
+    padding: 8px 15px;
+    border-radius: 3px;
+    background: #648bfd;
+    left: 50%;
+    margin-left: -50px;
+    width: 100px;
+    z-index: 100000;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.qc-spinner {
+    min-height: 500px;
+}
+
+.qc-spinner:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    border-radius: 50%;
+    border-top: 3px solid #07d;
+    border-right: 3px solid transparent;
+    animation: spinner .6s linear infinite;
+}

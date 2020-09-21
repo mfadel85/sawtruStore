@@ -1,0 +1,234 @@
+<div id="d_validator" class="container-fluid">
+    <style>
+        .claim-purchase .small {
+            color: #000;
+        }
+
+        #remind_later {
+            font-size: 14px;
+            text-align: right;
+            float: right;
+            margin-right: 25px;
+            color: rgb(49, 112, 143);
+        }
+
+        #remind_later > .fa {
+            color: #f0b840;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .wrapper-info {
+            width: 100%;
+            padding: 20px 0 0 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .image-lock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 72px;
+        }
+
+        .image-lock .fa {
+            font-size: 50px;
+        }
+
+        .claim-purchase {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .table thead td span[data-toggle="tooltip"]:after, label.control-label span:after {
+            color: #f0b840;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        #d_validator_submit {
+            width: 100%;
+            height: 42px;
+            margin-top: 27px;
+            box-shadow: none;
+            background: #4fb5e7;
+            border: 2px solid #3aa5da;
+            color: #fff;
+            font-size: 15px;
+            border-radius: 4px;
+        }
+
+        .wrapper-response {
+            color: #e3503e;
+            font-size: 14px;
+        }
+
+        @media all and (max-width: 991px) {
+            .claim-purchase {
+                display: block;
+            }
+
+            #d_validator_submit {
+                margin: 0;
+            }
+        }
+    </style>
+
+    <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+        <a id="remind_later" href="{{ action_remind }}"><i class="fa fa-bell-slash"></i> Remind me later</a>
+        <div class="wrapper-info">
+            <div class="image-lock">
+                <i class="fa fa-lock"></i>
+            </div>
+            <div class="description-problem">
+                <h4>{{ text }}</h4>
+                <p>{{ help }}</p>
+            </div>
+        </div>
+
+        <div class="wrapper-form">
+            <form class="claim-purchase">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label" for="market">
+                            <span data-toggle="tooltip" title=""
+                                  data-original-title="Select the marketplace where the extension was purchased.">Marketplace</span>
+                        </label>
+
+                        <select name="market" id="d_validation_market" class="form-control input-lg"
+                                placeholder="Email">
+                            <option value="opencart">Opencart</option>
+                            <option value="isenselabs">IsenseLabs</option>
+                            <option value="dreamvention">Dreamvention.ee</option>
+                            <option value="opencartseomodule">Opencartseomodule.com</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label" for="email">
+                            <span data-toggle="tooltip" title="" data-original-title="Opencart/IsenseLabs/Dreamvention or other marketplace account Email where the extension was purchased (ex.
+                            joe@gmail.com).">Email</span>
+                        </label>
+
+                        <input name="email" class="form-control input-lg" id="d_validation_email"
+                               placeholder="Email">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label" for="order_id">
+                            <span data-toggle="tooltip" title="" data-original-title="Opencart/IsenseLabs/Dreamvention or other marketplace Purchase Order Id (ex.
+                            9876554)">Order ID</span>
+                        </label>
+
+                        <input name="order_id" class="form-control input-lg" id="d_validation_order_id"
+                               placeholder="Order id">
+                    </div>
+                </div>
+
+                <input type="hidden" name="codename" value="{{ codename }}">
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button id="d_validator_submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="col-md-12">
+                <div class="wrapper-response"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+
+<script>
+    function cleartErrors() {
+        $('.wrapper-response').text('');
+        $('.wrapper-form').find('div.alert, div.text-danger').remove();
+        $('.wrapper-form').find('div.form-group').removeClass('has-error');
+    }
+
+    function showAlertLicence(selector, json) {
+        if (json['error']) {
+            for (i in json['error']) {
+                var element = $('#d_validation_' + i);
+                console.log(element);
+
+                $(element).after('<div class="text-danger">' + json['error'][i] + '</div>');
+                $(element).parent().addClass('has-error');
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        $(document).on('click', '#d_validator_submit', function (event) {
+            event.preventDefault();
+            cleartErrors();
+
+            $.ajax({
+                url: '{{ action }}',
+                method: 'post',
+                dataType: 'json',
+                data: $('.claim-purchase').serialize(),
+                beforeSend: function () {
+                    $('#content').fadeTo('fast', 0.5);
+                },
+                complete: function () {
+                    $('#content').fadeTo('fast', 1);
+                },
+                success: function (json) {
+                    if (json['error']) {
+                        showAlertLicence(".claim-purchase", json);
+                    }
+                    if (json['warning']) {
+                        $('.wrapper-response').text(json['warning']);
+                    }
+
+                    if (json['success']) {
+                        $('#d_validator').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '  <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+
+                        setTimeout(function () {
+                            $('#d_validator').fadeOut(300, function () {
+                                $(this).remove();
+                            });
+                        }, 5000);
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '#remind_later', function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: $(this).attr("href"),
+                method: 'post',
+                dataType: 'json',
+                data: {module: "{{ codename }}"},
+                beforeSend: function () {
+                    $('#content').fadeTo('fast', 0.5);
+                },
+                complete: function () {
+                    $('#content').fadeTo('fast', 1);
+                },
+                success: function (json) {
+                    if (json['success']) {
+                        $('#d_validator').fadeOut(300, function () {
+                            $(this).remove();
+                        });
+                        console.log("success");
+                    }
+                }
+            });
+        });
+    });
+</script>

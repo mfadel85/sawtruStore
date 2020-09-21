@@ -1,10 +1,41 @@
 <?php
 
-class ControllerCatalogStockManagement extends Controller {
-    private $error = array();
+/**
+ * Template File Doc Comment
+ * 
+ * PHP version 7
+ *
+ * @category Template_Class
+ * @package  Template_Class
+ * @author   Author <author@domain.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     http://localhost/
+ */
 
-    public function index(){
-		
+/**
+ * Template Class Doc Comment
+ * 
+ * Template Class
+ * 
+ * @category Template_Class
+ * @package  Template_Class
+ * @author   Author <author@domain.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     http://localhost/
+ */
+
+class ControllerCatalogStockManagement extends Controller
+{
+
+    private $_error = array();
+    /**
+     * Describes index function
+     *
+     * @return void
+     **/
+	
+    public function index()
+    {	
 		$this->document->addScript('https://code.jquery.com/ui/1.12.1/jquery-ui.js'); /// no need for this at all
 		$this->document->addStyle('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
 
@@ -15,12 +46,34 @@ class ControllerCatalogStockManagement extends Controller {
 		$data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');			
         $data['sak'] = "This is the beginning.";
-
+		// get the product list
+		// get the map fully		
+		//// we need the product list
+		/// we need the product to position list
+//		//// we need the product list
+		/// we need the product to position list
+		$this->load->model('catalog/product');
+		$this->load->model('catalog/pallet');
+		$extractedMap = $this->extractMap();
+		$data['map'] = $extractedMap;
+		$data['unitCount'] = count($extractedMap);
+		
+		
+		
+		$data['products'] = array();
+		$data['products'] = $this->model_catalog_product->getProducts();
+		/*echo '<pre>';
+		var_dump($data['products'] );
+		echo '</pre>';**/
         $data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+			'href' => $this->url->link(
+				'common/dashboard', 
+				'user_token=' . $this->session->data['user_token'], 
+				true
+			)
 		);
 		$data['user_token'] = $this->session->data['user_token'];
 
@@ -31,5 +84,12 @@ class ControllerCatalogStockManagement extends Controller {
         
         
         $this->response->setOutput($this->load->view('catalog/stock_management',$data));
-    }
+	}
+	public function extractMap(){
+		$this->load->model('catalog/pallet');
+		$map = $this->model_catalog_pallet->getMap();
+		return $map;
+
+
+	}
 }

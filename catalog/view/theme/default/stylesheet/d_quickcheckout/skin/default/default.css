@@ -1,0 +1,78 @@
+.qc .ve-btn--primary,
+.qc a.ve-btn--primary,
+.qc-btn.ve-btn--primary {
+  background: #23a1d1 !important;
+  color: #fff !important; }
+  .qc .ve-btn--primary > *,
+  .qc a.ve-btn--primary > *,
+  .qc-btn.ve-btn--primary > * {
+    color: #fff !important; }
+  .qc .ve-btn--primary.ve-btn--loading,
+  .qc a.ve-btn--primary.ve-btn--loading,
+  .qc-btn.ve-btn--primary.ve-btn--loading {
+    color: transparent !important; }
+    .qc .ve-btn--primary.ve-btn--loading > *,
+    .qc a.ve-btn--primary.ve-btn--loading > *,
+    .qc-btn.ve-btn--primary.ve-btn--loading > * {
+      color: transparent !important; }
+    .qc .ve-btn--primary.ve-btn--loading:after,
+    .qc a.ve-btn--primary.ve-btn--loading:after,
+    .qc-btn.ve-btn--primary.ve-btn--loading:after {
+      border-right-color: transparent !important;
+      border-top-color: transparent !important; }
+  .qc .ve-btn--primary:after,
+  .qc a.ve-btn--primary:after,
+  .qc-btn.ve-btn--primary:after {
+    border-color: #fff !important; }
+  .qc .ve-btn--primary:hover,
+  .qc a.ve-btn--primary:hover,
+  .qc-btn.ve-btn--primary:hover {
+    background: #24a8da !important; }
+  .qc .ve-btn--primary:active, .qc .ve-btn--primary.active,
+  .qc a.ve-btn--primary:active,
+  .qc a.ve-btn--primary.active,
+  .qc-btn.ve-btn--primary:active,
+  .qc-btn.ve-btn--primary.active {
+    background: #186f8f !important; }
+
+.qc-loader {
+  background: #23a1d1; }
+
+.qc-spinner:before {
+  border-top: 3px solid #23a1d1; }
+
+.qc .ve-radio--selected {
+  color: #23a1d1 !important; }
+
+.qc .ve-radio [type=radio]:checked + i:before {
+  border-color: #23a1d1 !important;
+  background-color: #fff; }
+
+.qc .ve-radio [type=radio]:checked + i:after {
+  background-color: #23a1d1 !important; }
+
+.qc .ve-checkbox [type=checkbox]:checked + i:before {
+  border: 1px solid #23a1d1 !important;
+  background-color: #23a1d1 !important; }
+
+.qc .qc-name a,
+.qc label a {
+  color: #23a1d1 !important; }
+
+.qc .process-page-progress-bar,
+.qc .process-page .process-page-dot {
+  background-color: #9ed9ef; }
+
+.qc .process-page .process-page-dot:after {
+  background-color: #23a1d1; }
+
+.qc .process-page.disabled .process-page-dot {
+  background-color: #f5f5f5; }
+
+@media (max-width: 767.98px) {
+  .qc .process-page.active {
+    background: #edf8fc; }
+  .qc .process-page.active .process-page-label {
+    color: #23a1d1; } }
+
+/*# sourceMappingURL=default.css.map */

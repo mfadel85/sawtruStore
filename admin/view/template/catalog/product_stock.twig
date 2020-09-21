@@ -1,0 +1,388 @@
+{{ header }}
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-attribute" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="form-group" >
+      <label class="col-sm-2 control-label" for="">Product Barcode</label>
+        <div class="col-sm-10">
+              <input type="text" name="productBarcode"  value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control" />
+        </div>
+    </div>	
+  </div>
+ 
+  <div class="container-fluid">
+    <div class="form-group" >
+      <label class="col-sm-2 control-label" for="">Dimensions</label>
+        <div class="col-sm-2">
+              L<label type="text" name="length"  value="" placeholder="" id="length" class="form-control" ></label>
+        </div>
+        <div class="col-sm-2">
+              Width<label type="text" name="width"  value="" placeholder=""  id="width" class="form-control" ></label>
+        </div>        
+        <div class="col-sm-2">
+              D<label type="text" name="depth"  value="" placeholder=""  id="depth" class="form-control" ></label>
+        </div>
+        <div class="col-sm-1">
+              Weight<label type="text" name="weight"  value="" placeholder="" id="weight" class="form-control" ></label>
+        </div>  
+		<div class="col-sm-2">
+              Pallet Count<label type="text" name="bentCount"  value="" placeholder="" id="bentCount" class="form-control" ></label>
+        </div>
+ 		<div class="col-sm-1">
+              Product ID<input type="text" name="productID"  value="" placeholder="" id="productID" class="form-control" />
+        </div>				              
+    </div>	
+  </div>
+  <div class="container-fluid row">
+    <div class="form-group" >
+      <label class="col-sm-2 control-label" for="">Pallet Barcode</label>
+        <div class="col-sm-10">
+              <input type="text" name="palletBarcode"  value="{{ palletBarcode }}" placeholder="{{ palletBarcode }}" id="palletBarcode" class="form-control" />
+        </div>
+    </div>	
+  </div>
+<style type="text/css">
+	.empty {
+		background-color: seagreen;
+		cursor:pointer;
+	}
+	.full {
+		background-color: red;
+	}	
+	.hasSpace {
+		background-color: grey;
+		cursor:pointer;		
+	}		
+</style>  
+  <!-- now show the units as a table those data dynamically will be presented -->
+	<div class="container-fluid row" >
+		<div class="from-group col-sm-6">
+		  	<table class="table unit table-striped table-light table-bordered">
+			  <thead>
+			    <tr>
+			      <th scope="col">Unit1</th>
+			      <th scope="col">Bent 1</th>
+			      <th scope="col">Bent 2</th>
+			      <th scope="col">Bent 3</th>
+			      <th scope="col">Bent4</th>
+			      <th scope="col">Bent 5</th>
+			      <th scope="col">Bent 6</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr>
+			      <th scope="row">1</th>
+			      <td class='full'>Milk (0)</td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (2)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (2)</td>
+			    </tr>
+			    <tr>
+			      <th scope="row">2</th>
+			      <td class='hasSpace'>Nestle Water (2)</td>
+			      <td class='hasSpace'>Sirma Water (3)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='full'>Kitkat (0)</td>			      
+			    </tr>
+			    <tr>
+			      <th scope="row">3</th>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Lay's Chips (4)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (2)</td>			      
+			    </tr>
+			    <tr>
+			      <th scope="row">4</th>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Lay's Chips (1)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='full'>Kitkat (0)</td>			      
+			    </tr>			    
+			  </tbody>
+			</table>		
+		</div>  	
+		<div class="col-sm-6">
+		  	<table class="table unit table-striped table-light table-bordered">
+			  <thead>
+			    <tr>
+			      <th scope="col">Unit2</th>
+			      <th scope="col">Bent 1</th>
+			      <th scope="col">Bent 2</th>
+			      <th scope="col">Bent 3</th>
+			      <th scope="col">Bent 4</th>
+			      <th scope="col">Bent 5</th>
+			      <th scope="col">Bent 6</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr>
+			      <th scope="row">1</th>
+			      <td class='hasSpace'>Milk (4)</td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (3)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='full'>Kitkat (0)</td>
+			    </tr>
+			    <tr>
+			      <th scope="row">2</th>
+			      <td class='hasSpace'>Nestle Water (2)</td>
+			      <td class='hasSpace'>Sirma Water (3)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'> Kitkat (2)</td>			      
+			    </tr>
+			    <tr>
+			      <th scope="row">3</th>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Lay's Chips (2)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (3)</td>			      
+			    </tr>
+			    <tr>
+			      <th scope="row">4</th>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='full'>Lay's Chips (0)</td>
+			      <td class='empty'></td>
+			      <td class='empty'></td>
+			      <td class='hasSpace'>Kitkat (3)</td>			      
+			    </tr>			    
+			  </tbody>
+			</table>			
+		</div>  		
+	</div>
+       
+</div>
+<script type="text/javascript">
+	productID = 0;
+	$.ajaxSetup({ cache: false });
+
+	var api_token = '';
+
+	$.ajax({
+	  url: 'http://localhost/store/index.php?route=api/login&key=LA6g3ogGx7lgceCO2uiFZJ4QCwfe93SY54OYi2Pvjnrnxr55sFygOMT1sATi0b7y439oTRZPlM2s9ZY9Qt6tLOYqyDcoVXmhNAChHV2wL3ptKSlaWxMtO5XHhsokshxVyCGiKgMMU775z4IVy549FxY4rTRYb8UVlGNHJBcDIQgkRXdWziUpkzJP6ybm1gUPIIVn5ehCXxQTiRXvqXc6dd0zz4MddwWnQdRMMbdS5wF2IszhxPunqKAYx2If6YZA',
+	  type: 'post',
+	  dataType: 'json',
+	  data: '',
+	  crossDomain: true,
+	  success: function(json) {
+	    $('.alert').remove();
+	    if (json['error']) {
+	      if (json['error']['key']) {
+	        $('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error']['key'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+	      }
+	      if (json['error']['ip']) {
+	        $('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error']['ip'] + ' <button type="button" id="button-ip-add" data-loading-text="{{ text_loading }}" class="btn btn-danger btn-xs pull-right"><i class="fa fa-plus"></i>{{ button_ip_add }}</button></div>');
+	      }
+	    }
+	    if (json['api_token']) {
+	      api_token = json['api_token'];
+	    }
+	  },
+	  error: function(xhr, ajaxOptions, thrownError) {
+	  	alert('failure');
+
+	    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	  }
+	});
+	// checksum calculation for GTIN-8, GTIN-12, GTIN-13, GTIN-14, and SSCC
+	// based on http://www.gs1.org/barcodes/support/check_digit_calculator
+	function isValidBarcode(barcode) {
+	  // check length
+	  if (barcode.length < 8 || barcode.length > 18 ||
+	      (barcode.length != 8 && barcode.length != 12 &&
+	      barcode.length != 13 && barcode.length != 14 &&	      
+	      barcode.length != 18)) {
+	    return false;
+	  }
+
+	  return true;
+	}
+	function onClickCell(event, field, value, row, $element) {
+		alert($element.text());
+		$('.clicked-text').text($element.text());
+		$('.clicked-field').text(field);
+		$('.clicked-value').text(value);
+		$('.alert').removeClass('hidden');
+	}	
+	$('.unit').on('click-cell.bs.table', onClickCell);
+
+	function getProductID(barcode){
+		$.ajax({
+			url: 'http://localhost/store/index.php?route=api/product/get',
+			async: false,
+		  	type: 'post',
+		  	data: {sku: barcode},
+		    crossDomain: true,
+			  success: function(json) {
+			  	  
+			  },
+			  error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Get Product ID failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			    }
+		}).done(function(json){
+	    	productId = json['product_id'];
+
+			$("#productID").val(productId);
+			$("#bentCount").html(json['bent_count']);
+			$("#length").html(json['length']);
+			$("#width").html(json['width']);
+			$("#depth").html(json['height']);
+			$("#weight").html(json['weight']);
+
+			return productId;
+	    });
+		return productId;
+	}
+
+	$("#productBarcode").on("change", function () {
+		//don't activate this if the input is not 13 digit
+		var barCode = $("#productBarcode").val();	
+		if(barCode.length > 12){
+			var test1 = isValidBarcode(barCode);
+			if(!test1){
+				alert('not valid barcode');
+				event.preventDefault();
+			}
+			productID = getProductID(barCode);	
+		}
+		
+		// if true get the product and its details and prepare the map
+	}); 
+
+	$("#palletBarcode").on("change", function () {
+
+		if ($("#productBarcode").val() == '')
+		{
+			alert("Enter the barcode of the product, first");
+			event.preventDefault();
+			return;
+		}				
+		sku = $("#productBarcode").val();
+		productID = $("#productID").val();
+
+		var barCode = $("#palletBarcode").val();		      
+		var palletID = 0;
+
+		$.ajax({
+			url: 'http://localhost/store/index.php?route=api/pallet/getPallet',
+		  	type: 'post',
+		  	//dataType: 'json',
+		  	data: {
+		  		palletID: barCode
+		  	},
+		    crossDomain: true,
+			  success: function(json) {
+			  	  palletID = json['pallet_id'];
+			  	  $("#productID").val(palletID);
+			  },
+			  error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Get Pallet ID failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    }
+	    });
+	    
+		$.ajax({
+			url: 'http://localhost/store/index.php?route=api/pallet/getPalletContent',
+		  	type: 'post',
+		  	//dataType: 'json',
+		  	data: {
+		  		palletID: barCode,
+		  		productID: productID
+		  	},
+		    crossDomain: true,
+			  success: function(json) {
+			  	  palletID = json['pallet_id'];
+			  	  $("#productID").val(palletID);
+			  },
+			  error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Get content failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    }
+	    });	  
+	    // we have to make sure that the productID is set before 
+	    if(typeof productID === 'undefined'){
+	    	alert("Couldn't get the Product ID");
+			event.preventDefault();
+			return;
+	    }
+
+		$.ajax({
+			url: 'http://localhost/store/index.php?route=api/pallet/getAvailableSpace',
+		  	type: 'post',
+		  	//dataType: 'json',
+	    	data: {palletID:barCode,productID:productID},
+		    crossDomain: true,
+			    success: function(json) {
+			  	    palletID = json['pallet_id'];
+				    //alert(json);
+				    // we can add the stock here
+				    // change product quantity, oc_product_to_position
+				    //clear this form
+				  },
+			    error: function(xhr, ajaxOptions, thrownError) {
+					alert('Get space failure');
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    }
+	    }).done(function(json){
+	    	if(json < 1)
+	    	{
+	    		alert("No Available Positions!!!");
+				event.preventDefault();
+				return;
+	    	}
+	    });		
+
+	    $.ajax({
+	    	url:'http://localhost/store/index.php?route=api/pallet/updateStock',
+	    	type:'post',
+	    	data: {palletID:barCode,productID:productID},
+	    	crossDomain:true,
+	    	success:function(json){
+	    		$("#productBarcode").val("");//units
+	    		$("#productID").val("");
+	    		$("#length").val("");
+	    		$("#width").val("");
+	    		$("#depth").val("");
+	    		$("#weight").val("");
+	    		$("#bentCount").val("");
+	    	},
+	    	error: function(xhr,ajaxOptions,thrownError){
+	    		alert('Update Failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	    	}
+	    }).done(function(json){
+	    	if(json == 1)
+	    		alert("Yok olamaz");
+
+	    });      	
+		// if true get the product and its details and prepare the map
+	}); 
+</script>
+{{ footer }} 
