@@ -290,7 +290,7 @@
 		var barCode = $("#palletBarcode").val();		      
 		var palletID = 0;
 
-		$.ajax({
+		/*$.ajax({
 			url: 'http://localhost/store/index.php?route=api/pallet/getPallet',
 		  	type: 'post',
 		  	//dataType: 'json',
@@ -299,6 +299,7 @@
 		  	},
 		    crossDomain: true,
 			  success: function(json) {
+				  console.log('json of the get pallet api',json);
 			  	  palletID = json['pallet_id'];
 			  	  $("#productID").val(palletID);
 			  },
@@ -306,16 +307,14 @@
 		  		alert('Get Pallet ID failure');
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
-	    });
+	    });*/
 	    
 		$.ajax({
 			url: 'http://localhost/store/index.php?route=api/pallet/getPalletContent',
 		  	type: 'post',
 		  	//dataType: 'json',
 		  	data: {
-		  		palletID: barCode,
-		  		productID: productID
-		  	},
+		  		palletID: barCode		  	},
 		    crossDomain: true,
 			  success: function(json) {
 			  	  palletID = json['pallet_id'];
