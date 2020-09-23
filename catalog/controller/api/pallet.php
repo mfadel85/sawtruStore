@@ -7,8 +7,6 @@ class ControllerApiPallet extends Controller
 	}
 
 	public function getPallet(){
-		//print_r('Yalan söyleme gözlerime bak');
-		//$this->load->language('api/order');
 		$json = array();		
 		if (!isset($_POST['palletID']) ) {
 			$json['error']=1;
@@ -51,14 +49,20 @@ class ControllerApiPallet extends Controller
 		$palletID  = $_POST['palletID'];
 		$productID = $_POST['productID'];
 		$bentCount = $_POST['bentCount'];
+		$update    = $_POST['update'];
+		/// check if it can't be assigned, or updated???
 		$this->load->model('catalog/pallet');
-		$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount);
+		$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount,$update);
 	}
 
 	public function getAvailableSpace(){
+		// check if this pallet can contain this product ?? here or not here?
+
 		$json = array();
 		//isset and not empty we need to understand what is happening here :D
 		if (!isset($_POST['palletID']) || !isset($_POST['productID']) || $_POST['productID']=='' || $_POST['palletID']=='' ) {
+			error_log("got here");
+
 			$json['error']=1;
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($json));
@@ -67,9 +71,14 @@ class ControllerApiPallet extends Controller
 		$productID = $_POST['productID'];
 		$this->load->model('catalog/pallet');	
 		error_log("palletID : $palletID, productID: $productID");
-		$json = $this->model_catalog_pallet->getAvailablePositionsCount($palletID,$productID);
-		error_log("json : $json");
+		$assigned = $this->model_catalog_pallet->productAssignedToPallet($palletID,$productID);
+		error_log("assigned $assigned" );
 
+		if($assigned)
+			$json = $this->model_catalog_pallet->getAvailablePositionsCount($palletID,$productID);
+		else 
+			$json = -1;
+		error_log("json  $json");
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
     }
@@ -88,7 +97,10 @@ class ControllerApiPallet extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($map));
         /// suppose to get everything in the pallet a map of the whole stock
-    }
+	}
+
+
+
     /**
      * Describes updateStock()
      * it updates the stock of pallet using product_id, pallet_id to add 1 to stock
@@ -97,19 +109,24 @@ class ControllerApiPallet extends Controller
      **/
     public function updateStock()
     {
-		$this->load->model('catalog/pallet');	
-
-		$json = array();
-		if (!isset($_POST['palletID']) && !isset($_POST['productID']) ) {
-			$json['error']=1;
-			$this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode($json));
-		}	
-
 		$palletID  = $_POST['palletID'];
 		$productID = $_POST['productID'];
+		// verifiy if this product assigned to this pallet
+		$this->load->model('catalog/pallet');
+		$assigned = $this->model_catalog_pallet->verifyProductPallet($palletID,$productID);
+		error_log("Assigned $assigned");
+		if($assigned == "Assigned to another Product" )
+			$json = "Not Allowed Operation";
+		else {
+			$json = array();
+			if (!isset($_POST['palletID']) && !isset($_POST['productID']) ) {
+				$json['error']=1;
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode($json));
+			}		
+			$json = $this->model_catalog_pallet->updateStock($palletID,$productID);
+		}
 
-		$json = $this->model_catalog_pallet->updateStock($palletID,$productID);
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));	

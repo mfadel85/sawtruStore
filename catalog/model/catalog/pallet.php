@@ -25,7 +25,13 @@ class ModelCatalogPallet extends Model {
 		return $map;
 
 	}
-
+	public function productAssignedToPallet($palletID,$productID){
+		$count= $this->db->query("SELECT count(*) FROM `oc_pallet_product` where product_id = $productID and start_pallet_id = $palletID");
+		if(count($count->row)> 0)
+			return true;
+		else 
+			return false;
+	}
 	public function getAvailablePositionsCount($palletID,$productID){
 		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
 		$width = $width->rows[0]["width"];
@@ -60,7 +66,26 @@ class ModelCatalogPallet extends Model {
 
 		return $countAvailable;
 	}
+	public function verifyProductPallet($palletID,$productID){
+		// check if a pallet is assigned or not
+		$countQuery = $this->getPalletProduct($palletID,$productID);
+		//var_dump($countQuery);
+		$count = -1;
+		if(isset($countQuery['Count'])){
+			$count = $countQuery['Count'];
+			error_log("Count $count");
+			if($count > 0)
+				return "Assigned";
+		}
 
+		else {
+			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $palletID group by start_pallet");
+			if( $isItAssigned->num_rows > 0)
+				return "Assigned to another Product";
+			else 
+				return "Not Assigned";
+		}
+	}
 	public function updateStock($palletID,$productID){
 		$countAvailable = $this->getAvailablePositionsCount($palletID,$productID);
 		if($countAvailable < 1){
@@ -84,11 +109,15 @@ class ModelCatalogPallet extends Model {
 
 	}
 
-	public function assignPalletProduct($palletID,$productID,$bentCount){
-		$assigned = $this->db->query("
-			INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `time_created`, `time_modified`, `expiration_date`) 
-			VALUES (NULL,$palletID, $productID, $bentCount, current_timestamp(), current_timestamp(), NULL);
-		");
+	public function assignPalletProduct($palletID,$productID,$bentCount,$update){
+		if(!$update)
+			$assigned = $this->db->query("
+				INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `time_created`, `time_modified`, `expiration_date`) 
+				VALUES (NULL,$palletID, $productID, $bentCount, current_timestamp(), current_timestamp(), NULL);
+			");
+		else 
+			$updated = $this->db->query("
+				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$bentCount where start_pallet_id = $palletID");
 		
 
 	}

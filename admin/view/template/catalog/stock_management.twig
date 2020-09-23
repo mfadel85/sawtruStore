@@ -169,6 +169,7 @@
 			console.log('element id',td[0].id);
 			const barCode = td[0].getAttribute("data-barcode");
 			const filled = td[0].getAttribute("data-filled");
+			const assignedProductID = td[0].getAttribute("data-product-id");
 
 			if(filled != "0"){
 				alert("you can't do this, this bent has already assigned to another product!!");
@@ -213,12 +214,20 @@
 			// needed data: start pallet id, product id,  bentCount, created date, modified date
 			// we will add the assign functionality
 			// now we will send ajax request so these changes update in the database , unit_id
+			let update = false;
+			if(assignedProductID != productID){
+				update = true;
+			}
+
 			$.ajax({
 				url: 'http://localhost/store/index.php?route=api/pallet/assignPalletProduct',
 				async: false,
 				type: 'post',
-				data: {palletID: barCode, productID:productID,bentCount:palletCount},
+				data: {palletID: barCode, productID:productID,bentCount:palletCount,update:update},
 				crossDomain: true,
+				success:function(){
+					location.reload();
+				}
 			});
 		}
 
@@ -331,20 +340,55 @@
 	}); 
 
 	$("#palletBarcode").on("change", function () {
+		/// steps:
+		/// get the product id and the barcode of the pallet
+		/// check if this product is assigned to that pallet
+		/// check if this pallet is not full
+		/// if both conditions are true then do the add stock code
+		const sku = $("#productBarcode").val();
+		productID = $("#productID").val();
+		let barCode = $("#palletBarcode").val();		      
 
-		if ($("#productBarcode").val() == '')
+		if ( sku == '' || typeof productID === 'undefined')
 		{
 			alert("Enter the barcode of the product, first");
 			event.preventDefault();
 			return;
 		}				
-		sku = $("#productBarcode").val();
-		productID = $("#productID").val();
-
-		var barCode = $("#palletBarcode").val();		      
-		var palletID = 0;
-		// http://localhost/store/ should be updated to {{catalog}}
 		$.ajax({
+			url:'http://localhost/store/index.php?route=api/pallet/updateStock',
+			type:'post',
+			data:{
+				palletID: barCode,
+				productID: productID
+			},
+
+			crossDomain:true,
+			success:function(json){
+				console.log("Result of update stock",json);
+				if(json == 'Not Allowed Operation' )
+					alert("Not Allowed");
+
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Failed to know if the product can be added to this pallet.');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    } 
+		}).done(function(json){
+			$("#productBarcode").val("");//units
+			$("#palletBarcode").val("");//units
+			$("#productID").val("");
+			$("#length").val("");
+			$("#width").val("");
+			$("#depth").val("");
+			$("#weight").val("");
+			$("#bentCount").val("");
+			if(json == 1)
+	    		alert("Added to stock");
+			location.reload();
+		});
+		// http://localhost/store/ should be updated to {{catalog}}
+		/*$.ajax({
 			url: 'http://localhost/store/index.php?route=api/pallet/getPallet',
 		  	type: 'post',
 		  	//dataType: 'json',
@@ -353,16 +397,16 @@
 		  	},
 		    crossDomain: true,
 			  success: function(json) {
-			  	  palletID = json['pallet_id'];
-			  	  $("#productID").val(palletID);
+				    var palletID = json['pallet_id'];
+			  	    $("#productID").val(palletID);// what is this?
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
 		  		alert('Get Pallet ID failure');
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
-	    });
+	    });*/
 	    
-		$.ajax({
+		/*$.ajax({
 			url: 'http://localhost/store/index.php?route=api/pallet/getPalletContent',
 		  	type: 'post',
 		  	//dataType: 'json',
@@ -372,22 +416,19 @@
 		  	},
 		    crossDomain: true,
 			  success: function(json) {
+				  console.log(json);
 			  	  palletID = json['pallet_id'];
-			  	  $("#productID").val(palletID);
+			  	  $("#productID").val(palletID);// what is this?
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
 				console.log('Get content failure');
 				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    }
-	    });	  
+	    });	  */
 	    // we have to make sure that the productID is set before 
-	    if(typeof productID === 'undefined'){
-	    	alert("Couldn't get the Product ID");
-			event.preventDefault();
-			return;
-	    }
 
-		$.ajax({
+
+		/*$.ajax({
 			url: 'http://localhost/store/index.php?route=api/pallet/getAvailableSpace',
 		  	type: 'post',
 		  	//dataType: 'json',
@@ -406,15 +447,15 @@
 		    	
 		    }
 	    }).done(function(json){
+			alert(json);
 	    	if(json < 1)
 	    	{
 	    		alert("No Available Positions!!!");
 				event.preventDefault();
 				return;
 	    	}
-	    });		
-
-	    $.ajax({
+			else {
+					    $.ajax({
 	    	url:'http://localhost/store/index.php?route=api/pallet/updateStock',
 	    	type:'post',
 	    	data: {palletID:barCode,productID:productID},
@@ -437,7 +478,12 @@
 	    }).done(function(json){
 	    	if(json == 1)
 	    		alert("Added to stock");
-	    });      	
+				location.reload();
+	    });  
+			}
+	    });		*/
+
+    	
 		// if true get the product and its details and prepare the map
 	}); 
 </script>
