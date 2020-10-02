@@ -47,7 +47,7 @@ class ModelCatalogPallet extends Model {
 			join " . DB_PREFIX . "product_description opd
 			on op.product_id = opd.product_id
 			where op.product_id = $productID and olcd.language_id = 1");
-		error_log("Product_id is : ".$productID);
+		//error_log("Product_id is : ".$productID);
 		$width     = $productInfo->row['width']; // this factor is for the available positions, we should get classID also, 
 		$length    = $productInfo->row['length'];
 		$height    = $productInfo->row['height'];

@@ -215,11 +215,13 @@
 			// we will add the assign functionality
 			// now we will send ajax request so these changes update in the database , unit_id
 			let update = false;
-			if(assignedProductID == productID){
-				update = false; // to be checke
+			if(assignedProductID != ''){
+				update = true; // to be checke
 			}
-			else if(assignedProductID != productID)
-				update = true;
+			else if( assignedProductID == '')
+			   update = false;
+
+			
 			console.log(assignedProductID,productID);
 			$.ajax({
 				url: 'http://localhost/store/index.php?route=api/pallet/assignPalletProduct',

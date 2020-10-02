@@ -123,9 +123,12 @@ class ModelCatalogPallet extends Model {
 	public function getNextPalletID($palletID,$i){
 		$palletInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $palletID");
 		$row    = $palletInfo->row["shelf_id"];
-		if((int)$palletInfo->row["x_position"]+$i>5)
+		if((int)$palletInfo->row["x_position"]>5)
 			return -1;
-		$xPos   = (int)$palletInfo->row["x_position"]+$i+1;
+
+		$xPos   = (int)$palletInfo->row["x_position"]+$i;
+		$xPosX = (int)$palletInfo->row["x_position"];
+		error_log("before $xPosX, after xPos is $xPos ");
 		$unitID = $palletInfo->row["unit_id"];
 		$nextPalletID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextPalletID;
@@ -141,8 +144,12 @@ class ModelCatalogPallet extends Model {
 				$palletStats = $this->getPalletStatus($nextBeltID);
 				if($palletStats == "Empty" || $palletStats == "Assigned Empty")
 				{
+					error_log("We are here Z: $palletStats, Belt ID $beltID, next belt id is $nextBeltID");
 					// if assigned empty and the cells before it is also assigned empty
 					// to delete the record of $nextPalletID
+					if($palletStats == "Assigned Empty") {
+						$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
+					}
 					$assignable = true;
 					continue;
 				}
@@ -159,25 +166,30 @@ class ModelCatalogPallet extends Model {
 		if($update == "false" && $assignable){
 			error_log("We are here to live");
 			// all the cells to be written
-			for($i=1;$i<=$beltCount;$i++){
-				if($i>1){ // comment
-					$beltID = $this->getNextPalletID($beltID); 
+			for($i=0;$i< $beltCount;$i++){
+				if($i>0){ // comment
+					$beltID = $this->getNextPalletID($beltID,$i); 
+					error_log("beltID is $beltID i is $i");
 				}
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
-					VALUES (NULL,$beltID, $productID, $beltCount,$i, current_timestamp(), current_timestamp(), NULL);");
+					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);");
 				print_r($assigned);
 				error_log("Assigned $assigned");
 			}
 				
 		}	
 		else {
-			error_log("We are here to live in another way");
-			$updated = $this->db->query("
-			UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount where start_pallet_id = $palletID");
+			for($i=1;$i<=$beltCount;$i++){
+				if($i>1){ // comment
+					$beltID = $this->getNextPalletID($beltID,$i); 
+				}
+				error_log("We are here to live in another way");
+				$updated = $this->db->query("
+				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i where start_pallet_id = $beltID");
+			}
+		
 		}
-		
-		
 
 	}
 }
