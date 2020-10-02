@@ -30,6 +30,10 @@ class Cart {
 		}
 	}
 
+	public function prepareOrder($order){
+
+	}
+
 	public function getProducts() {
 		$product_data = array();
 
@@ -237,19 +241,33 @@ class Cart {
 				$positionQueryString = "SELECT optp.product_id, optp.shelf_id,optp.unit_id as unitID,optp.start_pallet,op.x_position as xPos ,
 				os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
 				join oc_pallet op on optp.start_pallet = op.pallet_id 
-				join oc_shelf os on os.shelf_id = op.shelf_id WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,1 ";
+				join oc_shelf os on os.shelf_id = op.shelf_id WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
 				$position_query = $this->db->query($positionQueryString);
+
+
+				if($cart['quantity'] == 1){
+					$xPos = $position_query->row['xPos'];
+					$yPos = $position_query->row['yPos'];
+				}
+					
+				else if($cart['quantity']> 1){
+					foreach($position_query->rows as $product){
+						$xPos[] = $product['xPos'];/// Null ??
+						$yPos[] = $product['yPos'];/// Null ??
+					}
+				}
+
 				//print_r("<br>our Query<br>");
 				//print_r($cart['product_id']);
-				error_log($positionQueryString);				
+			
 				//print_r("<br>end of our Query<br>");
 				//// if product out of stock handle
 				/// MFH 
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
-					'xPos'            => $position_query->row['xPos'],
-					'yPos'            => $position_query->row['yPos'],
+					'xPos'            => $xPos,//// maybe we have multiple xPos
+					'yPos'            => $yPos,/// maybe we have multiple yPos
 					'unit_id'         => $position_query->row['unitID'],
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],

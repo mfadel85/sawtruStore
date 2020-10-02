@@ -6,28 +6,40 @@ class ControllerCheckoutSuccess extends Controller {
 		if (isset($this->session->data['order_id'])) {
 		    $products = $this->cart->getProducts();
 		    $jsonProducts = [];
-		    $productsCount = count($products);
+		    $productsCount = 0;
 		    foreach ($products as $product) {
-				$currentArary = array();
-				$currentArary['name'] = $product['name'];
-				$currentArary['quantity'] = $product['quantity'];
-				$currentArary['xPos'] = $product['xPos'];
-				$currentArary['yPos'] = $product['yPos'];
-				$currentArary['unitID'] = $product['unit_id'];/// check this
-				$currentArary['bentCount'] = $product['bent_count'];
+				$productsCount += $product['quantity'];
+				if($product['quantity']>1){
+					for($i=0;$i<(int)$product['quantity'];$i++){
+						$currentArary = array();
+						$currentArary['name'] = $product['name'];
+						$currentArary['quantity'] = 1;
+						$currentArary['xPos'] = $product['xPos'][$i];
+						$currentArary['yPos'] = $product['yPos'][$i];
+						$currentArary['unitID'] = $product['unit_id'];/// check this
+						$currentArary['bentCount'] = $product['bent_count']; 
+						$jsonProducts[] = $currentArary;
+					}
+				}	
+				else {
+					$currentArary = array();
+					$currentArary['name'] = $product['name'];
+					$currentArary['quantity'] = $product['quantity'];
+					$currentArary['xPos'] = $product['xPos'];
+					$currentArary['yPos'] = $product['yPos'];
+					$currentArary['unitID'] = $product['unit_id'];/// check this
+					$currentArary['bentCount'] = $product['bent_count']; 
+					$jsonProducts[] = $currentArary;
+				}			
+			}
 
-		    	// productName as a helper, 
-		    	$jsonProducts[] = $currentArary;
-		    }
-			print_r($products);
-			//$products = array();// quantity to be added
-			$productsCount = count($products);
 			$order = array(
 				'OrderID'       => $this->session->data['order_id'],
 				'ProductsCount' => $productsCount,
 				'Products'      => $jsonProducts,
 				'OrderStatus'   => 'waiting'
 			);
+
 			$json_data = json_encode($order);// path need to be changed
 			$result = file_put_contents('data.json', $json_data);			
 			print_r('Result: ');
@@ -79,7 +91,6 @@ class ControllerCheckoutSuccess extends Controller {
 		}
 
 		$data['continue'] = $this->url->link('common/home');
-
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['column_right'] = $this->load->controller('common/column_right');
 		$data['content_top'] = $this->load->controller('common/content_top');
@@ -87,23 +98,17 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 		try {
-			$address="192.168.1.37";//127.0.0.1
+			$address="192.168.250.37";//127.0.0.1
 			$port="11111";
-			$msg="Hello server";
-			
 			$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
 			socket_connect($sock,$address,$port) or die("Could not connect to the socket");
 			socket_write($sock,$json_data);
-			
 			$read=socket_read($sock,1024);
-			echo $read; // if a certain message comes, it is okay, otherwise store in the database and the events what happens and how to be handled
+			echo $read; 
 			socket_close($sock);
-			$this->response->setOutput($this->load->view('common/success', $data));
-
-				
+			$this->response->setOutput($this->load->view('common/success', $data));				
 		} catch (Exception $e) {
 			print_r($e.Message);
-			//throw $th;
 		}
 	}
 }

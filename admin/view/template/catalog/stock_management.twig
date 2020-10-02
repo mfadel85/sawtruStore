@@ -215,10 +215,12 @@
 			// we will add the assign functionality
 			// now we will send ajax request so these changes update in the database , unit_id
 			let update = false;
-			if(assignedProductID != productID){
-				update = true;
+			if(assignedProductID == productID){
+				update = false; // to be checke
 			}
-
+			else if(assignedProductID != productID)
+				update = true;
+			console.log(assignedProductID,productID);
 			$.ajax({
 				url: 'http://localhost/store/index.php?route=api/pallet/assignPalletProduct',
 				async: false,
@@ -226,7 +228,7 @@
 				data: {palletID: barCode, productID:productID,bentCount:palletCount,update:update},
 				crossDomain: true,
 				success:function(){
-					location.reload();
+					//location.reload();
 				}
 			});
 		}
@@ -387,104 +389,7 @@
 	    		alert("Added to stock");
 			location.reload();
 		});
-		// http://localhost/store/ should be updated to {{catalog}}
-		/*$.ajax({
-			url: 'http://localhost/store/index.php?route=api/pallet/getPallet',
-		  	type: 'post',
-		  	//dataType: 'json',
-		  	data: {
-		  		palletID: barCode
-		  	},
-		    crossDomain: true,
-			  success: function(json) {
-				    var palletID = json['pallet_id'];
-			  	    $("#productID").val(palletID);// what is this?
-			  },
-			  error: function(xhr, ajaxOptions, thrownError) {
-		  		alert('Get Pallet ID failure');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		    }
-	    });*/
-	    
-		/*$.ajax({
-			url: 'http://localhost/store/index.php?route=api/pallet/getPalletContent',
-		  	type: 'post',
-		  	//dataType: 'json',
-		  	data: {
-		  		palletID: barCode,
-		  		productID: productID
-		  	},
-		    crossDomain: true,
-			  success: function(json) {
-				  console.log(json);
-			  	  palletID = json['pallet_id'];
-			  	  $("#productID").val(palletID);// what is this?
-			  },
-			  error: function(xhr, ajaxOptions, thrownError) {
-				console.log('Get content failure');
-				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		    }
-	    });	  */
-	    // we have to make sure that the productID is set before 
 
-
-		/*$.ajax({
-			url: 'http://localhost/store/index.php?route=api/pallet/getAvailableSpace',
-		  	type: 'post',
-		  	//dataType: 'json',
-	    	data: {palletID:barCode,productID:productID},
-		    crossDomain: true,
-			  success: function(json) {
-			  	  palletID = json['pallet_id'];
-				  //alert(json);
-				  // we can add the stock here
-				  // change product quantity, oc_product_to_position
-				  //clear this form
-				  },
-			  error: function(xhr, ajaxOptions, thrownError) {
-				console.log('Get space failure');
-				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-		    	
-		    }
-	    }).done(function(json){
-			alert(json);
-	    	if(json < 1)
-	    	{
-	    		alert("No Available Positions!!!");
-				event.preventDefault();
-				return;
-	    	}
-			else {
-					    $.ajax({
-	    	url:'http://localhost/store/index.php?route=api/pallet/updateStock',
-	    	type:'post',
-	    	data: {palletID:barCode,productID:productID},
-	    	crossDomain:true,
-	    	success:function(json){
-	    		$("#productBarcode").val("");//units
-	    		$("#palletBarcode").val("");//units
-	    		$("#productID").val("");
-	    		$("#length").val("");
-	    		$("#width").val("");
-	    		$("#depth").val("");
-	    		$("#weight").val("");
-	    		$("#bentCount").val("");
-
-	    	},
-	    	error: function(xhr,ajaxOptions,thrownError){
-				console.log('Update Failure');
-				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-	    	}
-	    }).done(function(json){
-	    	if(json == 1)
-	    		alert("Added to stock");
-				location.reload();
-	    });  
-			}
-	    });		*/
-
-    	
-		// if true get the product and its details and prepare the map
 	}); 
 </script>
 {{ footer }}

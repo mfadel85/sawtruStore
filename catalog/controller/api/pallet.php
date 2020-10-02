@@ -1,5 +1,4 @@
 <?php
-
 class ControllerApiPallet extends Controller
 {
 	public function info(){
@@ -50,6 +49,7 @@ class ControllerApiPallet extends Controller
 		$productID = $_POST['productID'];
 		$bentCount = $_POST['bentCount'];
 		$update    = $_POST['update'];
+		error_log("$palletID $productID  $bentCount $update");
 		/// check if it can't be assigned, or updated???
 		$this->load->model('catalog/pallet');
 		$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount,$update);

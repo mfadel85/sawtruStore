@@ -1,1 +1,1 @@
-{"OrderID":262,"ProductsCount":2,"Products":[{"name":"Kitkat","quantity":"1","xPos":"1","yPos":"1","unitID":"1","bentCount":"1"},{"name":"Nescafe Gold","quantity":"1","xPos":"1","yPos":"4","unitID":"1","bentCount":"3"}],"OrderStatus":"waiting"}
+{"OrderID":341,"ProductsCount":1,"Products":[{"name":"Kitkat","quantity":"1","xPos":"2","yPos":"1","unitID":"1","bentCount":"1"}],"OrderStatus":"waiting"}

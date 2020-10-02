@@ -44,6 +44,7 @@ $_['text_order_status']         = 'Order Statuses';
 $_['text_online']               = 'Who\'s Online';
 $_['text_product']              = 'Products';
 $_['text_product_stock']        = 'Stock Products';
+$_['text_stock_management']     = 'Stock Management';
 $_['text_reports']              = 'Reports';
 $_['text_review']               = 'Reviews';
 $_['text_return']               = 'Returns';

@@ -319,9 +319,25 @@ class ModelCheckoutOrder extends Model {
 					}
 				}
 			}
+			if($order_status_id == 5){// completed
+				$order_products = $this->getOrderProducts($order_id);
+				foreach ($order_products as $order_product) {
+
+
+
+					$quantity = (int)$order_product['quantity'];
+					for($j=0;$j<$quantity;$j++)
+						$position_query = $this->db->query("delete from oc_product_to_position where status='Sold' and product_id = ".(int)$order_product['product_id']." limit 1");
+						error_log("I did it now check the database pleaes!!");
+				}
+			}
 
 			// If current order status is not processing or complete but new status is processing or complete then commence completing the order
-			if (!in_array($order_info['order_status_id'], array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status'))) && in_array($order_status_id, array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status')))) {
+			if (!in_array($order_info['order_status_id'], array_merge($this->config->get('config_processing_status'), 
+				$this->config->get('config_complete_status'))) && 
+				in_array($order_status_id, array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status')))) {
+				error_log("get here");
+				error_log($this->config->get('config_complete_status')[0]);
 				// Redeem coupon, vouchers and reward points
 				$order_totals = $this->getOrderTotals($order_id);
 

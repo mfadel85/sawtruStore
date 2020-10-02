@@ -35,10 +35,10 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 
-			if ($this->user->hasPermission('access', 'catalog/product_stock')) {
+			if ($this->user->hasPermission('access', 'catalog/stock_management')) {
 				$catalog[] = array(
-					'name'	   => $this->language->get('text_product_stock'),
-					'href'     => $this->url->link('catalog/product_stock', 'user_token=' . $this->session->data['user_token'], true),
+					'name'	   => $this->language->get('text_stock_management'),
+					'href'     => $this->url->link('catalog/stock_management', 'user_token=' . $this->session->data['user_token'], true),
 					'children' => array()		
 				);
 			}

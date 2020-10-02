@@ -160,8 +160,8 @@ class ModelCatalogPallet extends Model {
 			error_log("We are here to live");
 			// all the cells to be written
 			for($i=1;$i<=$beltCount;$i++){
-				if($i>1){
-					$beltID = $this->getNextPalletID($beltID);
+				if($i>1){ // comment
+					$beltID = $this->getNextPalletID($beltID); 
 				}
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
