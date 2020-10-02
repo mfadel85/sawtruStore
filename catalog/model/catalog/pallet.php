@@ -89,7 +89,6 @@ class ModelCatalogPallet extends Model {
 	public function updateStock($palletID,$productID){
 		$countAvailable = $this->getAvailablePositionsCount($palletID,$productID);
 		if($countAvailable < 1){
-
 			return -1; 
 		}
 			
@@ -108,16 +107,76 @@ class ModelCatalogPallet extends Model {
 		
 
 	}
-
-	public function assignPalletProduct($palletID,$productID,$bentCount,$update){
-		if(!$update)
-			$assigned = $this->db->query("
-				INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `time_created`, `time_modified`, `expiration_date`) 
-				VALUES (NULL,$palletID, $productID, $bentCount, current_timestamp(), current_timestamp(), NULL);
-			");
+	public function getPalletStatus($palletID){
+		$state = $this->db->query("SELECT * FROM `oc_pallet_product` where start_pallet_id = 13");
+		if(count($state->row)==1){
+			$status = "Assigned Empty";
+			$isitFilled = $this->db->query("SELECT count(*) as Count FROM `oc_product_to_position` WHERE start_pallet = 13");			
+			if(isset($isitFilled->row['count']) && $isitFilled->row['count']>0)
+				$status = "Assigned Not Empty";			
+		}
 		else 
+			$status = "Not Assigned Empty";
+		return $status;
+
+	}
+	public function getNextPalletID($palletID,$i){
+		$palletInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $palletID");
+		$row    = $palletInfo->row["shelf_id"];
+		if((int)$palletInfo->row["x_position"]+$i>5)
+			return -1;
+		$xPos   = (int)$palletInfo->row["x_position"]+$i+1;
+		$unitID = $palletInfo->row["unit_id"];
+		$nextPalletID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
+		return $nextPalletID;
+	}
+	public function assignPalletProduct($beltID,$productID,$beltCount,$update){
+		error_log("Z $beltID,$productID,$beltCount,$update");
+		// check before inserting
+		$assignable = false;
+		if($beltCount > 1 ){
+			for($i=0;$i<$beltCount-1;$i++){
+				/// get next bent id
+				$nextBeltID = $this->getNextPalletID($beltID,$i);
+				$palletStats = $this->getPalletStatus($nextBeltID);
+				if($palletStats == "Empty" || $palletStats == "Assigned Empty")
+				{
+					// if assigned empty and the cells before it is also assigned empty
+					// to delete the record of $nextPalletID
+					$assignable = true;
+					continue;
+				}
+				else if($palletStats == "Assigned Not Empty"){
+					$assignable = false;
+					break;
+				}
+					
+			}
+			$assignable = true;
+		}
+		error_log("We are here 0: $update,$assignable,$beltCount");
+
+		if($update == "false" && $assignable){
+			error_log("We are here to live");
+			// all the cells to be written
+			for($i=1;$i<=$beltCount;$i++){
+				if($i>1){
+					$beltID = $this->getNextPalletID($beltID);
+				}
+				$assigned = $this->db->query("
+					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
+					VALUES (NULL,$beltID, $productID, $beltCount,$i, current_timestamp(), current_timestamp(), NULL);");
+				print_r($assigned);
+				error_log("Assigned $assigned");
+			}
+				
+		}	
+		else {
+			error_log("We are here to live in another way");
 			$updated = $this->db->query("
-				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$bentCount where start_pallet_id = $palletID");
+			UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount where start_pallet_id = $palletID");
+		}
+		
 		
 
 	}
