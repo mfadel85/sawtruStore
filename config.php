@@ -1,9 +1,10 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost/store/');
+//define('HTTP_SERVER', 'http://localhost/store/');
+define('HTTP_SERVER', 'http://192.168.2.108/store/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost/store/');
+define('HTTPS_SERVER', 'http://192.168.2.108/store/');
 //define('HTTPS_CATALOG', 'http://localhost/store/');
 // DIR
 define('DIR_APPLICATION', 'D:\WebServer\htdocs\store\catalog/');

@@ -224,7 +224,7 @@
 			
 			console.log(assignedProductID,productID);
 			$.ajax({
-				url: 'http://localhost/store/index.php?route=api/pallet/assignPalletProduct',
+				url: 'http://192.168.2.108/store/index.php?route=api/pallet/assignPalletProduct',
 				async: false,
 				type: 'post',
 				data: {palletID: barCode, productID:productID,bentCount:palletCount,update:update},
@@ -242,7 +242,7 @@
 	var api_token = '';
 
 	$.ajax({
-	  url: 'http://localhost/store/index.php?route=api/login&key=LA6g3ogGx7lgceCO2uiFZJ4QCwfe93SY54OYi2Pvjnrnxr55sFygOMT1sATi0b7y439oTRZPlM2s9ZY9Qt6tLOYqyDcoVXmhNAChHV2wL3ptKSlaWxMtO5XHhsokshxVyCGiKgMMU775z4IVy549FxY4rTRYb8UVlGNHJBcDIQgkRXdWziUpkzJP6ybm1gUPIIVn5ehCXxQTiRXvqXc6dd0zz4MddwWnQdRMMbdS5wF2IszhxPunqKAYx2If6YZA',
+	  url: 'http://192.168.2.108/store/index.php?route=api/login&key=LA6g3ogGx7lgceCO2uiFZJ4QCwfe93SY54OYi2Pvjnrnxr55sFygOMT1sATi0b7y439oTRZPlM2s9ZY9Qt6tLOYqyDcoVXmhNAChHV2wL3ptKSlaWxMtO5XHhsokshxVyCGiKgMMU775z4IVy549FxY4rTRYb8UVlGNHJBcDIQgkRXdWziUpkzJP6ybm1gUPIIVn5ehCXxQTiRXvqXc6dd0zz4MddwWnQdRMMbdS5wF2IszhxPunqKAYx2If6YZA',
 	  type: 'post',
 	  dataType: 'json',
 	  data: '',
@@ -291,7 +291,7 @@
 
 	function getProductID(barcode){
 		$.ajax({
-			url: 'http://localhost/store/index.php?route=api/product/get',
+			url: 'http://192.168.2.108/store/index.php?route=api/product/get',
 			async: false,
 		  	type: 'post',
 		  	data: {sku: barcode},
@@ -360,7 +360,7 @@
 			return;
 		}				
 		$.ajax({
-			url:'http://localhost/store/index.php?route=api/pallet/updateStock',
+			url:'http://192.168.2.108/store/index.php?route=api/pallet/updateStock',
 			type:'post',
 			data:{
 				palletID: barCode,
