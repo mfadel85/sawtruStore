@@ -1,10 +1,22 @@
 <?php
 class ModelCatalogUnit extends Model {
-    public function addUnit(){
+    public function addUnit($data){
 
+        $this->db->query("INSERT INTO " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name']) . "', barcode = '" . $this->db->escape($data['barcode']) . "'");
+
+        $unit_id = $this->db->getLastId();
+		$this->cache->delete('unit');
+
+		return $unit_id;
     }
-    public function editUnit(){
-
+    public function editUnit($unit_id, $data){
+		$this->db->query("UPDATE " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name'])  . "', barcode = '" . (int)$this->db->escape($data['barcode']) . "'  WHERE unit_id = '" . (int)$unit_id . "'");
+        $this->cache->delete('unit');
+    }
+    public function deleteUnit($unit_id){
+        // we have to delete all of its shelves and belts
+        $this->db->query("DELETE FROM " . DB_PREFIX . "unit WHERE unit_id = '" . (int)$unit_id . "'");
+		$this->cache->delete('unit_id');
     }
     public function getTotalUnits($data = array()){
         $sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "unit";
@@ -21,5 +33,10 @@ class ModelCatalogUnit extends Model {
             $units[] = $result;
         }
         return $units;
+    }
+
+    public function getUnit($unit_id){
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "unit p  WHERE p.unit_id = '" . (int)$unit_id . "' ");
+		return $query->row;        
     }
 }
