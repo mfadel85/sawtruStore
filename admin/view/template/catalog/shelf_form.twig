@@ -26,15 +26,7 @@
       <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-shelf" class="form-horizontal">
         <div class="tab-content">
           <div class="tab-content">
-            <div class="form-group required">
-              <label class="col-sm-2 control-label" for="input-model">{{ entry_name }}</label>
-              <div class="col-sm-10">
-                <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control"/>
-                  {% if error_model %}
-                <div class="text-danger">{{ error_name }}</div>
-                  {% endif %}
-              </div>
-            </div>
+
             <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-barcode"><span data-toggle="tooltip" title="{{ help_barcode }}">{{ entry_barcode }}</span></label>
                 <div class="col-sm-10">
@@ -42,14 +34,14 @@
                 </div>
               </div>                
             </div>
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-height"><span data-toggle="tooltip" title="{{ help_height }}">{{ entry_height }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control"/>
                 </div>
               </div>                
             </div>   
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-physical-row"><span data-toggle="tooltip" title="{{ help_physical_row }}">{{ entry_physical_row }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="physical_row" value="{{ physical_row }}" placeholder="{{ entry_physical_row }}" id="input-physical_row" class="form-control"/>

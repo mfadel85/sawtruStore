@@ -50,13 +50,12 @@ class ControllerCatalogShelf extends Controller {
                 'unit_id'  => $shelf['unit_id'],
                 'unit_name'=> $shelf['unit_name'],
                 'physical_row' => $shelf['physical_row'],
-                'widht'    => $shelf['width'],
-                'edit'     => $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
+                'width'    => $shelf['width'],
+                'edit'     => $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] . $url, true)
 
             );
         }
 
-        print_r($shelvesResults);
 
         $data['user_token'] = $this->session->data['user_token'];
 		if (isset($this->session->data['success'])) {
@@ -96,7 +95,7 @@ class ControllerCatalogShelf extends Controller {
         $this->load->model('catalog/shelf');
         //print_r($this->validateForm());
         if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
-			$this->model_catalog_unit->addUnit($this->request->post);
+			$this->model_catalog_shelf->addShelf($this->request->post);
 			$this->session->data['success'] = $this->language->get('text_success');
 			$url = '';
 			$this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
@@ -105,8 +104,20 @@ class ControllerCatalogShelf extends Controller {
         $this->getForm();
     }
 
-    public function edit($shelf_id){
-        
+    public function edit(){
+        $this->load->language('catalog/shelf');
+        $this->document->setTitle($this->language->get('heading_title'));
+        $this->load->model('catalog/shelf');
+        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
+            //print_r($this->request->get['shelf_id']);
+            //print_r($this->request->post);
+            $this->model_catalog_shelf->editShelf($this->request->get['shelf_id'],$this->request->post);
+			$this->session->data['success'] = $this->language->get('text_success');
+            $url = '';
+            $this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
+
+        }
+        $this->getForm(); 
     }    
 
     public function getForm(){
@@ -145,18 +156,52 @@ class ControllerCatalogShelf extends Controller {
 
 		$data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
         if (isset($this->request->get['shelf_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$shelf_info = $this->model_catalog_unit->getShelf($this->request->get['shelf_id']);
+            $shelf_info = $this->model_catalog_shelf->getShelf($this->request->get['shelf_id']);
         }   
+        if (isset($this->request->post['shelf_physical_row'])) {
+			$data['physical_row'] = $this->request->post['shelf_physical_row'];
+		} elseif (!empty($shelf_info)) {
+			$data['physical_row'] = $shelf_info['shelf_physical_row'];
+		} else {
+			$data['physical_row'] = '';
+        }
+
+		if (isset($this->request->post['barcode'])) {
+			$data['barcode'] = $this->request->post['barcode'];
+		} elseif (!empty($shelf_info)) {
+			$data['barcode'] = $shelf_info['barcode'];
+		} else {
+			$data['barcode'] = '';
+        }  
+
+		if (isset($this->request->post['height'])) {
+			$data['height'] = $this->request->post['height'];
+		} elseif (!empty($shelf_info)) {
+			$data['height'] = $shelf_info['height'];
+		} else {
+			$data['height'] = '';
+        }          
+
+		if (isset($this->request->post['unit_id'])) {
+			$data['unit_id'] = $this->request->post['unit_id'];
+		} elseif (!empty($shelf_info)) {
+			$data['unit_id'] = $shelf_info['unit_id'];
+		} else {
+			$data['unit_id'] = '';
+        }   
+
+		if (isset($this->request->post['width'])) {
+			$data['width'] = $this->request->post['width'];
+		} elseif (!empty($shelf_info)) {
+			$data['width'] = $shelf_info['width'];
+		} else {
+			$data['width'] = '';
+        }             
+
         $data['user_token'] = $this->session->data['user_token'];
         $this->load->model('localisation/language');
         $data['languages'] = $this->model_localisation_language->getLanguages();        
-		if (isset($this->request->post['barcode'])) {
-			$data['barcode'] = $this->request->post['barcode'];
-		} elseif (!empty($unit_info)) {
-			$data['barcode'] = $unit_info['barcode'];
-		} else {
-			$data['barcode'] = '';
-		} 
+
 
         $data['units'] = array();
         $filter_data = array();
@@ -173,5 +218,21 @@ class ControllerCatalogShelf extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
         $this->response->setOutput($this->load->view('catalog/shelf_form', $data));    
 
+    }
+    public function delete(){
+
+        $this->load->language('catalog/shelf');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('catalog/shelf');
+
+        if (isset($this->request->post['selected']) /*&& $this->validateDelete()*/) {
+            foreach ($this->request->post['selected'] as $shelf_id) {
+                $this->model_catalog_shelf->deleteShelf($shelf_id);
+            }
+            $this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
+
+        }
     }
 }

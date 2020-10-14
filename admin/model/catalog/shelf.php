@@ -1,15 +1,35 @@
 <?php
 class ModelCatalogShelf extends Model {
     public function addShelf($data){
+        $this->db->query("INSERT INTO " . DB_PREFIX . "shelf SET 
+        shelf_physical_row = '" . $this->db->escape($data['physical_row']) . "', 
+        barcode = '" . $this->db->escape($data['barcode']) . "',
+        unit_id = '" . $this->db->escape($data['unit_name']) . "',
+        height = '" . $this->db->escape($data['height']) . "',
+        width = '" . $this->db->escape($data['width']) . "'
+        ");
 
+        $shelf_id = $this->db->getLastId();
+		$this->cache->delete('shelf');
+		return $shelf_id;
     }
 
     public function editShelf($shelf_id,$data){
-
+        print_r("Hello World");
+        $this->db->query("UPDATE " . DB_PREFIX . "shelf 
+        SET shelf_physical_row = '" . $this->db->escape($data['physical_row'])  . "', 
+        barcode = '" . (int)$this->db->escape($data['barcode']) . "',  
+        unit_id = '" . $this->db->escape($data['unit_name']) . "',
+        height = '" . $this->db->escape($data['height']) . "',
+        width = '" . $this->db->escape($data['width']) . "'
+        WHERE shelf_id = '" . (int)$shelf_id . "'");
+        $this->cache->delete('shelf');
     }
 
-    public function deleteShelf($row_id){
-
+    public function deleteShelf($shelf_id){
+        // we have to delete all of its  belts
+        $this->db->query("DELETE FROM " . DB_PREFIX . "shelf WHERE shelf_id = '" . (int)$shelf_id . "'");
+		$this->cache->delete('shelf_id');
     }
     
     public function getTotalShelves($unit_id=0,$data=array()){
@@ -31,6 +51,7 @@ class ModelCatalogShelf extends Model {
 
     }
     public function getShelf($shelf_id){
-
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "shelf   WHERE shelf_id = '" . (int)$shelf_id . "' ");
+		return $query->row; 
     }
 }

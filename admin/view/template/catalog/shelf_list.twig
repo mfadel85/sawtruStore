@@ -45,8 +45,9 @@
                       <td class="text-left"> {{ column_unit }}</td>
                       <td class="text-left"> {{ column_barcode }}</td>
                       <td class="text-left"> {{ column_height }}</td>
-                      <td class="text-left"> {{ column_width }}</td>
                       <td class="text-left"> {{ column_physical_row }}</td>
+                      <td class="text-left"> {{ column_width }}</td>
+
                       <td class="text-right">{{ column_action }}</td>
                     </tr>
                   </thead>
@@ -63,9 +64,9 @@
                       <td class="text-left">{{ shelf.physical_row }}</td>
                       <td class="text-left">{{ shelf.unit_name }}</td>
                       <td class="text-left">{{ shelf.barcode }}</td>
-                      <td class="text-left">{{ shelf.height }}</td>
+                      <td class="text-left">{{ shelf.height }} mm</td>
                       <td class="text-left">{{ shelf.physical_row }}</td>
-                      <td class="text-left">{{ shelf.width }}</td>
+                      <td class="text-left">{{ shelf.width }} mm</td>
 
                       <td class="text-right"><a href="{{ shelf.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
 
