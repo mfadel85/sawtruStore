@@ -42,7 +42,23 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);
 			}
-			
+
+			if ($this->user->hasPermission('access', 'catalog/unit')) {
+				$catalog[] = array(
+					'name'	   => $this->language->get('text_unit'),
+					'href'     => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+
+			if ($this->user->hasPermission('access', 'catalog/shelf')) {
+				$catalog[] = array(
+					'name'	   => $this->language->get('text_shelf'),
+					'href'     => $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+
 			if ($this->user->hasPermission('access', 'catalog/recurring')) {
 				$catalog[] = array(
 					'name'	   => $this->language->get('text_recurring'),

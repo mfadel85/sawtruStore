@@ -66,6 +66,32 @@ class ModelCatalogPallet extends Model {
 
 		return $countAvailable;
 	}
+	public function getProductHeight($productID){
+		$height = $this->db->query("SELECT height FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
+		$height = $height->rows[0]["height"];
+		return $height;
+	}
+	public function getShelfHeight($beltID){
+		$shelfID = $this->db->query("select shelf_id from oc_pallet where pallet_id=$beltID")->rows[0]['shelf_id'];
+		$shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` where shelf_id =$shelfID")->rows[0]['height'];
+		return $shelfHeight;
+	}
+	public function verifyShelfProduct($beltID,$productID){
+		$shelfHeight = $this->getShelfHeight($beltID);
+		$productHeight = $this->getProductHeight($productID);
+		error_log(" shelfheigt $shelfHeight Product height $productHeight");
+		if((int)$shelfHeight >= (int)$productHeight){
+			error_log(" kill you?");
+
+			return true;
+		}
+		else {
+			error_log(" kill them?");
+
+			return false;
+
+		}
+	}
 	public function verifyProductPallet($palletID,$productID){
 		// check if a pallet is assigned or not
 		$countQuery = $this->getPalletProduct($palletID,$productID);
@@ -79,6 +105,13 @@ class ModelCatalogPallet extends Model {
 		}
 
 		else {
+			print_r(" PP is $palletID, prdct is $productID");
+
+			if(!$this->verifyShelfProduct($palletID,$productID)){
+				//print_r("got you");
+				return "Not Allowed Operation";
+			}
+				
 			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $palletID group by start_pallet");
 			if( $isItAssigned->num_rows > 0)
 				return "Assigned to another Product";
@@ -161,6 +194,9 @@ class ModelCatalogPallet extends Model {
 			}
 			$assignable = true;
 		}
+		else {
+			$assignable = true;
+		}
 		error_log("We are here 0: $update,$assignable,$beltCount");
 
 		if($update == "false" && $assignable){
@@ -168,7 +204,7 @@ class ModelCatalogPallet extends Model {
 			// all the cells to be written
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
-					$beltID = $this->getNextPalletID($beltID,$i); 
+					$beltID = $this->getNextPalletID($beltID,1); 
 					error_log("beltID is $beltID i is $i");
 				}
 				$assigned = $this->db->query("

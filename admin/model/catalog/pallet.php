@@ -63,9 +63,12 @@ class ModelCatalogPallet extends Model {
 	}
     public function getMap(){
 		$map = array();
-		$query = $this->db->query("SELECT * from oc_pallet op left join oc_pallet_product opp
-		on op.pallet_id = opp.start_pallet_id
-		order by unit_id,shelf_id,x_position");
+		//MFH we have to chnage the way we are showing the map
+		$query = $this->db->query("
+			SELECT * from oc_pallet op 
+			left join oc_pallet_product opp
+		    on op.pallet_id = opp.start_pallet_id /*where opp.position < 2*/
+		    order by unit_id,shelf_id,x_position");  
 
 		$skipCount = 0;
 		$i = 0;
@@ -90,7 +93,7 @@ class ModelCatalogPallet extends Model {
 			$barcode    = $pallet['barcode'];
 			$information = array();
 			$availableSpace = -1;
-			if($productID != null ){
+			if($productID != null && isset($pallet['position']) && $pallet['position']==1){
 				$information    = $this->getProductPositionInfo($palletID,$productID);
 
 				if($information != "0"){
@@ -121,7 +124,7 @@ class ModelCatalogPallet extends Model {
 						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$bentCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
 				}
 			}
-			else {
+			else  {
 				$productName = "NA";
 				$oppQuery = $this->db->query("select * from oc_pallet_product where start_pallet_id =$palletID limit 1");
 				$availableSpace = -1;// to be calculated

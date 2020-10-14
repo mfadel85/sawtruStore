@@ -37,8 +37,6 @@ class ControllerCatalogStockManagement extends Controller
     public function index()
     {	
 		$this->document->addScript('view/javascript/jquery-ui.js');
-		//$this->document->addScript('https://code.jquery.com/ui/1.12.1/jquery-ui.js'); /// no need for this at all
-		//$this->document->addStyle('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
         $this->document->addStyle('view/stylesheet/jquery-ui.css');
 
         $this->load->language('catalog/stock_management');

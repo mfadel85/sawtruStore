@@ -39,20 +39,32 @@ class ControllerApiPallet extends Controller
 		$this->response->setOutput(json_encode($json));		 		
 	}
 	public function assignPalletProduct(){
+
 		$json = array();
 		if(!isset($_POST['palletID']) || !isset($_POST['productID']) || $_POST['bentCount']==''){
 			$json['error']=1;
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($json));
 		}
-		$palletID  = $_POST['palletID'];
-		$productID = $_POST['productID'];
-		$bentCount = $_POST['bentCount'];
-		$update    = $_POST['update'];
-		error_log("$palletID $productID  $bentCount $update");
-		/// check if it can't be assigned, or updated???
 		$this->load->model('catalog/pallet');
-		$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount,$update);
+		$valid = $this->model_catalog_pallet->verifyShelfProduct($_POST['palletID'],$_POST['productID']);
+		error_log("$valid is valid");
+		if(!$valid){
+			$json['error']=1;
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+
+		}
+		else {
+			$palletID  = $_POST['palletID'];
+			$productID = $_POST['productID'];
+			$bentCount = $_POST['bentCount'];
+			$update    = $_POST['update'];
+			error_log("$palletID $productID  $bentCount $update");
+			/// check if it can't be assigned, or updated???
+			$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount,$update);
+		}
+
 	}
 
 	public function getAvailableSpace(){
@@ -115,7 +127,7 @@ class ControllerApiPallet extends Controller
 		$this->load->model('catalog/pallet');
 		$assigned = $this->model_catalog_pallet->verifyProductPallet($palletID,$productID);
 		error_log("Assigned $assigned");
-		if($assigned == "Assigned to another Product" )
+		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation")
 			$json = "Not Allowed Operation";
 		else {
 			$json = array();

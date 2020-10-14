@@ -238,7 +238,7 @@ class Cart {
 				} else {
 					$recurring = false;
 				}
-				$positionQueryString = "SELECT optp.product_id, optp.shelf_id,optp.unit_id as unitID,optp.start_pallet,op.x_position as xPos ,
+				$positionQueryString = "SELECT shelf_physical_row,optp.product_id, optp.shelf_id,optp.unit_id as unitID,optp.start_pallet,op.x_position as xPos ,
 				os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
 				join oc_pallet op on optp.start_pallet = op.pallet_id 
 				join oc_shelf os on os.shelf_id = op.shelf_id WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
@@ -247,7 +247,7 @@ class Cart {
 
 				if($cart['quantity'] == 1){
 					$xPos = $position_query->row['xPos'];
-					$yPos = $position_query->row['yPos'];
+					$yPos = $position_query->row['shelf_physical_row'];
 				}
 					
 				else if($cart['quantity']> 1){
