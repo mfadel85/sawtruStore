@@ -52,18 +52,24 @@ class ModelCatalogShelf extends Model {
             $this->db->query($query);
         }
     }
-
+    public function getBelts($shelf_id){
+        $beltsResults = $this->db->query("SELECT * from oc_pallet where shelf_id=$shelf_id");
+        $belts = array();
+        foreach($beltsResults->rows as $belt){
+            $belts[] = $belt;
+        }
+        return $belts;
+    }
     public function updateBarcodes($shelf_id,$data){
+        /// VIN to be implemented
         $beltCount =  (int)$this->db->escape($data['beltCount']);
         
         for($i = 0;$i<$beltCount;$i++){
             $j = $i+1;
             $inputName = 'barcode'.$j;
             /// get belt id 
-            print_r($this->db->escape($data[$inputName]));
-            echo "   ";
+
         }
-        die();
 
     }
     public function getUnitID($shelf_id){

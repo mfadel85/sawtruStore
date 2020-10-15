@@ -165,7 +165,18 @@ class ControllerCatalogShelf extends Controller {
         }        
         $data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
         $data['beltCount'] = 8;// to be defined automatically
+        $data['belts'][] = array();
+        $results = $this->model_catalog_shelf->getBelts($this->request->get['shelf_id']);
+        /*echo "<pre>";
+        print_r($results);
+        echo "</pre>";*/
+        foreach($results as $result){
 
+            $data['belts'][] = array(
+                'belt_id' => $result['pallet_id'],
+                'barcode' => $result['barcode'],
+            );
+        }
         $data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');

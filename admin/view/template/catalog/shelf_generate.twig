@@ -39,7 +39,7 @@
                   <div class="form-group required">
                     <label class="col-sm-2 control-label" for="input-barcode{{ i }}"><span data-toggle="tooltip" title="{{ help_barcode }}">{{ entry_barcode_generate ~ i }}</span></label>
                     <div class="col-sm-10">
-                      <input type="text" name="barcode{{i}}" value="{{ barcode }}" placeholder="{{ entry_barcode_generate ~ i }}" id="input-barcode{{ i }}" class="form-control"/>
+                      <input type="text" name="barcode{{i}}" value="{{ belts[i].barcode  }}" placeholder="{{ entry_barcode_generate ~ i }}" id="input-barcode{{ i }}" class="form-control"/>
                     </div>
                   </div> 
                 {% endfor %}
