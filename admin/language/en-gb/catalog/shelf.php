@@ -13,6 +13,8 @@ $_['text_success']           = 'Success: You have modified Shelves!';
 $_['text_list']              = 'Shelf List';
 $_['text_add']               = 'Add Shelf';
 $_['text_edit']              = 'Edit Shelf';
+$_['text_generate_barcode']  = 'Belts Barcodes';
+$_['entry_barcode_generate'] = 'Belt Barcode';
 $_['entry_name']             = 'Shelf Row';
 $_['entry_barcode']          = 'Shelf Barcode';
 $_['entry_height']           = 'Shelf Height';
@@ -30,6 +32,9 @@ $_['column_physical_row']    = 'Physical Row';
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';
 $_['button_edit']            = 'Edit';
+$_['button_generate']        = 'Generate Belts';
+
+$_['column_generate_belts']  = 'Edit Belts';
 
 // Help
 $_['help_barcode']               = 'Enter a valid barcode!!';

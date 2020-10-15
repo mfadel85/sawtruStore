@@ -1,0 +1,59 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-product" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+   <div class="container-fluid">{% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %} 
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-list"></i> {{ text_generate_barcode }}</h3>
+          </div>
+          <div class="panel-body">
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-shelf" class="form-horizontal">
+              <div class="tab-content">
+              {% set k = beltCount %}
+                {% for i in range(1,beltCount) %}
+
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-barcode{{ i }}"><span data-toggle="tooltip" title="{{ help_barcode }}">{{ entry_barcode_generate ~ i }}</span></label>
+                    <div class="col-sm-10">
+                      <input type="text" name="barcode{{i}}" value="{{ barcode }}" placeholder="{{ entry_barcode_generate ~ i }}" id="input-barcode{{ i }}" class="form-control"/>
+                    </div>
+                  </div> 
+                {% endfor %}
+                </div>
+              </div>
+              <input type="hidden" value = {{ beltCount}} name="beltCount">
+
+            </form>
+
+          </div>
+        </div>  
+      </div>
+    </div>
+    {{ beltCount }}
+    </div>
+</div>
+{{ footer }}

@@ -47,6 +47,7 @@
                       <td class="text-left"> {{ column_height }}</td>
                       <td class="text-left"> {{ column_physical_row }}</td>
                       <td class="text-left"> {{ column_width }}</td>
+                      <td class="text-right">{{ column_generate_belts }}</td>
 
                       <td class="text-right">{{ column_action }}</td>
                     </tr>
@@ -67,6 +68,14 @@
                       <td class="text-left">{{ shelf.height }} mm</td>
                       <td class="text-left">{{ shelf.physical_row }}</td>
                       <td class="text-left">{{ shelf.width }} mm</td>
+                      <input type="hidden" value="{{ shelf.type  }}" name="noBelt">
+                    
+                 
+
+                      <td class="text-right">
+                        <a href="{{ shelf.generate }}" data-toggle="tooltip" title="{{ button_generate }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+
+                      </td>
 
                       <td class="text-right"><a href="{{ shelf.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
 

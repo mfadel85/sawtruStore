@@ -38,14 +38,53 @@ class ModelCatalogShelf extends Model {
 
 		return $query->row['total'];
     }
+    public function generateBelts($shelf_id,$data){// we need barcodes
+        $unit_id = $this->getUnitID($shelf_id);
+        $beltCount =  (int)$this->db->escape($data['beltCount']);
+        for($i = 0;$i<$beltCount;$i++){
+            $j = 1+$i;
+            $inputName = 'barcode'.$j;
+            $barcodeValue = $this->db->escape($data[$inputName]);
+            $query = "INSERT INTO `oc_pallet` 
+            (`pallet_id`, `shelf_id`, `x_position`, `barcode`, `unit_id`, `date_modified`, `date_created`) 
+            VALUES 
+            (NULL, '$shelf_id', ' $j', '$barcodeValue', '$unit_id', current_timestamp(), current_timestamp());";
+            $this->db->query($query);
+        }
+    }
 
+    public function updateBarcodes($shelf_id,$data){
+        $beltCount =  (int)$this->db->escape($data['beltCount']);
+        
+        for($i = 0;$i<$beltCount;$i++){
+            $j = $i+1;
+            $inputName = 'barcode'.$j;
+            /// get belt id 
+            print_r($this->db->escape($data[$inputName]));
+            echo "   ";
+        }
+        die();
+
+    }
+    public function getUnitID($shelf_id){
+        $unit_id = $this->db->query("SELECT unit_id from oc_shelf where shelf_id=$shelf_id")->rows[0]['unit_id'];
+        return $unit_id;
+    }
     public function getShelves($unit_id,$data=array()){
         $shelves = array();
         $sql = "SELECT shelf_id,os.barcode,height,width,os.unit_id,name as unit_name,shelf_physical_row as physical_row FROM `oc_shelf` 
         os join oc_unit ou on os.unit_id = ou.unit_id where active = 1 ORDER BY `shelf_id` ASC";
         $query = $this->db->query($sql);
-        foreach($query->rows as $shelf)
+        foreach($query->rows as $shelf){
+            $shelf_id= $shelf['shelf_id'];
+            $count = $this->db->query("SELECT count(pallet_id) as count  from oc_pallet where shelf_id =$shelf_id")->rows[0]['count'];
+            if($count>0)
+                $shelf['noBelts'] = false;
+            else 
+                $shelf['noBelts'] = true;
             $shelves[] = $shelf;
+        }
+            
         return $shelves;
 
 

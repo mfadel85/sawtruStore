@@ -43,6 +43,17 @@ class ControllerCatalogShelf extends Controller {
         $shelves_total = $this->model_catalog_shelf->getTotalShelves(0);
         $shelvesResults = $this->model_catalog_shelf->getShelves($filter_data);
         foreach($shelvesResults as $shelf){
+            if($shelf['noBelts'] ){
+                $beltsLink = 'catalog/shelf/generate';
+                $type = "generate";
+            }
+            else {
+                $beltsLink = 'catalog/shelf/editBarcodes';
+                $type = "modify";
+
+            }
+                
+
             $data['shelves'][]= array(
                 'shelf_id' => $shelf['shelf_id'],
                 'barcode'  => $shelf['barcode'],
@@ -51,8 +62,10 @@ class ControllerCatalogShelf extends Controller {
                 'unit_name'=> $shelf['unit_name'],
                 'physical_row' => $shelf['physical_row'],
                 'width'    => $shelf['width'],
-                'edit'     => $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] . $url, true)
-
+                'noBelts'  => $shelf['noBelts'],
+                'type'    => $type,
+                'edit'     => $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] . $url, true),
+                'generate'     => $this->url->link($beltsLink, 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] .'&type=' . $type . $url, true),
             );
         }
 
@@ -89,6 +102,76 @@ class ControllerCatalogShelf extends Controller {
 
 		$this->response->setOutput($this->load->view('catalog/shelf_list', $data));
     }
+    public function generate(){
+        $this->load->model('catalog/shelf');
+
+        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
+            //print_r($this->request->get['shelf_id']);
+            $this->model_catalog_shelf->generateBelts($this->request->get['shelf_id'],$this->request->post);
+			$this->session->data['success'] = $this->language->get('text_success');
+            $this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
+        }        
+        $this->getBeltsForm(); 
+        
+    }
+    public function editBarcodes(){
+        $this->load->language('catalog/shelf');
+        $this->document->setTitle($this->language->get('heading_title'));
+        $this->load->model('catalog/shelf');
+        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
+            //print_r($this->request->get['shelf_id']);
+            //print_r($this->request->post);
+            $this->model_catalog_shelf->updateBarcodes($this->request->get['shelf_id'],$this->request->post);
+			$this->session->data['success'] = $this->language->get('text_success');
+            $url = '';
+            $this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
+
+        }
+        $this->getBeltsForm(); 
+    }
+    public function getBeltsForm(){
+        $this->load->model('catalog/unit');
+        $this->load->model('catalog/shelf'); 
+        $this->load->language('catalog/shelf');
+  
+        $data['text_form'] = !isset($this->request->get['shelf_id']) ? $this->language->get('text_add'): $this->language->get('text_edit');
+		if (isset($this->error['warning'])) {
+			$data['error_warning'] = $this->error['warning'];
+		} else {
+			$data['error_warning'] = '';
+        }   
+        if (isset($this->error['name'])) {
+			$data['error_name'] = $this->error['name'];
+		} else {
+			$data['error_name'] = array();
+        }
+        $url = '';
+		$data['breadcrumbs'] = array();
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+		);
+
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true)
+        );   
+        //print_r($this->request);
+		if ($this->request->get['type'] =="generate") {
+			$data['action'] = $this->url->link('catalog/shelf/generate', 'user_token=' . $this->session->data['user_token']. '&shelf_id=' . $this->request->get['shelf_id']  . $url, true);
+		} else {
+			$data['action'] = $this->url->link('catalog/shelf/editBarcodes', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $this->request->get['shelf_id'] . $url, true);
+        }        
+        $data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
+        $data['beltCount'] = 8;// to be defined automatically
+
+        $data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+        $this->response->setOutput($this->load->view('catalog/shelf_generate', $data));    
+
+    }    
     public function add(){
         $this->load->language('catalog/shelf');
         $this->document->setTitle($this->language->get('heading_title'));
