@@ -52,13 +52,13 @@ class ModelCatalogPallet extends Model {
 		$length    = $productInfo->row['length'];
 		$height    = $productInfo->row['height'];
 		$name      = $productInfo->row['name'];
-		$bentCount = $productInfo->row['bent_count'];
+		$beltCount = $productInfo->row['bent_count'];
 		$max = floor(PALLET_DEPTH / $width);
 		$lengthClassID = $productInfo->row['length_class_id'];
 		$weight = $productInfo->row['weight'];
 		$availableSpace = PALLET_DEPTH - $count*$width;
 		$countAvailable = floor($availableSpace / $width);
-		$result = [$countAvailable, $name,$bentCount,$pallet,$max];
+		$result = [$countAvailable, $name,$beltCount,$pallet,$max];
 		return $result;
 	}
     public function getMap(){
@@ -86,7 +86,8 @@ class ModelCatalogPallet extends Model {
 			$productID= $pallet['product_id'];
 			$shelfID= $pallet['shelf_id'];
 			$countQuery = $this->db->query("SELECT count(*) as count ,product_id as productID FROM `oc_product_to_position` WHERE start_pallet = ".$pallet['pallet_id']." and status='Ready'" );
-
+			$beltCount = 1;
+			$max = 10;
 			$count      = $countQuery->row["count"];
 			$productID  = $countQuery->row["productID"] ?? $pallet['product_id'];
 			$palletID   = $pallet['pallet_id'];
@@ -100,7 +101,7 @@ class ModelCatalogPallet extends Model {
 					$max            = $information[4];
 					$availableSpace = $max - $count;
 					$productName    = $information[1];
-					$bentCount      = $information[2];
+					$beltCount      = $information[2];
 					$pallet         = $information[3];
 				}
 				else {
@@ -111,17 +112,22 @@ class ModelCatalogPallet extends Model {
 					and language_id=". (int)$this->config->get('config_language_id'));
 
 					$availableSpace = $max = floor(PALLET_DEPTH / $nameQuery->rows[0]["width"]);				
-					$bentCount = $pallet['bent_count'];
+					$beltCount = $pallet['bent_count'];
 					$pallet = $pallet['pallet_id'];
 					$productName = $nameQuery->rows[0]["name"];	
 
 				}
 
-				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$bentCount ,$max,$column,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
-				if($bentCount-1>0){
-					$skipCount = $bentCount -1;
-					for($j=1;$j<$skipCount+1;$j++)
-						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$bentCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+				$skipCount = $beltCount -1;
+				if($skipCount-1>0){
+					for($j=1;$j<$skipCount+1;$j++) 							// $barcode will change
+					{
+						$nextBeltID = $this->getNextBeltID($palletID,$j);
+						$barcode = $this->db->query("select barcode from oc_pallet where pallet_id = $nextBeltID")->rows[0]['barcode'];
+						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+					}
+						
 				}
 			}
 			else  {
@@ -140,18 +146,32 @@ class ModelCatalogPallet extends Model {
 							and language_id=". (int)$this->config->get('config_language_id'));		
 						$productName = $nameQuery->rows[0]["name"];	
 						$availableSpace = floor(PALLET_DEPTH / $nameQuery->rows[0]["width"]);
-						if($bentCount-1>0){
-							$skipCount = $nameQuery->rows[0]["bent_count"] - 1;
+						$beltCount = $nameQuery->rows[0]["bent_count"];
+						if($beltCount-1>0){
+							$skipCount = $beltCount - 1;
 							for($j=1;$j<$skipCount+1;$j++)
-								$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$bentCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+								$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
 						}
 					}
 				}
-				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$bentCount,$max ,$column,$row,$barcode]; /// has to be an array current,produt name,product id ,how many pallets will take]
+				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount,$max ,$column,$row,$barcode]; /// has to be an array current,produt name,product id ,how many pallets will take]
 			}
 		}
 		return $map;
 	}
+	public function getNextBeltID($beltID,$i){
+		$palletInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
+		$row    = $palletInfo->row["shelf_id"];
+		if((int)$palletInfo->row["x_position"]>5)
+			return -1;
+
+		$xPos   = (int)$palletInfo->row["x_position"]+$i;
+		$xPosX = (int)$palletInfo->row["x_position"];
+		error_log("before $xPosX, after xPos is $xPos ");
+		$unitID = $palletInfo->row["unit_id"];
+		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
+		return $nextBeltID;
+	}	
 	public function getUnits(){
 		$units = array();
 		$query = $this->db->query("SELECT * FROM `oc_unit` order by unit_id");

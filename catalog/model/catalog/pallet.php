@@ -197,7 +197,7 @@ class ModelCatalogPallet extends Model {
 		else {
 			$assignable = true;
 		}
-		error_log("We are here 0: $update,$assignable,$beltCount");
+		error_log("We are here 0: $update,$assignable,$beltCount,$beltID");
 
 		if($update == "false" && $assignable){
 			error_log("We are here to live");
@@ -216,13 +216,38 @@ class ModelCatalogPallet extends Model {
 				
 		}	
 		else {
-			for($i=1;$i<=$beltCount;$i++){
-				if($i>1){ // comment
-					$beltID = $this->getNextPalletID($beltID,$i); 
-				}
-				error_log("We are here to live in another way");
+			// get the prev position
+			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
+			$prevPosition  = $prevInfo->rows[0]['position'];
+			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
+			error_log("Prov position is $prevPosition, prev beltCount is $prevBeltCount");
+			/* fix the prev position by deleteing them */
+			$updated = $this->db->query("
+				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1 
+				where start_pallet_id = $beltID
+			");
+			/// based on prev position and belt count if prev position is the first,
+			/// if it is the last, 
+			///if it is in the middle
+			/// we have to two type of cells: to be deleted(before updated cells and after updated cells) and to be updated
+			$tobeDeletedCount = $prevPosition - 1;
+			error_log("To be deleted $tobeDeletedCount ");
+
+			for($j=1;$j<=$tobeDeletedCount;$j++){
+				$prevBeltID = $this->getNextPalletID($beltID,$j*-1);
+				error_log("previous cell is $prevBeltID ");
+
+				$deleted  = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $prevBeltID");
+			}
+			/// updated cells here
+			for($i=1;$i<$beltCount;$i++){
+				
+				$beltID = $this->getNextPalletID($beltID,$i); 
+				
+				error_log("We are here to live in another way: update next cells");
 				$updated = $this->db->query("
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i where start_pallet_id = $beltID");
+				// if update gave no results then create
 			}
 		
 		}
