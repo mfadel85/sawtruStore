@@ -7,6 +7,8 @@ $_['error_warning']          = 'Warning: Please check the form carefully for err
 $_['error_permission']       = 'Warning: You do not have permission to modify Units!';
 $_['error_name']             = 'Shelf Name must be greater than 1 and less than 255 characters!';
 $_['error_barcode']          = 'Barcode must be valid!!';
+$_['error_height']           = 'Height must be valid!!';
+$_['error_barcode1']         = 'Barcode for belt 1 must be valid!!';
 
 // Text
 $_['text_success']           = 'Success: You have modified Shelves!';

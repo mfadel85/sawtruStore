@@ -7,7 +7,6 @@ class ControllerCatalogShelf extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('catalog/unit');
         $this->load->model('catalog/shelf');
-
         $this->getList();
     }
 
@@ -103,9 +102,11 @@ class ControllerCatalogShelf extends Controller {
 		$this->response->setOutput($this->load->view('catalog/shelf_list', $data));
     }
     public function generate(){
+        $this->load->language('catalog/shelf');
         $this->load->model('catalog/shelf');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
+        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateBeltsForm()*/){
             //print_r($this->request->get['shelf_id']);
             $this->model_catalog_shelf->generateBelts($this->request->get['shelf_id'],$this->request->post);
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -329,4 +330,43 @@ class ControllerCatalogShelf extends Controller {
 
         }
     }
+    protected function validateSehlfForm() {
+		if (!$this->user->hasPermission('modify', 'catalog/shelf')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		
+		if ((utf8_strlen($this->request->post['height']) < 1) || (utf8_strlen($this->request->post['height']) > 255)) {
+            // checked if it is numerical
+			$this->error['height'] = $this->language->get('error_height');
+		}
+	
+		if ($this->error && !isset($this->error['warning'])) {
+			$this->error['warning'] = $this->language->get('error_warning');
+		}
+
+		return !$this->error;
+    }
+
+    protected function validateBeltsForm() {
+		if (!$this->user->hasPermission('modify', 'catalog/shelf')) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
+        $value = isValidBarcode($this->request->post['barcode1']);
+
+		
+        if ( (utf8_strlen($this->request->post['barcode1']) < 1) || 
+             (utf8_strlen($this->request->post['barcode1']) > 15) || 
+             !isValidBarcode($this->request->post['barcode1'])
+        ) {
+			$this->error['barcode1'] = $this->language->get('error_barcode1');
+		}
+	
+		if ($this->error && !isset($this->error['warning'])) {
+			$this->error['warning'] = $this->language->get('error_warning');
+		}
+
+		return !$this->error;
+	}    
+    
 }
