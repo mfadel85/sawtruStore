@@ -99,7 +99,7 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		try {
 			$address="192.168.250.37";//127.0.0.1
-			$address="192.168.2.108";//127.0.0.1
+			$address=IP;//127.0.0.1
 			//$address="127.0.0.1";//127.0.0.1
 
 			$port="11111";

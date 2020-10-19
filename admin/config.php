@@ -3,14 +3,14 @@
 //error_reporting(E_ERROR | E_PARSE);
 
 //define('HTTP_SERVER', 'http://localhost/store/admin/');
-define('HTTP_SERVER', 'http://192.168.2.108/store/admin/');
-define('HTTP_CATALOG', 'http://192.168.2.108/store/');
+define('HTTP_SERVER', 'http://192.168.2.109/store/admin/');
+define('HTTP_CATALOG', 'http://192.168.2.109/store/');
 //define('HTTP_CATALOG', 'http://localhost/store/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://192.168.2.108/store/admin/');
+define('HTTPS_SERVER', 'http://192.168.2.109/store/admin/');
 //define('HTTPS_SERVER', 'http://localhost/store/admin/');
-define('HTTPS_CATALOG', 'http://192.168.2.108/store/');
+define('HTTPS_CATALOG', 'http://192.168.2.109/store/');
 //define('HTTPS_CATALOG', 'http://localhost/store/');
 
 //define('HTTPS_CATALOG', 'http://localhost/store/');
@@ -38,5 +38,6 @@ define('DB_PASSWORD', '');
 define('DB_DATABASE', 'store');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
+define('IP', '192.168.2.109');
 // MFH
 

@@ -69,7 +69,7 @@ class ModelCatalogPallet extends Model {
 			left join oc_pallet_product opp
 		    on op.pallet_id = opp.start_pallet_id /*where opp.position < 2*/
 		    order by unit_id,shelf_id,x_position");  
-
+		//print_r($query);
 		$skipCount = 0;
 		$i = 0;
 		foreach ($query->rows as $pallet) {
@@ -83,8 +83,8 @@ class ModelCatalogPallet extends Model {
 				$column +=COLUMN_COUNT;
 			$row = ($i-$column)/COLUMN_COUNT+1;
 			$unitID = $pallet['unit_id'];
-			$productID= $pallet['product_id'];
-			$shelfID= $pallet['shelf_id'];
+			$productID = $pallet['product_id'];
+			$shelfID = $pallet['shelf_id'];
 			$countQuery = $this->db->query("SELECT count(*) as count ,product_id as productID FROM `oc_product_to_position` WHERE start_pallet = ".$pallet['pallet_id']." and status='Ready'" );
 			$beltCount = 1;
 			$max = 10;
@@ -119,11 +119,13 @@ class ModelCatalogPallet extends Model {
 				}
 
 				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+				error_log("Pallet id is $palletID, product id is $productID, Belt Count is $beltCount");
 				$skipCount = $beltCount -1;
-				if($skipCount-1>0){
+				if($skipCount>0){
 					for($j=1;$j<$skipCount+1;$j++) 							// $barcode will change
 					{
 						$nextBeltID = $this->getNextBeltID($palletID,$j);
+						error_log("next Belt id is $nextBeltID");
 						$barcode = $this->db->query("select barcode from oc_pallet where pallet_id = $nextBeltID")->rows[0]['barcode'];
 						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
 					}
