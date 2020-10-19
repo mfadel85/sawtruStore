@@ -121,11 +121,11 @@ class ControllerApiPallet extends Controller
      **/
     public function updateStock()
     {
-		$palletID  = $_POST['palletID'];
+		$beltBarcode  = $_POST['palletID'];
 		$productID = $_POST['productID'];
 		// verifiy if this product assigned to this pallet
 		$this->load->model('catalog/pallet');
-		$assigned = $this->model_catalog_pallet->verifyProductPallet($palletID,$productID);
+		$assigned = $this->model_catalog_pallet->b($beltBarcode,$productID);
 		error_log("Assigned $assigned");
 		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation")
 			$json = "Not Allowed Operation";

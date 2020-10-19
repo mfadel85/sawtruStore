@@ -159,6 +159,7 @@ class ModelCatalogPallet extends Model {
 				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount,$max ,$column,$row,$barcode]; /// has to be an array current,produt name,product id ,how many pallets will take]
 			}
 		}
+		//print_r($map);
 		return $map;
 	}
 	public function getNextBeltID($beltID,$i){

@@ -72,14 +72,25 @@ class ModelCatalogPallet extends Model {
 		return $height;
 	}
 	public function getShelfHeight($beltID){
+		error_log("Shelf Height: Belt ID is : $beltID");
 		$shelfID = $this->db->query("select shelf_id from oc_pallet where pallet_id=$beltID")->rows[0]['shelf_id'];
+		error_log("Shelf ID : $shelfID");
+
 		$shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` where shelf_id =$shelfID")->rows[0]['height'];
+		error_log("Shelf height : $shelfHeight");
+
 		return $shelfHeight;
 	}
-	public function verifyShelfProduct($beltID,$productID){
+	public function getBeltID($barcode){
+		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = $barcode");
+		return $barcodeResult->rows[0]['pallet_id'];
+	}
+	public function verifyShelfProduct($beltBarcode,$productID){
+		$beltID = $this->getBeltID("$beltBarcode");
+		error_log("$beltID  is belt id ");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
-		error_log(" shelfheigt $shelfHeight Product height $productHeight");
+		error_log(" shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
 		if((int)$shelfHeight >= (int)$productHeight){
 			error_log(" kill you?");
 
@@ -92,9 +103,9 @@ class ModelCatalogPallet extends Model {
 
 		}
 	}
-	public function verifyProductPallet($palletID,$productID){
+	public function verifyProductPallet($beltBarcode,$productID){
 		// check if a pallet is assigned or not
-		$countQuery = $this->getPalletProduct($palletID,$productID);
+		$countQuery = $this->getPalletProduct($beltBarcode,$productID);
 		//var_dump($countQuery);
 		$count = -1;
 		if(isset($countQuery['Count'])){
@@ -105,14 +116,14 @@ class ModelCatalogPallet extends Model {
 		}
 
 		else {
-			print_r(" PP is $palletID, prdct is $productID");
+			error_log(" beltBarcode is $beltBarcode, prdct is $productID");
 
-			if(!$this->verifyShelfProduct($palletID,$productID)){
+			if(!$this->verifyShelfProduct($beltBarcode,$productID)){
 				//print_r("got you");
 				return "Not Allowed Operation";
 			}
-				
-			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $palletID group by start_pallet");
+			$beltID = $this->getBeltID($beltBarcode);
+			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $beltID group by start_pallet");
 			if( $isItAssigned->num_rows > 0)
 				return "Assigned to another Product";
 			else 
@@ -166,7 +177,8 @@ class ModelCatalogPallet extends Model {
 		$nextPalletID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextPalletID;
 	}
-	public function assignPalletProduct($beltID,$productID,$beltCount,$update){
+	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
+		$beltID = $this->getBeltID($beltBarcode);
 		error_log("Z $beltID,$productID,$beltCount,$update");
 		// check before inserting
 		$assignable = false;
@@ -230,14 +242,21 @@ class ModelCatalogPallet extends Model {
 			/// if it is the last, 
 			///if it is in the middle
 			/// we have to two type of cells: to be deleted(before updated cells and after updated cells) and to be updated
-			$tobeDeletedCount = $prevPosition - 1;
-			error_log("To be deleted $tobeDeletedCount ");
+			$tobeDeletedPrevCount = $prevPosition - 1;
+			error_log("To be deleted $tobeDeletedPrevCount ");
 
-			for($j=1;$j<=$tobeDeletedCount;$j++){
+			for($j=1;$j<=$tobeDeletedPrevCount;$j++){
 				$prevBeltID = $this->getNextPalletID($beltID,$j*-1);
 				error_log("previous cell is $prevBeltID ");
 
 				$deleted  = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $prevBeltID");
+			}
+			$tobeDeletedNextCount = $prevBeltCount -$prevPosition;
+			for($j=1;$j<=$tobeDeletedNextCount;$j++){
+				$nextBeltID = $this->getNextPalletID($beltID,$j);
+				error_log("next cell is $nextBeltID ");
+
+				$deleted  = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $nextBeltID");
 			}
 			/// updated cells here
 			for($i=1;$i<$beltCount;$i++){
