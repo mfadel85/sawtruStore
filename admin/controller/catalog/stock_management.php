@@ -62,8 +62,12 @@ class ControllerCatalogStockManagement extends Controller
 		
 		$data['products'] = array();
 		$data['products'] = $this->model_catalog_product->getProducts();
-        $data['breadcrumbs'] = array();
 
+		$data['decreasedProducts'] = array();
+		$data['decreasedProducts'] = $this->model_catalog_product->getDecreasedProducts();
+		
+		
+		$data['breadcrumbs'] = array();
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link(

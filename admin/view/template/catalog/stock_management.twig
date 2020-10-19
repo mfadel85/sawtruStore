@@ -66,24 +66,23 @@
 		</div>
 		<div class="col-sm-2">
     		<h3>Out of stock soon!!</h3>
-			<ul>
-				<li>Milk only 5 pcs left</li>
-				<li>Pepsi only 3 pcs left</li>
-				<li>Lays only 1 pcs left</li>
-				<li>Nescafe 200gr only 2 pcs left</li>
 
+			<ul>
+			{% for product in decreasedProducts %}
+				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}} - {{ product['quantity'] }} pcs</li>
+			{% endfor %}
 			</ul>
+
+	
 		</div>
 		<div class="col-sm-2" style="background-color:grey;">
-		<h2>Products List</h2>
-		<input type="text" placeholder="type some product" />
-
-		<ul>
-		{% for product in products %}
-			<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}}</li>
-		{% endfor %}
-
-		</ul>		
+			<h2>Products List</h2>
+			<input type="text" placeholder="type some product" />
+			<ul>
+			{% for product in products %}
+				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}}</li>
+			{% endfor %}
+			</ul>		
 		</div>
 	</div>
   <br><BR><BR>
