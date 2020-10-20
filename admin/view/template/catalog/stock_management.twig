@@ -237,7 +237,8 @@
 				console.log(json);
 				if(json['error'] == 1)
 					alert('Not Allowed Operation');
-				console.log('helloe');
+				else 
+					location.reload();
 			});
 		}
 
@@ -385,6 +386,7 @@
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    } 
 		}).done(function(json){
+			console.log(json);
 			$("#productBarcode").val("");//units
 			$("#palletBarcode").val("");//units
 			$("#productID").val("");

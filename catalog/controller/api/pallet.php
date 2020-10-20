@@ -123,9 +123,11 @@ class ControllerApiPallet extends Controller
     {
 		$beltBarcode  = $_POST['palletID'];
 		$productID = $_POST['productID'];
+		error_log("BeltBarcode is  $beltBarcode, Product id i productID");
+
 		// verifiy if this product assigned to this pallet
 		$this->load->model('catalog/pallet');
-		$assigned = $this->model_catalog_pallet->b($beltBarcode,$productID);
+		$assigned = $this->model_catalog_pallet->verifyProductPallet($beltBarcode,$productID);
 		error_log("Assigned $assigned");
 		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation")
 			$json = "Not Allowed Operation";
@@ -136,7 +138,7 @@ class ControllerApiPallet extends Controller
 				$this->response->addHeader('Content-Type: application/json');
 				$this->response->setOutput(json_encode($json));
 			}		
-			$json = $this->model_catalog_pallet->updateStock($palletID,$productID);
+			$json = $this->model_catalog_pallet->updateStock($beltBarcode,$productID);
 		}
 
 
