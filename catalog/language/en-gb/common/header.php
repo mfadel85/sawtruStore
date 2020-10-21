@@ -1,6 +1,8 @@
 <?php
 // Text
 $_['text_home']          = 'Home';
+$_['text_qrcode']        = 'Scan the QRcode to get your order!!';
+
 $_['text_wishlist']      = 'Wish List (%s)';
 $_['text_shopping_cart'] = 'Shopping Cart';
 $_['text_category']      = 'Categories';
