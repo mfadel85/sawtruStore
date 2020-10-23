@@ -39,6 +39,20 @@ class ControllerCatalogStockManagement extends Controller
 		$this->document->addScript('view/javascript/jquery-ui.js');
         $this->document->addStyle('view/stylesheet/jquery-ui.css');
 
+
+		$this->document->addStyle('view/stylesheet/jquery-ui.css');		
+		$this->document->addStyle('view/vendor/animate/animate.css');
+		$this->document->addStyle('view/vendor/select2/select2.min.css');	
+		$this->document->addStyle('view/vendor/perfect-scrollbar/perfect-scrollbar.css');
+		$this->document->addStyle('view/css/util.css');
+		$this->document->addStyle('view/css/main.css');
+
+		$this->document->addScript('view/javascript/jquery-ui.js');
+		$this->document->addScript('view/vendor/bootstrap/js/popper.js');
+		$this->document->addScript('view/vendor/select2/select2.min.js');
+		$this->document->addScript('view/js/main.js');
+
+				
         $this->load->language('catalog/stock_management');
         $this->document->setTitle($this->language->get('heading_title'));
         $data = array();
