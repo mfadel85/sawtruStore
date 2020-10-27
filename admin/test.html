@@ -1,0 +1,21 @@
+<html>
+  <head>
+
+  </head>
+  <body>
+    <script>
+      const beltWidth= 70;
+      const productDimensions = [145,80,60];
+      const shelfDimenstion = [150,600,70];
+      function findBestPositioning(shelfDimenstion,productDimensions){
+        var productHeight = productDimensions.reduce(function(a,b){
+          return Math.max(a,b);
+        });
+        document.write("product height is: "+productHeight);
+      }
+      findBestPositioning(shelfDimenstion,productDimensions);
+  
+    </script>      
+  </body>
+
+</html>
