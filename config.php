@@ -1,10 +1,11 @@
 <?php
 // HTTP
 //define('HTTP_SERVER', 'http://localhost/store/');
-define('HTTP_SERVER', 'http://192.168.2.109/store/');
+define('IP', '192.168.2.108');
+define('HTTP_SERVER', "http://".IP."/store/");
 
 // HTTPS
-define('HTTPS_SERVER', 'http://192.168.2.109/store/');
+define('HTTPS_SERVER', "http://".IP."/store/");
 //define('HTTPS_CATALOG', 'http://localhost/store/');
 // DIR
 define('DIR_APPLICATION', 'D:\WebServer\htdocs\store\catalog/');
@@ -29,4 +30,3 @@ define('DB_PASSWORD', '');
 define('DB_DATABASE', 'store');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
-define('IP', '192.168.2.109');
