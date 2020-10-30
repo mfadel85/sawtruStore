@@ -6,17 +6,59 @@
     <script>
       const beltWidth= 70;
       const productDimensions = [145,80,60];
-      const shelfDimenstion = [150,600,70];
-      function findBestPositioning(shelfDimenstion,productDimensions){
+      const shelfDimension = [150,600,70];
+      function calculatePositioning(shelfDimension,productDimensions){
+        // calc and out put add
+      }
+      function findOptimizedPosition(shelfDimension,pd){
+        
+        calculatePositioning(shelfDimension,[pd[0],pd[1],pd[2]]);
+        calculatePositioning(shelfDimension,[pd[0],pd[2],pd[1]]);
+        calculatePositioning(shelfDimension,[pd[1],pd[2],pd[0]]);
+        calculatePositioning(shelfDimension,[pd[1],pd[0],pd[2]]);
+        calculatePositioning(shelfDimension,[pd[2],pd[0],pd[1]]);
+        calculatePositioning(shelfDimension,[pd[2],pd[1],pd[0]]);
+
+      }
+      function findBestPositioning(shelfDimension,productDimensions){
         var productHeight = productDimensions.reduce(function(a,b){
           return Math.max(a,b);
         });
+        var index = productDimensions.indexOf(productHeight);
+        if (index > -1) {
+          productDimensions.splice(index, 1);
+        }
+        var secondDim = productDimensions.reduce(function(a,b){
+          return Math.max(a,b);
+        });
         document.write("product height is: "+productHeight);
+        document.write(" Second Dim "+secondDim);
+
         // first step: find product height: the biggest value of them
         // second step: compare with teh shelfDimensoins[0] if smaller then consider this as a height and 
-        // continue to the next dimension
+        
+        if(productHeight >= shelfDimension[0])
+        {
+          document.write("you need a longer shelf for this product<br>");
+          return;
+        }
+        else 
+        {
+          var lastDim = productDimensions.reduce(function(a,b){
+            return Math.min(a,b);
+          });
+          if(lastDim > shelfDimension[2])
+            document.write("we need two belts<br>");
+ 
+          document.write("we need two belts<br>");
+
+          var count = Math.ceil(600/lastDim);
+          document.write("  Count is "+count+" taking two belts");
+          
+          
+        }
       }
-      findBestPositioning(shelfDimenstion,productDimensions);
+      findBestPositioning(shelfDimension,productDimensions);
   
     </script>      
   </body>
