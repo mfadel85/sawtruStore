@@ -1,6 +1,8 @@
 <?php
 class ModelCatalogShelf extends Model {
+
     public function addShelf($data){
+
         $this->db->query("INSERT INTO " . DB_PREFIX . "shelf SET 
         shelf_physical_row = '" . $this->db->escape($data['physical_row']) . "', 
         barcode = '" . $this->db->escape($data['barcode']) . "',

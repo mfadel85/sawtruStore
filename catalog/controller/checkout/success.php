@@ -2,7 +2,7 @@
 class ControllerCheckoutSuccess extends Controller {
 	public function index() {
 		$this->load->language('checkout/success');
-
+		$total = $this->cart->getTotal();
 		if (isset($this->session->data['order_id'])) {
 		    $products = $this->cart->getProducts();
 		    $jsonProducts = [];
@@ -37,7 +37,8 @@ class ControllerCheckoutSuccess extends Controller {
 				'OrderID'       => $this->session->data['order_id'],
 				'ProductsCount' => $productsCount,
 				'Products'      => $jsonProducts,
-				'OrderStatus'   => 'waiting'
+				'OrderStatus'   => 'waiting',
+				'total'         => $total
 			);
 
 			$json_data = json_encode($order);// path need to be changed
@@ -98,7 +99,7 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 		try {
-			$address="192.168.250.37";//127.0.0.1
+			$address="192.168.1.108";//127.0.0.1
 			$address=IP;//127.0.0.1
 			//$address="127.0.0.1";//127.0.0.1
 
@@ -112,6 +113,10 @@ class ControllerCheckoutSuccess extends Controller {
 			$this->response->setOutput($this->load->view('common/success', $data));				
 		} catch (Exception $e) {
 			print_r($e.Message);
+			// how to handle this error?
+			// add the order to be sent after a certain period
+			$this->response->setOutput($this->load->view('common/success', $data));				
+
 		}
 	}
 }

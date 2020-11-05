@@ -253,7 +253,7 @@ a:hover, a:focus {
 	margin-right: 5px;
 }
 #menu > li.active > a {
-	color: #0b91d2;
+	color: #db1112;
 	background-color: #171b21;
 }
 #menu > li > ul {
@@ -279,7 +279,7 @@ a:hover, a:focus {
 	background-color: #242d37;
 }
 #menu li li.active > a {
-	color: #0b91d2;
+	color: #db1112;
 	background-color: #242d37;
 }
 #menu li ul a {
@@ -446,7 +446,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	border-top: 2px solid #5cb7e7;
 }
 .panel-primary .panel-heading {
-	color: #1e91cf;
+	color: #db1112;
 	border-color: #96d0f0;
 	background: white;
 }
@@ -485,7 +485,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	transition: all 1s;
 }
 .tile-primary {
-	background-color: #1b80c2;
+	background-color: #db1112;
 }
 .tile-success {
 	background-color: #53b953;

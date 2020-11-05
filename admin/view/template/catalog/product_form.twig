@@ -28,7 +28,7 @@
             <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
             <li><a href="#tab-data" data-toggle="tab">{{ tab_data }}</a></li>
             <li><a href="#tab-links" data-toggle="tab" style="display: none;">{{ tab_links }}</a></li>
-            <li><a href="#tab-attribute" data-toggle="tab" style="display: none;">{{ tab_attribute }}</a></li>
+            <li><a href="#tab-attribute" data-toggle="tab" style="display: block;">{{ tab_attribute }}</a></li>
             <li><a href="#tab-option" data-toggle="tab" style="display: none;">{{ tab_option }}</a></li>
             <li><a href="#tab-recurring" data-toggle="tab" style="display: none;">{{ tab_recurring }}</a></li>
             <li><a href="#tab-discount" data-toggle="tab" style="display: none;">{{ tab_discount }}</a></li>
@@ -233,7 +233,7 @@
                     {% endfor %}</div>
                 </div>
               </div>
-              <div class="form-group" style="display: none;">
+              <div class="form-group" style="display: block;">
                 <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="filter" value="" placeholder="{{ entry_filter }}" id="input-filter" class="form-control"/>

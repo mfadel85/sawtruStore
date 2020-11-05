@@ -11,8 +11,9 @@ class ModelCatalogPallet extends Model {
 	}
 
 	public function getPalletProduct($palletID,$productID){
+		error_log(" zzz $palletID,$productID" );
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
-		WHERE product_id=$productID AND start_pallet= $palletID group by start_pallet");
+		WHERE product_id=$productID AND start_pallet= $palletID and status!='Sold' group by start_pallet");
 		return $query->row;
 	}
 
@@ -33,6 +34,7 @@ class ModelCatalogPallet extends Model {
 			return false;
 	}
 	public function getAvailablePositionsCount($palletID,$productID){
+		error_log("getAvailablePositionsCount $palletID,$productID");
 		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
 		$width = $width->rows[0]["width"];
 		$productData = $this->getPalletProduct($palletID,$productID);
@@ -40,8 +42,8 @@ class ModelCatalogPallet extends Model {
 
 		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
 			$count     =  $productData['Count'];
-			error_log("Count: ".$count);
-
+			error_log(" getAvailablePositionsCount Count: ".$count);
+			return $count;
 		}
 		else {
 			$countAvailable = floor(Pallet_Detph / $width);
@@ -105,7 +107,10 @@ class ModelCatalogPallet extends Model {
 	}
 	public function verifyProductPallet($beltBarcode,$productID){
 		// check if a pallet is assigned or not
-		$countQuery = $this->getPalletProduct($beltBarcode,$productID);
+		// I need barcode hre :D
+		$beltID = $this->getBeltID("$beltBarcode");
+
+		$countQuery = $this->getPalletProduct($beltID,$productID);
 		//var_dump($countQuery);
 		$count = -1;
 		if(isset($countQuery['Count'])){
@@ -131,7 +136,12 @@ class ModelCatalogPallet extends Model {
 		}
 	}
 	public function updateStock($palletID,$productID){
+		$palletID = $this->getBeltID("$palletID");
+
+		error_log("Step 0 $palletID,$productID");
 		$countAvailable = $this->getAvailablePositionsCount($palletID,$productID);
+		error_log("Step 1 $countAvailable");
+
 		if($countAvailable < 1){
 			return -1; 
 		}
@@ -139,6 +149,7 @@ class ModelCatalogPallet extends Model {
 		
 		$update = $this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = quantity+1 WHERE product_id = $productID");
 		if($update){
+			error_log("ZXY Belt is is $palletID");
 			$unitIDQuery  = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $palletID");
 			$unitID = $unitIDQuery->rows[0]['unit_id'];
 			$shelfID = $unitIDQuery->rows[0]['shelf_id'];

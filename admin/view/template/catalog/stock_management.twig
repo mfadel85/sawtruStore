@@ -138,8 +138,12 @@
 
 </div>
 <script type="text/javascript">
-	var IP = '192.168.2.109';
-
+	$("#productBarcode").focus();
+	var IP = '192.168.1.51';
+	const beltWidth= 70;
+  const productDimensions = [145,70,60];
+  const shelfDimension = [150,600,beltWidth];
+  
 	function allElementsFromPoint(x, y) {
 		console.log('movement');
 		var element, elements = [];
@@ -338,6 +342,7 @@
 	    });
 		return productId;
 	}
+8699878420021
 
 	$("#productBarcode").on("change", function () {
     	$('.activeCell').removeClass('activeCell');
@@ -354,6 +359,7 @@
 		}
 		
 		// if true get the product and its details and prepare the map
+		$("#palletBarcode").focus();
 	}); 
 
 	$("#palletBarcode").on("change", function () {
@@ -403,9 +409,33 @@
 			$("#bentCount").val("");
 			if(json == 1)
 	    		alert("Added to stock");
+			else 
+				alert("Failed to add to stock!!!");
 			location.reload();
 		});
 
 	}); 
+
+  function calculatePositioning(shelfDimension,productDimensions){
+	if(productDimensions[0]>=shelfDimension[0]){
+		return [0,0,0]; //0 product using zero belt
+	}
+	else {
+		let neededBeltCount = Math.ceil(productDimensions[1]/shelfDimension[2]);
+		let maxQuantitiy = Math.floor(shelfDimension[1]/productDimensions[2]);
+		let quantityPerBelt = maxQuantitiy/neededBeltCount;
+		return [quantityPerBelt,maxQuantitiy,neededBeltCount];
+	}
+	}
+	function findOptimizedPosition(shelfDimension,pd){
+		let allPostitions = [];
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[0],pd[1],pd[2]]));
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[0],pd[2],pd[1]]));
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[1],pd[2],pd[0]]));
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[1],pd[0],pd[2]]));
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[2],pd[0],pd[1]]));
+		allPostitions.push(calculatePositioning(shelfDimension,[pd[2],pd[1],pd[0]]));
+		console.log(allPostitions);
+	}
 </script>
 {{ footer }}

@@ -3,7 +3,7 @@
 //error_reporting(E_ERROR | E_PARSE);
 
 //define('HTTP_SERVER', 'http://localhost/store/admin/');
-define('IP', '192.168.2.108');
+define('IP', '192.168.1.51');
 
 define('HTTP_SERVER', "http://".IP."/store/admin/");
 define('HTTP_CATALOG', "http://".IP."/store/");

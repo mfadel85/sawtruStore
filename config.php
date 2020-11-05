@@ -1,7 +1,7 @@
 <?php
 // HTTP
 //define('HTTP_SERVER', 'http://localhost/store/');
-define('IP', '192.168.2.108');
+define('IP', '192.168.1.51');
 define('HTTP_SERVER', "http://".IP."/store/");
 
 // HTTPS
