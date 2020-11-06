@@ -25,9 +25,14 @@
 		<div class="col-sm-8">
 			<div class="container-fluid row">
 				<div class="form-group">
-					<label class="col-sm-2 control-label" for="">Product Barcode</label>
-					<div class="col-sm-10">
+					<label class="col-sm-1 control-label" for="">Product Barcode</label>
+					<div class="col-sm-5">
 						<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
+					</div>
+				
+					<label class="col-sm-1 control-label" for="">Product Name</label>
+					<div class="col-sm-5">
+						<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
 					</div>
 				</div>
 			</div>
@@ -329,14 +334,16 @@
       	$("."+model).animate({
         	opacity: 0.70,
         	color:"red"
-      	}).addClass( "activeCell" );;
-      		console.log(allCells);
+      	}).addClass( "activeCell" );
+      		console.log(json);
+      		console.log(json['name']);
 			$("#productID").val(productId);
 			$("#bentCount").html(json['bent_count']);
 			$("#length").html(parseFloat(json['length']).toFixed(2));
 			$("#width").html(parseFloat(json['width']).toFixed(2));
 			$("#depth").html(parseFloat(json['height']).toFixed(2));
 			$("#weight").html(parseFloat(json['weight']).toFixed(2));
+			$("#productName").val(json['name']);
 
 			return productId;
 	    });
