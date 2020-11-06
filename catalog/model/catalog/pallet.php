@@ -86,6 +86,9 @@ class ModelCatalogPallet extends Model {
 		return $shelfHeight;
 	}
 	public function getBeltID($barcode){
+		if(substr( $barcode, 0, 1 ) !== "0")
+			return $barcode;
+		error_log("ZXY $barcode");
 		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = $barcode");
 		return $barcodeResult->rows[0]['pallet_id'];
 	}
@@ -138,7 +141,8 @@ class ModelCatalogPallet extends Model {
 		}
 	}
 	public function updateStock($palletID,$productID){
-		$palletID = $this->getBeltID("$palletID");
+		if(substr( $palletID, 0, 1 ) === "0")
+			$palletID = $this->getBeltID($palletID);
 
 		error_log("Step 0 $palletID,$productID");
 		$countAvailable = $this->getAvailablePositionsCount($palletID,$productID);

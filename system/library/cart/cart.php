@@ -244,14 +244,16 @@ class Cart {
 					optp.product_id,
 					optp.shelf_id,
 					optp.unit_id as unitID,
-					ou.direction as direction ,
+					
 					optp.start_pallet,
 					op.x_position as xPos ,
 					os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
 					join oc_pallet op on optp.start_pallet = op.pallet_id 
 					join oc_shelf os on os.shelf_id = op.shelf_id 
-					join oc_unit ou where optp.unit_id = ou.unit_id
+					
 					WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
+					error_log($positionQueryString);
+					//die();
 				$position_query = $this->db->query($positionQueryString);
 
 
@@ -279,7 +281,7 @@ class Cart {
 					'xPos'            => $xPos,//// maybe we have multiple xPos
 					'yPos'            => $yPos,/// maybe we have multiple yPos
 					'unit_id'         => $position_query->row['unitID'],
-					'direction'       => $position_query->row['direction'],
+					'direction'       => "Left",
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],
 					'model'           => $product_query->row['model'],
