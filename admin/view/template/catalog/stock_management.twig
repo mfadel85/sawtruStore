@@ -333,10 +333,10 @@
       		console.log(allCells);
 			$("#productID").val(productId);
 			$("#bentCount").html(json['bent_count']);
-			$("#length").html(json['length']);
-			$("#width").html(json['width']);
-			$("#depth").html(json['height']);
-			$("#weight").html(json['weight']);
+			$("#length").html(parseFloat(json['length']).toFixed(2));
+			$("#width").html(parseFloat(json['width']).toFixed(2));
+			$("#depth").html(parseFloat(json['height']).toFixed(2));
+			$("#weight").html(parseFloat(json['weight']).toFixed(2));
 
 			return productId;
 	    });

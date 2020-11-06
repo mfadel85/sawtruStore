@@ -1237,3 +1237,16 @@ upload/system/storage/vendor/symfony/property-access/composer.json
 upload/system/storage/vendor/symfony/property-access/README.md
 upload/system/storage/vendor/symfony/property-info/CHANGELOG.md
 upload/system/storage/vendor/symfony/property-info/LICENSE
+admin/controller/extension/payment/old/nochex.php
+admin/controller/extension/payment/old/paymate.php
+admin/controller/extension/payment/old/paypoint.php
+admin/controller/extension/payment/old/perpetual_payments.php
+admin/controller/extension/payment/old/pp_express.php
+admin/controller/extension/payment/old/pp_payflow_iframe.php
+admin/controller/extension/payment/old/pp_payflow.php
+admin/controller/extension/payment/old/realex.php
+admin/controller/extension/payment/old/sagepay_server.php
+upload/system/storage/vendor/bacon/bacon-qr-code/LICENSE
+upload/system/storage/vendor/bacon/bacon-qr-code/phpunit.xml.dist
+upload/system/storage/vendor/bacon/bacon-qr-code/src/Common/BitArray.php
+upload/system/storage/vendor/bacon/bacon-qr-code/src/Common/BitUtils.php
