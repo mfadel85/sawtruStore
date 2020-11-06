@@ -17,7 +17,10 @@ class ControllerCheckoutSuccess extends Controller {
 						$currentArary['xPos'] = $product['xPos'][$i];
 						$currentArary['yPos'] = $product['yPos'][$i];
 						$currentArary['unitID'] = $product['unit_id'];/// check this
+						$currentArary['direction'] = $product['direction'];/// check this
 						$currentArary['bentCount'] = $product['bent_count']; 
+						$currentArary['price']     = $product['price']; 
+
 						$jsonProducts[] = $currentArary;
 					}
 				}	
@@ -28,7 +31,10 @@ class ControllerCheckoutSuccess extends Controller {
 					$currentArary['xPos'] = $product['xPos'];
 					$currentArary['yPos'] = $product['yPos'];
 					$currentArary['unitID'] = $product['unit_id'];/// check this
+					$currentArary['direction'] = $product['direction'];/// check this
 					$currentArary['bentCount'] = $product['bent_count']; 
+					$currentArary['price'] = $product['price']; 
+
 					$jsonProducts[] = $currentArary;
 				}			
 			}

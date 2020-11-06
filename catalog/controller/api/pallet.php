@@ -129,7 +129,9 @@ class ControllerApiPallet extends Controller
 		$this->load->model('catalog/pallet');
 		$assigned = $this->model_catalog_pallet->verifyProductPallet($beltBarcode,$productID);
 		error_log("Assigned $assigned");
-		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation")
+		// check if allowerd 
+		$availablePositions = $this->model_catalog_pallet->getAvailablePositionsCount($beltBarcode,$productID);
+		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation" || $availablePositions < 1)
 			$json = "Not Allowed Operation";
 		else {
 			$json = array();

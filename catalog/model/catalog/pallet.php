@@ -33,11 +33,13 @@ class ModelCatalogPallet extends Model {
 		else 
 			return false;
 	}
-	public function getAvailablePositionsCount($palletID,$productID){
-		error_log("getAvailablePositionsCount $palletID,$productID");
+	public function getAvailablePositionsCount($beltBarcode,$productID){
+		$beltID = $this->getBeltID("$beltBarcode");
+
+		error_log("getAvailablePositionsCount $beltID,$productID");
 		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
 		$width = $width->rows[0]["width"];
-		$productData = $this->getPalletProduct($palletID,$productID);
+		$productData = $this->getPalletProduct($beltID,$productID);
 
 
 		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
