@@ -106,7 +106,7 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		try {
 			$address="192.168.1.108";//127.0.0.1
-			$address=IP;//127.0.0.1
+			$address=CONNECTORIP;//127.0.0.1
 			//$address="127.0.0.1";//127.0.0.1
 
 			$port="11111";
@@ -114,7 +114,8 @@ class ControllerCheckoutSuccess extends Controller {
 			socket_connect($sock,$address,$port) or die("Could not connect to the socket");
 			socket_write($sock,$json_data);
 			$read=socket_read($sock,1024);
-			echo $read; 
+			//echo $read; 
+			$data['result'] = $read;
 			socket_close($sock);
 			$this->response->setOutput($this->load->view('common/success', $data));				
 		} catch (Exception $e) {

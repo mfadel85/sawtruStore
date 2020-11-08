@@ -356,14 +356,14 @@
 
 		//don't activate this if the input is not 13 digit
 		var barCode = $("#productBarcode").val();	
-		if(barCode.length > 12){
+		//if(barCode.length > 12){
 			var test1 = isValidBarcode(barCode);
 			if(!test1){
 				alert('not valid barcode');
 				event.preventDefault();
 			}
 			productID = getProductID(barCode);	
-		}
+		//}
 		
 		// if true get the product and its details and prepare the map
 		$("#palletBarcode").focus();
@@ -415,7 +415,7 @@
 			$("#weight").val("");
 			$("#bentCount").val("");
 			if(json == 1)
-	    		alert("Added to stock");
+	    		console.log("Added to stock");
 			else 
 				alert("Failed to add to stock!!!");
 			location.reload();

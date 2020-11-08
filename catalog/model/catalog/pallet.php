@@ -77,7 +77,10 @@ class ModelCatalogPallet extends Model {
 	}
 	public function getShelfHeight($beltID){
 		error_log("Shelf Height: Belt ID is : $beltID");
-		$shelfID = $this->db->query("select shelf_id from oc_pallet where pallet_id=$beltID")->rows[0]['shelf_id'];
+		error_log("Query is : select shelf_id from oc_pallet where pallet_id=$beltID");
+		$shelfIDResult = $this->db->query("select shelf_id from oc_pallet where pallet_id=$beltID");
+
+		$shelfID = $shelfIDResult->rows[0]['shelf_id'];
 		error_log("Shelf ID : $shelfID");
 
 		$shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` where shelf_id =$shelfID")->rows[0]['height'];
@@ -86,6 +89,11 @@ class ModelCatalogPallet extends Model {
 		return $shelfHeight;
 	}
 	public function getBeltID($barcode){
+		//$realBarcode = false;
+		//$isItBarcode = $this->db->query("select * from oc_pallet where barcode = '$barcode' ");
+		//if(count($isItBarcode->rows) > 0)
+			
+		// sometimes passed as barcode, sometimes passed as id how to distinguish
 		if(substr( $barcode, 0, 1 ) !== "0")
 			return $barcode;
 		error_log("ZXY $barcode");
@@ -94,7 +102,7 @@ class ModelCatalogPallet extends Model {
 	}
 	public function verifyShelfProduct($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
-		error_log("$beltID  is belt id ");
+		error_log("ZZZ $beltID  is belt id ");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
 		error_log(" shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
