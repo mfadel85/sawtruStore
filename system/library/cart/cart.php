@@ -263,7 +263,12 @@ class Cart {
 				}
 					
 				else if($cart['quantity']> 1){
+					$xPos = array();
+					$yPos = array();
 					foreach($position_query->rows as $product){
+						/*print_r("started 0");
+						print_r($product);
+						print_r("Ended 1");*/
 						$xPos[] = $product['xPos'];/// Null ??
 						$yPos[] = $product['yPos'];/// Null ??
 					}

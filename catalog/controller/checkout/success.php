@@ -46,7 +46,7 @@ class ControllerCheckoutSuccess extends Controller {
 				'OrderStatus'   => 'waiting',
 				'total'         => $total
 			);
-
+			print_r($order);
 			$json_data = json_encode($order);// path need to be changed
 			$result = file_put_contents('data.json', $json_data);			
 			print_r('Result: ');

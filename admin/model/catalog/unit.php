@@ -19,7 +19,7 @@ class ModelCatalogUnit extends Model {
 		$this->cache->delete('unit_id');
     }
     public function getTotalUnits($data = array()){
-        $sql = "SELECT COUNT(*) as total FROM " . DB_PREFIX . "unit";
+        $sql = "SELECT COUNT(*) as total FROM oc_unit";
         $query = $this->db->query($sql);
 
 		return $query->row['total'];
