@@ -33,11 +33,14 @@ final class Versions
      * @internal
      */
     const VERSIONS          = array (
+  'bacon/bacon-qr-code' => '2.0.2@add6d9ff97336b62f95a3b94f75cea4e085465b2',
   'braintree/braintree_php' => '3.2.0@c7e0e2d1ae21d659cddb5507fb0bf181813b5733',
   'cardinity/cardinity-sdk-php' => 'v1.0.3@f51f6fbacee393b4eeff7b80be2b1cee77896b4c',
   'clue/stream-filter' => 'v1.4.1@5a58cc30a8bd6a4eb8f856adf61dd3e013f53f71',
   'composer/package-versions-deprecated' => '1.11.99@c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855',
+  'dasprid/enum' => '1.0.3@5abf82f213618696dda8e3bf6f64dd042d8542b2',
   'divido/divido-php' => 'v1.15-stable@8edd902ec2be8151331985021107031292b41ca1',
+  'endroid/qr-code' => '3.9.3@58d5872ca46b99b5c2e72cd2c8dea09ce2988156',
   'guzzlehttp/guzzle' => '5.3.3@93bbdb30d59be6cd9839495306c65f2907370eb9',
   'guzzlehttp/log-subscriber' => '1.0.1@99c3c0004165db721d8ef7bbef60c996210e538a',
   'guzzlehttp/oauth-subscriber' => '0.2.0@03f1ebe31d3112526106d0570c80eba6820e86e5',
@@ -47,8 +50,10 @@ final class Versions
   'guzzlehttp/streams' => '3.0.0@47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5',
   'http-interop/http-factory-guzzle' => '1.0.0@34861658efb9899a6618cef03de46e2a52c80fc0',
   'jean85/pretty-package-versions' => '1.5.1@a917488320c20057da87f67d0d40543dd9427f7a',
+  'khanamiryan/qrcode-detector-decoder' => '1.0.3@89b57f2d9939dd57394b83f6ccbd3e1a74659e34',
   'klarna/kco_rest' => 'v2.2.0@8a2142a2ebb087bb61901d51d1bb9698790e78c5',
   'leafo/scssphp' => 'v0.0.12@ff76df3e45af45e808f3fcd516a2cb5cbc77f45e',
+  'myclabs/php-enum' => '1.7.6@5f36467c7a87e20fbdc51e524fd8f9d1de80187c',
   'paragonie/random_compat' => 'v9.99.99@84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95',
   'php-http/client-common' => '2.3.0@e37e46c610c87519753135fb893111798c69076a',
   'php-http/discovery' => '1.10.0@88ff14cad4a0db68b343260fa7ac3f1599703660',
@@ -71,15 +76,20 @@ final class Versions
   'symfony/http-client-contracts' => 'v2.2.0@3a5d0fe7908daaa23e3dbf4cee3ba4bfbb19fdd3',
   'symfony/options-resolver' => 'v5.1.5@9ff59517938f88d90b6e65311fef08faa640f681',
   'symfony/polyfill-ctype' => 'v1.11.0@82ebae02209c21113908c229e9883c419720738a',
+  'symfony/polyfill-intl-grapheme' => 'v1.18.1@b740103edbdcc39602239ee8860f0f45a8eb9aa5',
+  'symfony/polyfill-intl-normalizer' => 'v1.18.1@37078a8dd4a2a1e9ab0231af7c6cb671b2ed5a7e',
   'symfony/polyfill-mbstring' => 'v1.11.0@fe5e94c604826c35a32fa832f35bd036b6799609',
   'symfony/polyfill-php73' => 'v1.18.1@fffa1a52a023e782cdcc221d781fe1ec8f87fcca',
   'symfony/polyfill-php80' => 'v1.18.1@d87d5766cbf48d72388a9f6b85f280c8ad51f981',
   'symfony/polyfill-uuid' => 'v1.18.1@da48e2cccd323e48c16c26481bf5800f6ab1c49d',
+  'symfony/property-access' => 'v5.1.7@4c43f7ff784e1e3ee1c96e15f76b342af6617b39',
+  'symfony/property-info' => 'v5.1.7@22518930091e0bdb249694efc509e3697f7e325e',
   'symfony/service-contracts' => 'v2.2.0@d15da7ba4957ffb8f1747218be9e1a121fd298a1',
+  'symfony/string' => 'v5.1.7@4a9afe9d07bac506f75bcee8ed3ce76da5a9343e',
   'symfony/translation' => 'v3.0.9@eee6c664853fd0576f21ae25725cfffeafe83f26',
   'symfony/validator' => 'v2.8.49@d5d2090bba3139d8ddb79959fbf516e87238fe3a',
   'zoujingli/wechat-php-sdk' => 'v1.3.17@afb0dfd1a0fd71cfe58b6811d559b6b0fc8f9de0',
-  'opencart/opencart' => 'dev-master@38eadfc46723c4a7a8a0eddefd7b234abef7f921',
+  'opencart/opencart' => 'dev-working@37e2ef4de061ea314c52c5b08fd82a558d69d0c6',
 );
 
     private function __construct()
