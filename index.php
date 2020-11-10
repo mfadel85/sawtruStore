@@ -23,8 +23,10 @@ if (!defined('DIR_APPLICATION')) {
 // VirtualQMOD
 require_once('./vqmod/vqmod.php');
 VQMod::bootup();
+//print_r($this->session->data['shipping_address']);
 
 // VQMODDED Startup
 require_once(VQMod::modCheck(DIR_SYSTEM . 'startup.php'));
+//print_r($this->session->data['shipping_address']);
 
 start('catalog');
