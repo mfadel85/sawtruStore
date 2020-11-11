@@ -3,6 +3,7 @@ class ControllerCommonHeader extends Controller {
 	public function index() {
 		// Analytics
 		$this->load->model('setting/extension');
+		
 
 		$data['analytics'] = array();
 

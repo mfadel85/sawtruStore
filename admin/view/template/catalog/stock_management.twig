@@ -252,8 +252,8 @@
 				console.log(json);
 				if(json['error'] == 1)
 					alert('Not Allowed Operation');
-				else 
-					location.reload();
+				//else 
+					//location.reload();
 			});
 		}
 
@@ -389,7 +389,7 @@
 			url:'http://'+IP+'/store/index.php?route=api/pallet/updateStock',
 			type:'post',
 			data:{
-				palletID: barCode,
+				barcode: barCode,
 				productID: productID
 			},
 

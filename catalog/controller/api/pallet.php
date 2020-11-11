@@ -121,7 +121,7 @@ class ControllerApiPallet extends Controller
      **/
     public function updateStock()
     {
-		$beltBarcode  = $_POST['palletID'];
+		$beltBarcode  = $_POST['barcode'];
 		$productID = $_POST['productID'];
 		error_log("BeltBarcode is  $beltBarcode, Product id i productID");
 

@@ -252,7 +252,7 @@ class Cart {
 					join oc_shelf os on os.shelf_id = op.shelf_id 
 					
 					WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
-					error_log($positionQueryString);
+					//error_log($positionQueryString);
 					//die();
 				$position_query = $this->db->query($positionQueryString);
 

@@ -13,7 +13,10 @@ class ModelCatalogPallet extends Model {
 	public function getPalletProduct($palletID,$productID){
 		error_log(" zzz $palletID,$productID" );
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
-		WHERE product_id=$productID AND start_pallet= $palletID and status!='Sold' group by start_pallet");
+		WHERE product_id=$productID AND start_pallet= $palletID and status != 'Sold' group by start_pallet");
+		error_log(" SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
+		WHERE product_id=$productID AND start_pallet= $palletID and status != 'Sold' group by start_pallet" );
+
 		return $query->row;
 	}
 
@@ -36,7 +39,6 @@ class ModelCatalogPallet extends Model {
 	public function getAvailablePositionsCount($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
 
-		error_log("getAvailablePositionsCount $beltID,$productID");
 		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
 		$width = $width->rows[0]["width"];
 		$productData = $this->getPalletProduct($beltID,$productID);
@@ -44,7 +46,6 @@ class ModelCatalogPallet extends Model {
 
 		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
 			$count     =  $productData['Count'];
-			error_log(" getAvailablePositionsCount Count: ".$count);
 			return $count;
 		}
 		else {
@@ -84,25 +85,27 @@ class ModelCatalogPallet extends Model {
 		error_log("Shelf ID : $shelfID");
 
 		$shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` where shelf_id =$shelfID")->rows[0]['height'];
+		error_log("SELECT height FROM `oc_shelf` where shelf_id =$shelfID");
 		error_log("Shelf height : $shelfHeight");
 
 		return $shelfHeight;
 	}
-	public function getBeltID($barcode){
+	private function getBeltID($barcode){
 		//$realBarcode = false;
 		//$isItBarcode = $this->db->query("select * from oc_pallet where barcode = '$barcode' ");
 		//if(count($isItBarcode->rows) > 0)
 			
 		// sometimes passed as barcode, sometimes passed as id how to distinguish
-		if(substr( $barcode, 0, 1 ) !== "0")
-			return $barcode;
-		error_log("ZXY $barcode");
+		/*if(substr( $barcode, 0, 1 ) !== "0")
+			return $barcode;*/
+		error_log("ZXY-2 Barcode $barcode");
 		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = $barcode");
+		error_log("SELECT pallet_id from oc_pallet where barcode = $barcode");
 		return $barcodeResult->rows[0]['pallet_id'];
 	}
 	public function verifyShelfProduct($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
-		error_log("ZZZ $beltID  is belt id ");
+		error_log("ZZZ $beltID  is belt id,Belt Barcode is $beltBarcode ");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
 		error_log(" shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
@@ -121,8 +124,8 @@ class ModelCatalogPallet extends Model {
 	public function verifyProductPallet($beltBarcode,$productID){
 		// check if a pallet is assigned or not
 		// I need barcode hre :D
-		$beltID = $this->getBeltID("$beltBarcode");
-
+		$beltID = $this->getBeltID($beltBarcode);
+		
 		$countQuery = $this->getPalletProduct($beltID,$productID);
 		//var_dump($countQuery);
 		$count = -1;
@@ -140,7 +143,6 @@ class ModelCatalogPallet extends Model {
 				//print_r("got you");
 				return "Not Allowed Operation";
 			}
-			$beltID = $this->getBeltID($beltBarcode);
 			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $beltID group by start_pallet");
 			if( $isItAssigned->num_rows > 0)
 				return "Assigned to another Product";
@@ -148,12 +150,12 @@ class ModelCatalogPallet extends Model {
 				return "Not Assigned";
 		}
 	}
-	public function updateStock($palletID,$productID){
-		if(substr( $palletID, 0, 1 ) === "0")
-			$palletID = $this->getBeltID($palletID);
-
-		error_log("Step 0 $palletID,$productID");
-		$countAvailable = $this->getAvailablePositionsCount($palletID,$productID);
+	public function updateStock($barcode,$productID){
+		/*if(substr( $palletID, 0, 1 ) === "0")
+			$palletID = $this->getBeltID($palletID);*/
+		$beltID =  $this->getBeltID($barcode);
+		error_log("Step 0 Barcode D:  $barcode,$productID");
+		$countAvailable = $this->getAvailablePositionsCount($barcode,$productID);
 		error_log("Step 1 $countAvailable");
 
 		if($countAvailable < 1){
@@ -163,12 +165,12 @@ class ModelCatalogPallet extends Model {
 		
 		$update = $this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = quantity+1 WHERE product_id = $productID");
 		if($update){
-			error_log("ZXY Belt is is $palletID");
-			$unitIDQuery  = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $palletID");
+			error_log("ZXY-1 Belt is is $barcode");
+			$unitIDQuery  = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $beltID");
 			$unitID = $unitIDQuery->rows[0]['unit_id'];
 			$shelfID = $unitIDQuery->rows[0]['shelf_id'];
 			$update = $this->db->query("INSERT INTO `oc_product_to_position` (`position_id`, `product_id`, `shelf_id`, `unit_id`, `start_pallet`, `expiry_date`, `date_added`) 
-				VALUES (NULL, '$productID', '$shelfID', '$unitID', '$palletID', '2022-04-30', CURRENT_TIMESTAMP);");
+				VALUES (NULL, '$productID', '$shelfID', '$unitID', '$beltID', '2022-04-30', CURRENT_TIMESTAMP);");
 			if($update)
 				return 1;
 
