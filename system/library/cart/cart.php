@@ -35,11 +35,13 @@ class Cart {
 	}
 
 	public function getProducts() {
+
 		$product_data = array();
 
 		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 
 		foreach ($cart_query->rows as $cart) {
+
 			$stock = true;
 
 			$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_store p2s LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p2s.product_id = '" . (int)$cart['product_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'");
@@ -100,7 +102,9 @@ class Cart {
 								);
 							}
 						} elseif ($option_query->row['type'] == 'checkbox' && is_array($value)) {
+
 							foreach ($value as $product_option_value_id) {
+
 								$option_value_query = $this->db->query("SELECT pov.option_value_id, pov.quantity, pov.subtract, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix, ovd.name FROM " . DB_PREFIX . "product_option_value pov LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (pov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 								if ($option_value_query->num_rows) {
@@ -238,39 +242,41 @@ class Cart {
 				} else {
 					$recurring = false;
 				}
+
 				$positionQueryString = "
 				SELECT 
 					shelf_physical_row,
 					optp.product_id,
 					optp.shelf_id,
 					optp.unit_id as unitID,
-					
+					ocu.direction as direction,
 					optp.start_pallet,
 					op.x_position as xPos ,
 					os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
 					join oc_pallet op on optp.start_pallet = op.pallet_id 
 					join oc_shelf os on os.shelf_id = op.shelf_id 
-					
+					join oc_unit ocu on ocu.unit_id = os.unit_id
 					WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
 					//error_log($positionQueryString);
 					//die();
 				$position_query = $this->db->query($positionQueryString);
 
-
+				//print_r($position_query);
 				if($cart['quantity'] == 1){
 					$xPos = $position_query->row['xPos'];
 					$yPos = $position_query->row['shelf_physical_row'];
+					$direction =  $position_query->row['direction'];
 				}
-					
+
 				else if($cart['quantity']> 1){
+
 					$xPos = array();
 					$yPos = array();
 					foreach($position_query->rows as $product){
-						/*print_r("started 0");
-						print_r($product);
-						print_r("Ended 1");*/
 						$xPos[] = $product['xPos'];/// Null ??
 						$yPos[] = $product['yPos'];/// Null ??
+						$direction[] =  $product['direction'];/// Null ??
+
 					}
 				}
 
@@ -286,7 +292,7 @@ class Cart {
 					'xPos'            => $xPos,//// maybe we have multiple xPos
 					'yPos'            => $yPos,/// maybe we have multiple yPos
 					'unit_id'         => $position_query->row['unitID'],
-					'direction'       => "Left",
+					'direction'       => $direction,
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],
 					'model'           => $product_query->row['model'],
@@ -312,6 +318,7 @@ class Cart {
 					'recurring'       => $recurring
 				);
 			} else {
+
 				$this->remove($cart['cart_id']);
 			}
 		}
