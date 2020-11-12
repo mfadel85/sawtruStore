@@ -126,7 +126,7 @@ class ControllerCheckoutSuccess extends Controller {
 			$address=CONNECTORIP;//127.0.0.1
 			//$address="127.0.0.1";//127.0.0.1
 			error_log("ZXX Step 9");
-
+			// test here
 			$port="11111";
 			error_log("ZXX Step 9.1");
 			$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
