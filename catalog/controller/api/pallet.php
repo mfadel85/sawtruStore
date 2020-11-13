@@ -132,7 +132,7 @@ class ControllerApiPallet extends Controller
 		// check if allowerd 
 		$availablePositions = $this->model_catalog_pallet->getAvailablePositionsCount($beltBarcode,$productID);
 		error_log("Available positions are : $availablePositions");
-		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation" || $availablePositions < 1){
+		if($assigned == "Assigned to another Product" || $assigned == "Not Allowed Operation" || $availablePositions < 1 ){
 			$json = "Not Allowed Operation";
 			error_log("!!!!! not allowerd");
 
