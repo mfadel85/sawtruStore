@@ -106,12 +106,9 @@
   					<thead class="thead-dark">
 					<tr class="row100 head">
 						<th class="column100 column1" data-column="column1" scope="col">#</th>
-						<th class="column100 column2" data-column="column2" scope="col">1</th>
-						<th class="column100 column3" data-column="column3" scope="col">2</th>
-						<th class="column100 column4" data-column="column4" scope="col">3</th>
-						<th class="column100 column5" data-column="column5" scope="col">4</th>
-						<th class="column100 column6" data-column="column6" scope="col">5</th>
-						<th class="column100 column7" data-column="column7" scope="col">6</th>
+						{% for item in unit %}
+						<th class="column100 column{{ loop.index }}" data-column="column2" scope="col">{{ loop.index }}</th>
+						{% endfor %}
 					</tr>
 				</thead>
 				<tbody class="">
@@ -418,7 +415,7 @@
 	    		console.log("Added to stock");
 			else 
 				alert("Failed to add to stock!!!");
-			location.reload();
+			//location.reload();
 		});
 
 	}); 

@@ -119,13 +119,11 @@ class ModelCatalogPallet extends Model {
 				}
 
 				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
-				error_log("Pallet id is $palletID, product id is $productID, Belt Count is $beltCount");
 				$skipCount = $beltCount -1;
 				if($skipCount>0){
 					for($j=1;$j<$skipCount+1;$j++) 							// $barcode will change
 					{
 						$nextBeltID = $this->getNextBeltID($palletID,$j);
-						error_log("next Belt id is $nextBeltID");
 						$barcode = $this->db->query("select barcode from oc_pallet where pallet_id = $nextBeltID")->rows[0]['barcode'];
 						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
 					}
@@ -170,7 +168,6 @@ class ModelCatalogPallet extends Model {
 
 		$xPos   = (int)$palletInfo->row["x_position"]+$i;
 		$xPosX = (int)$palletInfo->row["x_position"];
-		error_log("before $xPosX, after xPos is $xPos ");
 		$unitID = $palletInfo->row["unit_id"];
 		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextBeltID;

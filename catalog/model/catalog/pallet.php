@@ -10,7 +10,7 @@ class ModelCatalogPallet extends Model {
 		return $query->row;		
 	}
 
-	public function getPalletProduct($palletID,$productID){
+	public function getBeltProduct($palletID,$productID){
 		error_log(" zzz $palletID,$productID" );
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
 		WHERE product_id=$productID AND start_pallet= $palletID and status != 'Sold' group by start_pallet");
@@ -38,20 +38,23 @@ class ModelCatalogPallet extends Model {
 	}
 	public function getAvailablePositionsCount($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
-
+		error_log("Belt Barcode is : $beltBarcode, Product ID is $productID");
 		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
 		$width = $width->rows[0]["width"];
-		$productData = $this->getPalletProduct($beltID,$productID);
+		$productData = $this->getBeltProduct($beltID,$productID);
 
 
 		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
-			$count     =  $productData['Count'];
-			return $count;
+			$max = floor(Pallet_Detph / $width);
+            
+			$count = $productData['Count'];
+			// it has to be Max-$count
+			return $max-$count;
 		}
 		else {
 			$countAvailable = floor(Pallet_Detph / $width);
 			error_log("Count available: ".$countAvailable);
-			return $countAvailable; // return max not zero
+			return $max; // return max not zero
 		}
 			
 		// what is hapenning here? we have to explore
@@ -126,7 +129,7 @@ class ModelCatalogPallet extends Model {
 		// I need barcode hre :D
 		$beltID = $this->getBeltID($beltBarcode);
 		
-		$countQuery = $this->getPalletProduct($beltID,$productID);
+		$countQuery = $this->getBeltProduct($beltID,$productID);
 		//var_dump($countQuery);
 		$count = -1;
 		if(isset($countQuery['Count'])){
@@ -199,14 +202,12 @@ class ModelCatalogPallet extends Model {
 
 		$xPos   = (int)$palletInfo->row["x_position"]+$i;
 		$xPosX = (int)$palletInfo->row["x_position"];
-		error_log("before $xPosX, after xPos is $xPos ");
 		$unitID = $palletInfo->row["unit_id"];
 		$nextPalletID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextPalletID;
 	}
 	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
 		$beltID = $this->getBeltID($beltBarcode);
-		error_log("Z $beltID,$productID,$beltCount,$update");
 		// check before inserting
 		$assignable = false;
 		if($beltCount > 1 ){
@@ -216,7 +217,6 @@ class ModelCatalogPallet extends Model {
 				$palletStats = $this->getPalletStatus($nextBeltID);
 				if($palletStats == "Empty" || $palletStats == "Assigned Empty")
 				{
-					error_log("We are here Z: $palletStats, Belt ID $beltID, next belt id is $nextBeltID");
 					// if assigned empty and the cells before it is also assigned empty
 					// to delete the record of $nextPalletID
 					if($palletStats == "Assigned Empty") {
@@ -236,21 +236,16 @@ class ModelCatalogPallet extends Model {
 		else {
 			$assignable = true;
 		}
-		error_log("We are here 0: $update,$assignable,$beltCount,$beltID");
 
 		if($update == "false" && $assignable){
-			error_log("We are here to live");
 			// all the cells to be written
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
 					$beltID = $this->getNextPalletID($beltID,1); 
-					error_log("beltID is $beltID i is $i");
 				}
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
 					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);");
-				print_r($assigned);
-				error_log("Assigned $assigned");
 			}
 				
 		}	
@@ -259,7 +254,6 @@ class ModelCatalogPallet extends Model {
 			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
 			$prevPosition  = $prevInfo->rows[0]['position'];
 			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
-			error_log("Prov position is $prevPosition, prev beltCount is $prevBeltCount");
 			/* fix the prev position by deleteing them */
 			$updated = $this->db->query("
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1 
@@ -270,18 +264,15 @@ class ModelCatalogPallet extends Model {
 			///if it is in the middle
 			/// we have to two type of cells: to be deleted(before updated cells and after updated cells) and to be updated
 			$tobeDeletedPrevCount = $prevPosition - 1;
-			error_log("To be deleted $tobeDeletedPrevCount ");
 
 			for($j=1;$j<=$tobeDeletedPrevCount;$j++){
 				$prevBeltID = $this->getNextPalletID($beltID,$j*-1);
-				error_log("previous cell is $prevBeltID ");
 
 				$deleted  = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $prevBeltID");
 			}
 			$tobeDeletedNextCount = $prevBeltCount -$prevPosition;
 			for($j=1;$j<=$tobeDeletedNextCount;$j++){
 				$nextBeltID = $this->getNextPalletID($beltID,$j);
-				error_log("next cell is $nextBeltID ");
 
 				$deleted  = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $nextBeltID");
 			}

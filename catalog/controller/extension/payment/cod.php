@@ -11,7 +11,6 @@ class ControllerExtensionPaymentCod extends Controller {
 			$this->load->model('checkout/order');
 
 			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('payment_cod_order_status_id'));
-		
 			$json['redirect'] = $this->url->link('checkout/success');
 		}
 		
