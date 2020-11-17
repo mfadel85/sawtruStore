@@ -13,13 +13,17 @@ $_['text_success']           = 'Success: You have modified Units!';
 $_['text_list']              = 'Unit List';
 $_['text_add']               = 'Add Unit';
 $_['text_edit']              = 'Edit Unit';
+$_['text_add']               = 'Add Unit';
+
 $_['entry_name']             = 'Unit Name';
 $_['entry_barcode']          = 'Unit Barcode';
 $_['entry_unitdirection']    = 'Unit Direction';
+$_['entry_sort_order']       = 'Sort Order';
 
 // Column
 $_['column_name']            = 'Unit Name';
-$_['column_barcode']            = 'Barcode';
+$_['column_barcode']         = 'Barcode';
+$_['column_sort_order']      = 'Sort Order';
 
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';

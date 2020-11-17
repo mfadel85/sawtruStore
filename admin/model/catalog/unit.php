@@ -4,6 +4,7 @@ class ModelCatalogUnit extends Model {
         
         $this->db->query("INSERT INTO " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name']) . "',
          direction  = '" . $this->db->escape($data['unit_direction']) . "',
+         sort_order  = '" . $this->db->escape($data['sort_order']) . "',
          barcode = '" . $this->db->escape($data['barcode']) . "'");
 
         $unit_id = $this->db->getLastId();
@@ -14,6 +15,8 @@ class ModelCatalogUnit extends Model {
     public function editUnit($unit_id, $data){
         $this->db->query("UPDATE " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name'])  . "',
         direction = '" . $this->db->escape($data['unit_direction'])  . "',
+        sort_order = '" . $this->db->escape($data['sort_order'])  . "',
+
          barcode = '" . (int)$this->db->escape($data['barcode']) . "'  WHERE unit_id = '" . (int)$unit_id . "'");
         $this->cache->delete('unit');
     }
