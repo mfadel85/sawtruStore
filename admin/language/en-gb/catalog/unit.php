@@ -15,6 +15,7 @@ $_['text_add']               = 'Add Unit';
 $_['text_edit']              = 'Edit Unit';
 $_['entry_name']             = 'Unit Name';
 $_['entry_barcode']          = 'Unit Barcode';
+$_['entry_unitdirection']    = 'Unit Direction';
 
 // Column
 $_['column_name']            = 'Unit Name';
@@ -26,3 +27,4 @@ $_['button_edit']            = 'Edit';
 
 // Help
 $_['help_barcode']               = 'Enter a valid barcode!!';
+$_['help_direction']             = 'Unit Direction Right or left?!!';

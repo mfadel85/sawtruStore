@@ -1,8 +1,10 @@
 <?php
 class ModelCatalogUnit extends Model {
     public function addUnit($data){
-
-        $this->db->query("INSERT INTO " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name']) . "', barcode = '" . $this->db->escape($data['barcode']) . "'");
+        
+        $this->db->query("INSERT INTO " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name']) . "',
+         direction  = '" . $this->db->escape($data['unit_direction']) . "',
+         barcode = '" . $this->db->escape($data['barcode']) . "'");
 
         $unit_id = $this->db->getLastId();
 		$this->cache->delete('unit');
@@ -10,7 +12,9 @@ class ModelCatalogUnit extends Model {
 		return $unit_id;
     }
     public function editUnit($unit_id, $data){
-		$this->db->query("UPDATE " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name'])  . "', barcode = '" . (int)$this->db->escape($data['barcode']) . "'  WHERE unit_id = '" . (int)$unit_id . "'");
+        $this->db->query("UPDATE " . DB_PREFIX . "unit SET name = '" . $this->db->escape($data['name'])  . "',
+        direction = '" . $this->db->escape($data['unit_direction'])  . "',
+         barcode = '" . (int)$this->db->escape($data['barcode']) . "'  WHERE unit_id = '" . (int)$unit_id . "'");
         $this->cache->delete('unit');
     }
     public function deleteUnit($unit_id){

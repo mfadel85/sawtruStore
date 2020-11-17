@@ -32,15 +32,34 @@
                   <input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control"/>
                   {% if error_model %}
                     <div class="text-danger">{{ error_name }}</div>
-                  {% endif %}</div>
+                  {% endif %}
                 </div>
+              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-barcode"><span data-toggle="tooltip" title="{{ help_barcode }}">{{ entry_barcode }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="barcode" value="{{ barcode }}" placeholder="{{ entry_barcode }}" id="input-barcode" class="form-control"/>
                 </div>
               </div>                
-
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-direction"><span data-toggle="tooltip" title="{{ help_direction }}">{{ entry_unitdirection }}</span></label>
+                <div class="col-sm-10">
+                  <select name="unit_direction" id="input-unit-direction" class="form-control">
+                    <option value="0">{{ text_none }}</option>
+                    <option value="Right"
+                      {% if unit_direction == "Right" %}
+                         selected="selected"
+                         {% endif %}
+                         >Right</option>
+                        <option value="Left" 
+                           {% if unit_direction == "Left" %}
+                        selected="selected"
+                          {% endif %}
+                        >Left</option>
+                      
+                  </select>
+                </div>
+              </div>   
             </div>
 
           </div>
