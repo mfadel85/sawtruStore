@@ -62,9 +62,10 @@ class ControllerCatalogShelf extends Controller {
                 'physical_row' => $shelf['physical_row'],
                 'width'    => $shelf['width'],
                 'noBelts'  => $shelf['noBelts'],
-                'type'    => $type,
+                'type'     => $type,
                 'edit'     => $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] . $url, true),
-                'generate'     => $this->url->link($beltsLink, 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] .'&type=' . $type . $url, true),
+                'generate' => $this->url->link($beltsLink, 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id'] .'&type=' . $type . $url, true),
+                'empty'    => $this->url->link('catalog/shelf/emptyShelf', 'user_token=' .$this->session->data['user_token'] . '&shelf_id=' . $shelf['shelf_id']  . $url, true)
             );
         }
 
@@ -348,6 +349,14 @@ class ControllerCatalogShelf extends Controller {
 		return !$this->error;
     }
 
+    public function emptyShelf(){
+        print_r("Started!!");
+
+        $shelfID = $this->request->get['shelf_id'];
+        $this->load->model('catalog/shelf');
+        $this->model_catalog_shelf->emptyShelf($shelfID);
+        print_r("let's see if it worked or not!!");
+    }
     protected function validateBeltsForm() {
 		if (!$this->user->hasPermission('modify', 'catalog/shelf')) {
 			$this->error['warning'] = $this->language->get('error_permission');

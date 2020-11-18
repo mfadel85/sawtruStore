@@ -159,19 +159,44 @@ class ControllerCatalogUnit extends Controller {
 			$data['name'] = '';
         }
         $name = $data['name'];
+
 		if (isset($this->request->post['barcode'])) {
 			$data['barcode'] = $this->request->post['barcode'];
 		} elseif (!empty($unit_info)) {
 			$data['barcode'] = $unit_info['barcode'];
 		} else {
 			$data['barcode'] = '';
-		}        
+        }     
+
+		if (isset($this->request->post['sort_order'])) {
+			$data['sort_order'] = $this->request->post['sort_order'];
+		} elseif (!empty($unit_info)) {
+			$data['sort_order'] = $unit_info['sort_order'];
+		} else {
+			$data['sort_order'] = '';
+        }          
+        
+		if (isset($this->request->post['unit_direction'])) {
+			$data['unit_direction'] = $this->request->post['unit_direction'];
+		} elseif (!empty($unit_info)) {
+			$data['unit_direction'] = $unit_info['direction'];
+		} else {
+			$data['unit_direction'] = '';
+        }    
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('catalog/unit_form', $data));    
+    }
+    public function emptyUnit(){
+        $unitID = $this->request->get['unit_id'];
+        $this->load->model('catalog/unit');
+        $shelves = $this->model_catalog_unit->getShelves($unitID);
+        $this->load->controller('catalog/shelf');
+        
+
     }
     protected function validateBarcode($barcode){
         return true;
