@@ -10,14 +10,11 @@ class ControllerCheckoutSuccess extends Controller {
 		    $jsonProducts = [];
 		    $productsCount = 0;
 		    foreach ($products as $product) {
-				error_log("ZXX Step 0");
 
 				$productsCount += $product['quantity'];
 				if($product['quantity']>1){
-					error_log("ZXX Step 1");
 
 					for($i=0;$i<(int)$product['quantity'];$i++){
-						error_log("ZXX Step 2");
 
 						$currentArary = array();
 						$currentArary['name'] = $product['name'];
@@ -33,7 +30,6 @@ class ControllerCheckoutSuccess extends Controller {
 					}
 				}	
 				else {
-					error_log("ZXX Step 3");
 
 					$currentArary = array();
 					$currentArary['name'] = $product['name'];
@@ -46,11 +42,9 @@ class ControllerCheckoutSuccess extends Controller {
 					$currentArary['price'] = $product['price']; 
 
 					$jsonProducts[] = $currentArary;
-					error_log("ZXX Step 4");
 
 				}			
 			}
-			error_log("ZXX Step 5");
 
 			$order = array(
 				'OrderID'       => $this->session->data['order_id'],
@@ -62,7 +56,6 @@ class ControllerCheckoutSuccess extends Controller {
 			print_r($order);
 			$json_data = json_encode($order);// path need to be changed
 			$this->cart->clear();
-			error_log("ZXX Step 6");
 
 			unset($this->session->data['shipping_method']);
 			unset($this->session->data['shipping_methods']);
@@ -122,15 +115,23 @@ class ControllerCheckoutSuccess extends Controller {
 			$address=CONNECTORIP;
 			$port="11111";
 			$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
-			socket_connect($sock,$address,$port);
-			socket_write($sock,$json_data);
-			$read=socket_read($sock,3072);
-			$data['result'] = $read;
+			if(!socket_connect($sock,$address,$port)){
+				$this->load->model("checkout/order");
+				$this->model_checkout_order->addOrderHistory($order['OrderID'], 17);
+
+				print_r("stuck here!!!!");
+			}
+			else {
+				socket_write($sock,$json_data);
+				$read=socket_read($sock,3072);
+				$data['result'] = $read;
+				print_r("<BR>Main Path<BR>");
+			}
 			socket_close($sock);
-			print_r("<BR>Main Path<BR>");
+
 
 			$this->response->setOutput($this->load->view('common/success', $data));				
-		} catch (\Throwable  $e) {
+		} catch (ErrorException $ex) {
 			print_r("<BR>Exception Path<BR>");
 			print_r("Messaeg is : ".$e.Message);
 			// how to handle this error?

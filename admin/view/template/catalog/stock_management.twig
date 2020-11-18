@@ -117,7 +117,7 @@
 					<th scope="row"  > {{ loop.index }}</th>
 					{% for pallet in item %}
 
-						<td  data-column="column{{ loop.index }}" id="r{{ pallet[8]}}c{{ pallet[7]}}" data-filled="{{ pallet[1] }}" data-product-id="{{ pallet[10] }}" data-barcode="{{ pallet[9]}}" data-pallet-count="{{ pallet[5]}}"
+						<td  data-column="column{{ loop.index }}" title=" {{ pallet[1] }} / {{ pallet[6]}} " id="r{{ pallet[8]}}c{{ pallet[7]}}" data-filled="{{ pallet[1] }}" data-product-id="{{ pallet[10] }}" data-barcode="{{ pallet[9]}}" data-pallet-count="{{ pallet[5]}}"
 						{% if  pallet[3]  == 0 %}
 							class="full column100 column{{ loop.index }}"
 						{% elseif pallet[3] == -1  %}
@@ -126,7 +126,7 @@
 							class="assigned column100 column{{ loop.index }}"
 						{% endif %}
 						
-						 > {{ pallet[4] }} - {{ pallet[1] }} / {{ pallet[6]}} </td>
+						 > {{ pallet[4] }}  </td>
 					{% endfor %}
 					</tr>
 				{% endfor %}
