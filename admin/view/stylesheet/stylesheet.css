@@ -4,7 +4,7 @@ html, body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Open Sans', sans-serif;
-	color: #545454;
+	color: #333;
 	text-rendering: optimizeLegibility;
 }
 h1, h2, h3, h4, h5, h6, p {
@@ -151,7 +151,7 @@ a:hover, a:focus {
 	width: 235px;
 	height: 100%;
 	overflow: auto;
-	background-color: #242d37;
+	background-color: #222d32;
 	position: absolute;
 	top: 0px;
 	left: -235px;

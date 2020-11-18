@@ -180,6 +180,14 @@ class ModelCatalogPallet extends Model {
 		}
 		return $units;
 	}
+	public function emptyBelt($beltID){
+		$emptyProductPosition = $this->db->query("DELETE FROM oc_product_to_position where start_pallet = $beltID ");
+		if($emptyProductPosition){
+			$emptyBeltProduct = $this->db->query("DELETE FROM oc_pallet_product where start_pallet_id = $beltID ");
+		}
+	}
+
+	// not used right now
 	public function getShelves(){
 		$units = $this->getUnits();
 		$map = array();
@@ -190,7 +198,6 @@ class ModelCatalogPallet extends Model {
 
 			$map[$unitID][] = $shelf['shelf_id'];
 		}
-
 		//return $map;
 	}
 

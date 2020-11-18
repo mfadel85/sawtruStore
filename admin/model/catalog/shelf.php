@@ -69,15 +69,14 @@ class ModelCatalogShelf extends Model {
         for($i = 0;$i<$beltCount;$i++){
             $j = $i+1;
             $inputName = 'barcode'.$j;
-            /// get belt id 
-
         }
-
     }
+
     public function getUnitID($shelf_id){
         $unit_id = $this->db->query("SELECT unit_id from oc_shelf where shelf_id=$shelf_id")->rows[0]['unit_id'];
         return $unit_id;
     }
+
     public function getShelves($unit_id,$data=array()){
         $shelves = array();
         $sql = "SELECT shelf_id,os.barcode,height,width,os.unit_id,name as unit_name,shelf_physical_row as physical_row FROM `oc_shelf` 
@@ -92,11 +91,38 @@ class ModelCatalogShelf extends Model {
                 $shelf['noBelts'] = true;
             $shelves[] = $shelf;
         }
-            
         return $shelves;
-
-
     }
+
+	public function emptyShelf($shelfID){
+        /// get all belts in this shelf and empty them
+        print_r("Belt ID is $shelfID <BR>");
+        $belts = $this->db->query("SELECT pallet_id from oc_pallet WHERE shelf_id = $shelfID");
+        print_r($belts);
+		foreach($belts->rows as $belt){
+			$this->emptyBelt($belt['pallet_id']);
+		}
+    }    
+
+	public function emptyBelt($beltID){
+        // get count and which product it has
+        $productInfo = $this->db->query("SELECT count(*) as count,product_id FROM `oc_product_to_position` where start_pallet = $beltID");
+
+        $count = $productInfo->rows[0]["count"];
+        if($count > 0){
+            $productID = $productInfo->rows[0]["count"];
+            $modifyStock = $this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$count where product_id = $productID");/// decrease the stoc
+            $emptyProductPosition = $this->db->query("DELETE FROM oc_product_to_position where start_pallet = $beltID ");
+            if($emptyProductPosition){
+                $emptyBeltProduct = $this->db->query("DELETE FROM oc_pallet_product where start_pallet_id = $beltID ");
+            }
+            return "The belt has been emptied";
+        }
+        else 
+            return "It is an empty belt!!";
+
+	}    
+    
     public function getShelf($shelf_id){
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "shelf   WHERE shelf_id = '" . (int)$shelf_id . "' ");
 		return $query->row; 

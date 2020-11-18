@@ -33,6 +33,7 @@ $_['column_width']           = 'Width';
 $_['column_physical_row']    = 'Physical Row';
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';
+$_['column_empty']          = 'Empty this shelf';
 $_['button_edit']            = 'Edit';
 $_['button_generate']        = 'Generate Belts';
 
