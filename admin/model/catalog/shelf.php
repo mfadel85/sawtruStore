@@ -107,24 +107,34 @@ class ModelCatalogShelf extends Model {
 	public function emptyBelt($beltID){
         // get count and which product it has
         $productInfo = $this->db->query("SELECT count(*) as count,product_id FROM `oc_product_to_position` where start_pallet = $beltID");
-
+        $message = "";
         $count = $productInfo->rows[0]["count"];
         if($count > 0){
             $productID = $productInfo->rows[0]["count"];
             $modifyStock = $this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$count where product_id = $productID");/// decrease the stoc
             $emptyProductPosition = $this->db->query("DELETE FROM oc_product_to_position where start_pallet = $beltID ");
-            if($emptyProductPosition){
-                $emptyBeltProduct = $this->db->query("DELETE FROM oc_pallet_product where start_pallet_id = $beltID ");
-            }
-            return "The belt has been emptied";
+            $message =  "The belt has been emptied";
         }
-        else 
-            return "It is an empty belt!!";
+        else  {
+            $message =  "It is an empty belt!!";
+        }
+        $emptyBeltProduct = $this->db->query("DELETE FROM oc_pallet_product where start_pallet_id = $beltID ");
+        return $message;
 
-	}    
+    }    
+    public function emptyUnit($unitID){
+        // get all shelves from this unit and empty them
+        $shelves = $this->db->query("SELECT * FROM `oc_shelf` WHERE unit_id = $unitID");
+        print_r($shelves);
+        if(count($shelves->rows)>0){
+            foreach($shelves->rows as $shelf)
+                $this->emptyShelf($shelf['shelf_id']);
+        }
+
+    }
     
-    public function getShelf($shelf_id){
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "shelf   WHERE shelf_id = '" . (int)$shelf_id . "' ");
+    public function getShelf($shelfID){
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "shelf   WHERE shelf_id = '" . (int)$shelfID . "' ");
 		return $query->row; 
     }
 }

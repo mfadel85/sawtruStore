@@ -36,7 +36,8 @@ class ControllerCatalogUnit extends Controller {
                 'unit_id' => $result['unit_id'],
                 'barcode' => $result['barcode'],
                 'name'    => $result['name'],
-                'edit'       => $this->url->link('catalog/unit/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
+                'edit'    => $this->url->link('catalog/unit/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true),
+                'empty'   => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
 
             );
         }
@@ -193,9 +194,11 @@ class ControllerCatalogUnit extends Controller {
     public function emptyUnit(){
         $unitID = $this->request->get['unit_id'];
         $this->load->model('catalog/unit');
-        $shelves = $this->model_catalog_unit->getShelves($unitID);
-        $this->load->controller('catalog/shelf');
-        
+        $this->load->model('catalog/shelf');
+        $this->model_catalog_shelf->emptyUnit($unitID);
+        $this->response->redirect($this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true));
+
+
 
     }
     protected function validateBarcode($barcode){

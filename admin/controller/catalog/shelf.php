@@ -356,6 +356,8 @@ class ControllerCatalogShelf extends Controller {
         $this->load->model('catalog/shelf');
         $this->model_catalog_shelf->emptyShelf($shelfID);
         print_r("let's see if it worked or not!!");
+        $this->response->redirect($this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true));
+
     }
     protected function validateBeltsForm() {
 		if (!$this->user->hasPermission('modify', 'catalog/shelf')) {
