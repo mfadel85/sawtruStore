@@ -105,10 +105,12 @@ class ControllerCatalogUnit extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('catalog/unit');
+        $this->load->model('catalog/shelf');
 
         if (isset($this->request->post['selected']) /*&& $this->validateDelete()*/) {
-            foreach ($this->request->post['selected'] as $unit_id) {
-                $this->model_catalog_unit->deleteUnit($unit_id);
+            foreach ($this->request->post['selected'] as $unitID) {
+                $this->model_catalog_shelf->emptyUnit($unitID);
+                $this->model_catalog_unit->deleteUnit($unitID);
             }
             $this->response->redirect($this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true));
 
