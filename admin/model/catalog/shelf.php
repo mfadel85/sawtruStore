@@ -63,13 +63,23 @@ class ModelCatalogShelf extends Model {
         return $belts;
     }
     public function updateBarcodes($shelf_id,$data){
+
         /// VIN to be implemented
-        $beltCount =  (int)$this->db->escape($data['beltCount']);
-        
-        for($i = 0;$i<$beltCount;$i++){
-            $j = $i+1;
-            $inputName = 'barcode'.$j;
+        print_r($data);
+        $beltIDs = array();
+        $i = 1;
+        foreach($data as $index=>$barcode){
+            print_r("<BR>select pallet_id from oc_pallet where x_position = $i and shelf_id=$shelf_id<BR>");
+            $beltID = $this->db->query("select pallet_id from oc_pallet where x_position = $i and shelf_id=$shelf_id");
+            print_r("Belt Query is <BR>");
+            print_r($beltID);
+            $id= $beltID->rows[0]['pallet_id'];
+            print_r("<BR>Belt id is :$id <BR>");
+            $updateBelt = $this->db->query("update oc_pallet set barcode = $barcode where pallet_id = $id");
+            $i++;
+
         }
+
     }
 
     public function getUnitID($shelf_id){
