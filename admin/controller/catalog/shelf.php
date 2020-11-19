@@ -11,6 +11,7 @@ class ControllerCatalogShelf extends Controller {
     }
 
     protected function getList(){
+
         $data['error_warning'] = false;
         $data['breadcrumbs'] = array();
         $data['breadcumbs'][] =array(
@@ -117,6 +118,7 @@ class ControllerCatalogShelf extends Controller {
         
     }
     public function editBarcodes(){
+
         $this->load->language('catalog/shelf');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('catalog/shelf');
@@ -132,6 +134,8 @@ class ControllerCatalogShelf extends Controller {
         $this->getBeltsForm(); 
     }
     public function getBeltsForm(){
+        $data['user_token'] = $this->session->data['user_token'];
+
         $this->load->model('catalog/unit');
         $this->load->model('catalog/shelf'); 
         $this->load->language('catalog/shelf');
@@ -377,6 +381,18 @@ class ControllerCatalogShelf extends Controller {
 		}
 
 		return !$this->error;
-	}    
+    }    
+    public function checkBarcode(){
+		$barcode = $this->request->get['barcode'];
+		$count = 0;
+		if($barcode <> "")
+		{
+            $this->load->model('catalog/pallet');
+			$count = $this->model_catalog_pallet->checkBarcode($barcode);
+		}
+		$count = json_encode($count);
+		print_r("$count");
+		return json_encode($count);	
+	}
     
 }

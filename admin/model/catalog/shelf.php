@@ -41,6 +41,7 @@ class ModelCatalogShelf extends Model {
 		return $query->row['total'];
     }
     public function generateBelts($shelf_id,$data){// we need barcodes
+        
         $unit_id = $this->getUnitID($shelf_id);
         $beltCount =  (int)$this->db->escape($data['beltCount']);
         for($i = 0;$i<$beltCount;$i++){
@@ -147,4 +148,10 @@ class ModelCatalogShelf extends Model {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "shelf   WHERE shelf_id = '" . (int)$shelfID . "' ");
 		return $query->row; 
     }
+
+    public function checkBarcode($barcode){
+		$query = $this->db->query("SELECT Count(*) as Count from oc_pallet where sku = '$barcode' ");
+		$count = $query->rows[0]['Count'];
+		return $count;
+	}
 }

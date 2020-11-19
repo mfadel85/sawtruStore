@@ -115,25 +115,22 @@ class ControllerCheckoutSuccess extends Controller {
 			$address=CONNECTORIP;
 			$port="11111";
 			$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
-			if(!socket_connect($sock,$address,$port)){
+			if(false == (socket_connect($sock,$address,$port))){
+				$notSentYetToPLCStatus = 17;
 				$this->load->model("checkout/order");
-				$this->model_checkout_order->addOrderHistory($order['OrderID'], 17);
-
-				print_r("stuck here!!!!");
+				$this->model_checkout_order->addOrderHistory($order['OrderID'], $notSentYetToPLCStatus);// 17 means not send yet to pLC
+				throw new Exception(socket_strerror(socket_last_error()));
 			}
 			else {
 				socket_write($sock,$json_data);
 				$read=socket_read($sock,3072);
 				$data['result'] = $read;
-				print_r("<BR>Main Path<BR>");
 			}
 			socket_close($sock);
-
-
 			$this->response->setOutput($this->load->view('common/success', $data));				
-		} catch (ErrorException $ex) {
+		} catch (Exception $ex) {
 			print_r("<BR>Exception Path<BR>");
-			print_r("Messaeg is : ".$e.Message);
+			error_log("Messaeg is : ".$ex);
 			// how to handle this error?
 			// add the order to be sent after a certain period
 			$this->response->setOutput($this->load->view('common/success', $data));				

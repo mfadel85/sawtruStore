@@ -39,7 +39,7 @@
                   <div class="form-group required">
                     <label class="col-sm-2 control-label" for="input-barcode{{ i }}"><span data-toggle="tooltip" title="{{ help_barcode }}">{{ entry_barcode_generate ~ i }}</span></label>
                     <div class="col-sm-10">
-                      <input type="text" name="barcode{{i}}" value="{{ belts[i].barcode  }}" placeholder="{{ entry_barcode_generate ~ i }}" id="input-barcode{{ i }}" class="form-control"/>
+                      <input type="text" name="barcode{{i}}" value="{{ belts[i].barcode  }}" placeholder="{{ entry_barcode_generate ~ i }}" id="input-barcode{{ i }}" class="form-control barcode"/>
                     </div>
                   </div> 
                 {% endfor %}
@@ -56,3 +56,26 @@
     </div>
 </div>
 {{ footer }}
+  <script type="text/javascript">  
+  $(".barcode").on("change",function(){
+
+    /// query the value againt the database to see if it exists and returns an error 
+    var barcode = $(this).val();
+    if(barcode != ''){
+      $.ajax({
+        url: 'index.php?route=catalog/shelf/checkBarcode&user_token={{ user_token }}&barcode='+ barcode,
+        dataType: 'json',
+
+        success:function(data){
+        }
+      })
+      .done(function(json){
+        if(json>0){
+          alert("Barcode already exists for a belt in the database!!!");
+          return;
+        }
+      });
+    }
+      
+  });
+</script>

@@ -24,4 +24,6 @@ class ContollerCatalogPallet extends Controller {
 		$this->model('catalog/pallet');
 		$this->model_catalog_pallet->emptyShelf($shelfID);
 	}	
+
 }
+

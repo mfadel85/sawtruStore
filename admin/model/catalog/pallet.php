@@ -186,7 +186,11 @@ class ModelCatalogPallet extends Model {
 			$emptyBeltProduct = $this->db->query("DELETE FROM oc_pallet_product where start_pallet_id = $beltID ");
 		}
 	}
-
+	public function checkBarcode($barcode){
+		$query = $this->db->query("SELECT Count(*) as Count from oc_pallet where barcode = '$barcode' ");
+		$count = $query->rows[0]['Count'];
+		return $count;
+	}
 	// not used right now
 	public function getShelves(){
 		$units = $this->getUnits();
