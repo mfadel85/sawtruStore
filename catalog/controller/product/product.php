@@ -665,7 +665,7 @@ class ControllerProductProduct extends Controller {
 		{
 			$this->load->model('catalog/product');
 			$count = $this->model_catalog_product->checkBarcode($barcode);
-			return $count;
+			return json_encode($count);
 		}
 
 	}

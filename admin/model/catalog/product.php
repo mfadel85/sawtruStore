@@ -735,4 +735,9 @@ class ModelCatalogProduct extends Model {
 
 		return $query->row['total'];
 	}
+	public function checkBarcode($barcode){
+		$query = $this->db->query("SELECT Count(*) as Count from oc_product where sku = '$barcode' ");
+		$count = $query->rows[0]['Count'];
+		return $count;
+	}
 }

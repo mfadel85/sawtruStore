@@ -1353,4 +1353,18 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+	public function checkBarcode(){
+		$barcode = $this->request->get['barcode'];
+		$count = 0;
+		if($barcode <> "")
+		{
+			$this->load->model('catalog/product');
+			$count = $this->model_catalog_product->checkBarcode($barcode);
+		}
+		$count = json_encode($count);
+		print_r("$count");
+
+		return json_encode($count);
+	}
+
 }

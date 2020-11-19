@@ -1105,15 +1105,19 @@
   $("#input-sku").on("change",function(){
     /// query the value againt the database to see if it exists and returns an error 
     var sku = $(this).val();
-    if(sku <> ''){
+    if(sku != ''){
       $.ajax({
         url: 'index.php?route=catalog/product/checkBarcode&user_token={{ user_token }}&barcode='+ sku,
-        success:function(data){
-          if(data['count']>0){
-            alert("not allowed");
-            return;
-          }
+        dataType: 'json',
 
+        success:function(data){
+        }
+      })
+      .done(function(json){
+        debugger;
+        if(json>0){
+          alert("Barcode already exists for a product in the database!!!");
+          return;
         }
       });
     }

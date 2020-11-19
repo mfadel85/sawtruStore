@@ -165,13 +165,12 @@ class ControllerCatalogShelf extends Controller {
 		} else {
 			$data['action'] = $this->url->link('catalog/shelf/editBarcodes', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $this->request->get['shelf_id'] . $url, true);
         }        
+        
         $data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
         $data['beltCount'] = 8;// to be defined automatically
         $data['belts'][] = array();
         $results = $this->model_catalog_shelf->getBelts($this->request->get['shelf_id']);
-        /*echo "<pre>";
-        print_r($results);
-        echo "</pre>";*/
+
         foreach($results as $result){
 
             $data['belts'][] = array(
