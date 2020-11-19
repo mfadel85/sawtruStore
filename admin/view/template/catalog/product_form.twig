@@ -334,17 +334,9 @@
 
                     {% for stock_status in stock_statuses %}
                       {% if stock_status.stock_status_id == stock_status_id %}
-
-
                         <option value="{{ stock_status.stock_status_id }}" selected="selected">{{ stock_status.name }}</option>
-
-
                       {% else %}
-
-
                         <option value="{{ stock_status.stock_status_id }}">{{ stock_status.name }}</option>
-
-
                       {% endif %}
                     {% endfor %}
 
@@ -412,14 +404,8 @@
 
 
                         <option value="{{ length_class.length_class_id }}" selected="selected">{{ length_class.title }}</option>
-
-
                       {% else %}
-
-
                         <option value="{{ length_class.length_class_id }}">{{ length_class.title }}</option>
-
-
                       {% endif %}
                     {% endfor %}
 
@@ -1115,6 +1101,24 @@
   <script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
   <script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
   <script type="text/javascript"><!--
+
+  $("#input-sku").on("change",function(){
+    /// query the value againt the database to see if it exists and returns an error 
+    var sku = $(this).val();
+    if(sku <> ''){
+      $.ajax({
+        url: 'index.php?route=catalog/product/checkBarcode&user_token={{ user_token }}&barcode='+ sku,
+        success:function(data){
+          if(data['count']>0){
+            alert("not allowed");
+            return;
+          }
+
+        }
+      });
+    }
+      
+  });
   $("#input-length").on("change", function () {
     		var width = $("#input-length").val();	
         widthVal = parseFloat(width);

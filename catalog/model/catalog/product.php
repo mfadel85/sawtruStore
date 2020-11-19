@@ -565,4 +565,9 @@ class ModelCatalogProduct extends Model {
 			return 0;
 		}
 	}
+	public function checkBarcode($barcode){
+		$query = $this->db->query("SELECT Count(*) as Count from oc_product where sku = '$barcode' ");
+		$count = $query->rows[0]['Count'];
+		return $count;
+	}
 }
