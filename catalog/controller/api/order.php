@@ -725,7 +725,9 @@ class ControllerApiOrder extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
-
+	public function foo(){
+		print_r("foocilik");
+	}
 	public function info() {
 		error_log("I will kill you three tiems");
 		$this->load->language('api/order');
