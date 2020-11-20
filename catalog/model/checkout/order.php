@@ -435,4 +435,9 @@ class ModelCheckoutOrder extends Model {
 			$this->cache->delete('product');
 		}
 	}
+	public function getUnsentOrders(){
+		$query = $this->db->query("SELECT order_id FROM oc_order WHERE order_status_id=17");
+		$result = json_encode($query->rows);
+		return $result;
+	}
 }

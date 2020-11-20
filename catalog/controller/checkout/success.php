@@ -1,7 +1,6 @@
 <?php
 class ControllerCheckoutSuccess extends Controller {
 	public function index() {
-		error_log("Success debugging started");
 
 		$this->load->language('checkout/success');
 		$total = $this->cart->getTotal();
@@ -72,7 +71,6 @@ class ControllerCheckoutSuccess extends Controller {
 		}
 
 		$this->document->setTitle($this->language->get('heading_title'));
-		error_log("ZXX Step 7");
 
 		$data['breadcrumbs'] = array();
 
@@ -111,7 +109,6 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 
 		try {
-			$address="192.168.1.108";
 			$address=CONNECTORIP;
 			$port="11111";
 			$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
@@ -122,6 +119,7 @@ class ControllerCheckoutSuccess extends Controller {
 				throw new Exception(socket_strerror(socket_last_error()));
 			}
 			else {
+
 				socket_write($sock,$json_data);
 				$read=socket_read($sock,3072);
 				$data['result'] = $read;
@@ -131,6 +129,9 @@ class ControllerCheckoutSuccess extends Controller {
 		} catch (Exception $ex) {
 			print_r("<BR>Exception Path<BR>");
 			error_log("Messaeg is : ".$ex);
+			$orderID = $order['OrderID'];
+			error_log("Order $orderID can't be sent now to the PLC, it will be scheduled to be sent later!!!");
+
 			// how to handle this error?
 			// add the order to be sent after a certain period
 			$this->response->setOutput($this->load->view('common/success', $data));				

@@ -727,6 +727,7 @@ class ControllerApiOrder extends Controller {
 	}
 
 	public function info() {
+		error_log("I will kill you three tiems");
 		$this->load->language('api/order');
 
 		$json = array();
@@ -828,5 +829,12 @@ class ControllerApiOrder extends Controller {
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
+	}
+	public function getUnsentOrders(){
+		$this->load->language('api/order');
+		$this->load->model('checkout/order');
+		$orders = $this->model_checkout_order->getUnsentOrders();
+		print_r($orders);
+
 	}
 }
