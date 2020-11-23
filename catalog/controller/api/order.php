@@ -728,8 +728,36 @@ class ControllerApiOrder extends Controller {
 	public function foo(){
 		print_r("foocilik");
 	}
+	public function getOrderDetails(){
+		$this->load->language('api/order');
+		$json = array();
+		if (!isset($this->session->data['api_id'])) {
+			$json['error'] = $this->language->get('error_permission');
+		} else {
+			$this->load->model('checkout/order');
+
+			if (isset($this->request->get['order_id'])) {
+				$order_id = $this->request->get['order_id'];
+			} else {
+				$order_id = 0;
+			}
+			$order_info = $this->model_checkout_order->getOrder($order_id);
+			$order_products = $this->model_checkout_order->getOrderProducts($order_id);
+
+			if ($order_info && $order_products) {
+				$json['order'] = $order_info;
+				$json['products'] = $order_products;
+
+				$json['success'] = $this->language->get('text_success');
+			} else {
+				$json['error'] = $this->language->get('error_not_found');
+			}
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+
+	}
 	public function info() {
-		error_log("I will kill you three tiems");
 		$this->load->language('api/order');
 
 		$json = array();
