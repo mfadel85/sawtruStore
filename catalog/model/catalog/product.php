@@ -570,4 +570,58 @@ class ModelCatalogProduct extends Model {
 		$count = $query->rows[0]['Count'];
 		return $count;
 	}
+	public function getProductInfomation($productID,$quantity=1){
+		$productData = array();
+		$positionQueryString = "
+			SELECT 
+			shelf_physical_row,
+			optp.product_id,
+			optp.shelf_id,
+			optp.unit_id as unitID,
+			ocu.direction as direction,
+			optp.start_pallet,
+			op.x_position as xPos ,
+			os.shelf_physical_row as yPos ,
+			price as price,
+			opdp.name as name,
+			opd.bent_count as bentCount
+			FROM `oc_product_to_position` optp 
+			join oc_pallet op on optp.start_pallet = op.pallet_id 
+			join oc_shelf os on os.shelf_id = op.shelf_id 
+			join oc_unit ocu on ocu.unit_id = os.unit_id
+			join oc_product opd on opd.product_id = optp.product_id
+			join oc_product_description opdp on opd.product_id = optp.product_id
+			WHERE optp.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
+		$position_query = $this->db->query($positionQueryString);
+
+		if($quantity == 1){
+			$xPos = $position_query->row['xPos'];
+			$yPos = $position_query->row['shelf_physical_row'];
+			$direction =  $position_query->row['direction'];
+		}
+
+		else if($quantity> 1){
+
+			$xPos = array();
+			$yPos = array();
+			foreach($position_query->rows as $product){
+				$xPos[] = $product['xPos'];/// Null ??
+				$yPos[] = $product['yPos'];/// Null ??
+				$direction[] =  $product['direction'];/// Null ??
+			}
+		}	
+		$productData[] = array(	
+			'xPos'            => $xPos,//// maybe we have multiple xPos
+			'yPos'            => $yPos,/// maybe we have multiple yPos
+			'unit_id'         => $position_query->row['unitID'],
+			'direction'       => $direction,
+			'product_id'      => $productID,
+			'name'            => $position_query->row['name'],
+			'price'           => $position_query->row['price'],
+			'bentCount'       => $position_query->row['bentCount']
+		);	
+		//var_dump($productData);		
+
+		return $productData;
+	}
 }

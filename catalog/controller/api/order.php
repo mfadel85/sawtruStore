@@ -787,7 +787,7 @@ class ControllerApiOrder extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
-
+	
 	public function orderDetails(){
 		$this->load->language('api/order');
 
@@ -864,7 +864,96 @@ class ControllerApiOrder extends Controller {
 		$this->load->language('api/order');
 		$this->load->model('checkout/order');
 		$orders = $this->model_checkout_order->getUnsentOrders();
-		print_r($orders);
 
 	}
+	public function sendOrder($order){
+
+	}
+	public function sendOrders(){
+		$allOrders = array();
+		$finalOrder = array();
+		$this->load->language('api/order');
+		$this->load->model('checkout/order');
+		$this->load->model('catalog/product');
+
+		$orders = $this->model_checkout_order->getUnsentOrders();
+		$orders = json_decode($orders,true);
+		if(count($orders) > 0){
+			foreach($orders as $order){
+				$productsCount=0;
+				$orderID  = $order['order_id'];
+				$finalOrder['OrderID'] = $orderID;
+				$orderDetails = $this->orderDetail($orderID);
+
+				$jsonProducts = [];
+				foreach($orderDetails['products'] as $product){
+					$productID = $product['product_id'];
+					$productQuantity = $product['quantity'];
+					$productsCount += $productQuantity;
+					print_r("<BR> Product ID is $productID:  Quantity is $productQuantity<BR>");
+					$productInfomation = $this->model_catalog_product->getProductInfomation($productID,$productQuantity);
+				}
+				$finalOrder['ProductsCount'] = $productsCount;
+				$finalOrder['OrderStatus'] = "Waiting";
+				$finalOrder['Total'] = $order['total'];
+				$finalOrder['Products'] = $productInfomation;
+				$json_data = json_encode($finalOrder);// path need to be changed
+				echo "<PRE>";
+				var_dump($json_data);
+				echo "</PRE>";
+				try {
+					error_log("Started Sending");
+
+					$address=CONNECTORIP;
+					$port="11111";
+					$sock=socket_create(AF_INET,SOCK_STREAM,0) or die("Cannot create a socket");
+					if(false == (socket_connect($sock,$address,$port))){
+						$notSentYetToPLCStatus = 17;
+						$this->load->model("checkout/order");
+						$this->model_checkout_order->addOrderHistory($order['OrderID'], $notSentYetToPLCStatus);// 17 means not send yet to pLC
+						throw new Exception(socket_strerror(socket_last_error()));
+					}
+					else {
+		
+						socket_write($sock,$json_data);
+						$read=socket_read($sock,3072);
+						$data['result'] = $read;
+					}
+					socket_close($sock);
+					$this->response->setOutput($this->load->view('common/success', $data));				
+				} catch (Exception $ex) {
+					print_r("<BR>Exception Path<BR>");
+					error_log("Messaeg is : ".$ex);
+					$orderID = $order['OrderID'];
+					error_log("Order $orderID can't be sent now to the PLC, it will be scheduled to be sent later!!!");
+		
+					// how to handle this error?
+					// add the order to be sent after a certain period
+					$this->response->setOutput($this->load->view('common/success', $data));				
+		
+				}
+			}	
+		}
+		return $finalOrder;		
+	}	
+
+	public function orderDetail($order_id){
+		$json = array();
+		
+		$this->load->model('checkout/order');
+
+		$order_info = $this->model_checkout_order->getOrder($order_id);
+		$order_products = $this->model_checkout_order->getOrderProducts($order_id);
+
+		if ($order_info && $order_products) {
+			$json['order'] = $order_info;
+			$json['products'] = $order_products;
+
+			$json['success'] = $this->language->get('text_success');
+		} else {
+			$json['error'] = $this->language->get('error_not_found');
+		}
+		return $json;
+	}	
+	
 }
