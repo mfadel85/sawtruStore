@@ -922,23 +922,24 @@ class ControllerApiOrder extends Controller {
 		
 						socket_write($sock,$json_data);
 						$read=socket_read($sock,3072);
-						$data['result'] = $read;
+						$savedInTheDBStatus = 2;
+
+						error_log("Order $orderID has been sent to the PLC!!!");
+						$this->model_checkout_order->addOrderHistory($order['OrderID'], $savedInTheDBStatus);// 17 means not send yet to pLC
+
 					}
 					socket_close($sock);
 					$this->response->setOutput($this->load->view('common/success', $data));				
 				} catch (Exception $ex) {
 					print_r("<BR>Exception Path<BR>");
 					error_log("Messaeg is : ".$ex);
-					$orderID = $order['OrderID'];
 					error_log("Order $orderID can't be sent now to the PLC, it will be scheduled to be sent later!!!");
-		
-					// how to handle this error?
-					// add the order to be sent after a certain period
-					$this->response->setOutput($this->load->view('common/success', $data));				
 		
 				}
 			}	
 		}
+		error_log("All the unsent orders have been sent!!");
+
 		return $finalOrder;		
 	}	
 
