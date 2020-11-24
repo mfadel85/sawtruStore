@@ -593,36 +593,22 @@ class ModelCatalogProduct extends Model {
 			join oc_product_description opdp on opdp.product_id = optp.product_id
 			WHERE opd.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
 		$position_query = $this->db->query($positionQueryString);
-		print_r("<BR>POS QUERY<BR>");
-		print_r($position_query);
-		print_r("<BR>POS QUERY<BR>");
-		if($quantity == 1){
-			$xPos = $position_query->row['xPos'];
-			$yPos = $position_query->row['shelf_physical_row'];
-			$direction =  $position_query->row['direction'];
-			// unit id also  has to be here
+
+		foreach($position_query->rows as $result){
+			$xPos = $result['xPos'];
+			$yPos = $result['shelf_physical_row'];
+			$direction =  $result['direction'];
+			$productData[] = array(	
+				'xPos'            => $xPos,//// maybe we have multiple xPos
+				'yPos'            => $yPos,/// maybe we have multiple yPos
+				'unit_id'         => $result['unitID'],
+				'direction'       => $direction,
+				'product_id'      => $productID,
+				'name'            => $result['name'],
+				'price'           => $result['price'],
+				'bentCount'       => $result['bentCount']
+			);	
 		}
-
-		else if($quantity> 1){
-
-			$xPos = array();
-			$yPos = array();
-			foreach($position_query->rows as $product){
-				$xPos[] = $product['xPos'];/// Null ??
-				$yPos[] = $product['yPos'];/// Null ??
-				$direction[] =  $product['direction'];/// Null ??
-			}
-		}	
-		$productData[] = array(	
-			'xPos'            => $xPos,//// maybe we have multiple xPos
-			'yPos'            => $yPos,/// maybe we have multiple yPos
-			'unit_id'         => $position_query->row['unitID'],
-			'direction'       => $direction,
-			'product_id'      => $productID,
-			'name'            => $position_query->row['name'],
-			'price'           => $position_query->row['price'],
-			'bentCount'       => $position_query->row['bentCount']
-		);	
 		//var_dump($productData);		
 
 		return $productData;

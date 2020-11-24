@@ -884,21 +884,26 @@ class ControllerApiOrder extends Controller {
 				$orderID  = $order['order_id'];
 				$finalOrder['OrderID'] = $orderID;
 				$orderDetails = $this->orderDetail($orderID);
-
+								
 				$jsonProducts = [];
 				foreach($orderDetails['products'] as $product){
+					
+					
 					$productID = $product['product_id'];
 					$productQuantity = $product['quantity'];
 					$productsCount += $productQuantity;
-					print_r("<BR> Product ID is $productID:  Quantity is $productQuantity<BR>");
 					$productInfomation = $this->model_catalog_product->getProductInfomation($productID,$productQuantity);
+					foreach($productInfomation as $info)
+						$finalOrder['Products'][] = $info;
+					print_r("<BR> Product ID is $productID:  Quantity is $productQuantity<BR>");
+
 				}
 				$finalOrder['ProductsCount'] = $productsCount;
 				$finalOrder['OrderStatus'] = "Waiting";
 				$finalOrder['Total'] = $order['total'];
-				$finalOrder['Products'] = $productInfomation;
 				$json_data = json_encode($finalOrder);// path need to be changed
 				echo "<PRE>";
+				print_r("<BR>Json DAta is <BR>");
 				var_dump($json_data);
 				echo "</PRE>";
 				try {
