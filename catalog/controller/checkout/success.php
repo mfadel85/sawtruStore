@@ -29,7 +29,6 @@ class ControllerCheckoutSuccess extends Controller {
 					}
 				}	
 				else {
-
 					$currentArary = array();
 					$currentArary['name'] = $product['name'];
 					$currentArary['quantity'] = $product['quantity'];
@@ -130,6 +129,7 @@ class ControllerCheckoutSuccess extends Controller {
 			print_r("<BR>Exception Path<BR>");
 			error_log("Messaeg is : ".$ex);
 			$orderID = $order['OrderID'];
+			$data["special"] = "Order $orderID can't be sent now to the PLC, it will be scheduled to be sent later!!!";
 			error_log("Order $orderID can't be sent now to the PLC, it will be scheduled to be sent later!!!");
 
 			// how to handle this error?
