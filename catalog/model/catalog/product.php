@@ -590,14 +590,17 @@ class ModelCatalogProduct extends Model {
 			join oc_shelf os on os.shelf_id = op.shelf_id 
 			join oc_unit ocu on ocu.unit_id = os.unit_id
 			join oc_product opd on opd.product_id = optp.product_id
-			join oc_product_description opdp on opd.product_id = optp.product_id
-			WHERE optp.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
+			join oc_product_description opdp on opdp.product_id = optp.product_id
+			WHERE opd.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
 		$position_query = $this->db->query($positionQueryString);
-
+		print_r("<BR>POS QUERY<BR>");
+		print_r($position_query);
+		print_r("<BR>POS QUERY<BR>");
 		if($quantity == 1){
 			$xPos = $position_query->row['xPos'];
 			$yPos = $position_query->row['shelf_physical_row'];
 			$direction =  $position_query->row['direction'];
+			// unit id also  has to be here
 		}
 
 		else if($quantity> 1){

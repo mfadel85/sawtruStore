@@ -272,6 +272,7 @@ class Cart {
 
 					$xPos = array();
 					$yPos = array();
+					$direction = array();
 					foreach($position_query->rows as $product){
 						$xPos[] = $product['xPos'];/// Null ??
 						$yPos[] = $product['yPos'];/// Null ??

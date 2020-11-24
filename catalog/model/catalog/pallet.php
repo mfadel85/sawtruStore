@@ -54,7 +54,7 @@ class ModelCatalogPallet extends Model {
 		else {
 			$countAvailable = floor(Pallet_Detph / $width);
 			error_log("Count available: ".$countAvailable);
-			return $max; // return max not zero
+			return $countAvailable; // return max not zero
 		}
 			
 		// what is hapenning here? we have to explore
