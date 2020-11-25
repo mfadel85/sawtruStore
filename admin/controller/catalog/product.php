@@ -387,10 +387,11 @@ class ControllerCatalogProduct extends Controller {
 				'model'      => $result['model'],
 				'price'      => $this->currency->format($result['price'], $this->config->get('config_currency')),
 				'special'    => $special,
-				'quantity'   => $result['quantity'],
-				'bent_count'   => $result['bent_count'],
-				'status'     => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'edit'       => $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'] . $url, true)
+				'quantity'        => $result['quantity'],
+				'warningQuantity' => $result['warningQuantity'],
+				'bent_count'      => $result['bent_count'],
+				'status'          => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+				'edit'            => $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'] . $url, true)
 			);
 		}
 
@@ -1221,7 +1222,11 @@ class ControllerCatalogProduct extends Controller {
 		if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64)) {
 			$this->error['model'] = $this->language->get('error_model');
 		}
-
+		print_r(" Manu : $this->request->post['manufacturer']");
+		if ((utf8_strlen($this->request->post['manufacturer']) < 1) || (utf8_strlen($this->request->post['manufacturer']) > 64)) {
+			$this->error['manufacturer'] = $this->language->get('error_manufacturer');
+		}
+		//error_manufacturer
 		if ($this->request->post['product_seo_url']) {
 			$this->load->model('design/seo_url');
 			
