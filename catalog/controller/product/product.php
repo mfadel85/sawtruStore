@@ -669,4 +669,5 @@ class ControllerProductProduct extends Controller {
 		}
 
 	}
+
 }

@@ -613,4 +613,9 @@ class ModelCatalogProduct extends Model {
 
 		return $productData;
 	}
+	public function updateMinQ($productID,$quantity){
+		$query = $this->db->query("Update OC_PRODUCT set warningQuantity=$quantity where product_id= $productID");
+		if($query)
+		return 1;
+	}
 }

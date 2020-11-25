@@ -23,6 +23,7 @@ $_['column_model']           = 'Model';
 $_['column_image']           = 'Image';
 $_['column_price']           = 'Price';
 $_['column_quantity']        = 'Quantity';
+$_['column_warningQuantity']        = 'Min Quantity';
 $_['column_bent_count']        = 'Bent Count';
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';
@@ -108,5 +109,7 @@ $_['error_permission']       = 'Warning: You do not have permission to modify pr
 $_['error_name']             = 'Product Name must be greater than 1 and less than 255 characters!';
 $_['error_meta_title']       = 'Meta Title must be greater than 1 and less than 255 characters!';
 $_['error_model']            = 'Product Model must be greater than 1 and less than 64 characters!';
+$_['error_manufacturer']     = 'The Supplier cannot be empty, please choose the supplier';
 $_['error_keyword']          = 'SEO URL already in use!';
+
 $_['error_unique']           = 'SEO URL must be unique!';

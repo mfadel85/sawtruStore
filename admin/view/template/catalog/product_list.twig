@@ -180,7 +180,7 @@
                       {{ product.price }}
                       {% endif %}</td>
                     <td class="text-right">{% if product.quantity <= 0 %} <span class="label label-warning">{{ product.quantity }}</span> {% elseif product.quantity <= 5 %} <span class="label label-danger">{{ product.quantity }}</span> {% else %} <span class="label label-success">{{ product.quantity }}</span> {% endif %}</td>
-                    <td class="text-right"> <input type="number" class="form-control minQuantity" value="{{ product.warningQuantity }}"></input> </td>
+                    <td class="text-right"> <input type="number" class="form-control minQuantity" id="minQ{{ product.product_id }}" value="{{ product.warningQuantity }}"></input> </td>
 
                     <td class="text-left">{{ product.status }}</td>
                     <td class="text-right"><a href="{{ product.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
@@ -206,6 +206,42 @@
     </div>
   </div>
   <script type="text/javascript"><!--
+  const IP = '192.168.1.51';
+
+  $(".minQuantity").on("change", function () {
+    // get product id , get new quantity and update the min quanitiy based on that
+    let newQuanity = $(this).val();
+    let cellID = $(this).attr('id');
+    let productID = cellID.substring(4);
+    		$.ajax({
+			url:'http://'+IP+'/store/index.php?route=api/product/updateMinQ',
+			type:'post',
+			data:{
+				quantity: newQuanity,
+				productID: productID
+			},
+
+			crossDomain:true,
+			success:function(json){
+				console.log("Result of update stock",json);
+				if(json == 'Not Allowed Operation' )
+					alert("Not Allowed");
+
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Failed to update product.');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		    } 
+		}).done(function(json){
+			console.log(json);
+			if(json == 1)
+	    		console.log("Updated");
+			else 
+				alert("Failed to update");
+			location.reload();
+		});
+
+  })
 $('#button-filter').on('click', function() {
 	var url = '';
 
