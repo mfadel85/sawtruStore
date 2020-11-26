@@ -10,6 +10,7 @@ $_['text_edit']         = 'Edit Dashboard Recent Orders';
 // Column
 $_['column_error_id']   = 'Error ID';
 $_['column_error_code']   = 'Error Code';
+$_['column_error_explanation']   = 'Error Explanatoin';
 $_['column_status']     = 'Status';
 $_['column_date_added'] = 'Date Added';
 $_['column_action']     = 'Action';

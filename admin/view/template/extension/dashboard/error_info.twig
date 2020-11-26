@@ -7,8 +7,8 @@
     <table class="table">
       <thead>
         <tr>
-          <td class="text-right">{{ column_error_id }}</td>
-          <td>{{ column_error_coce }}</td>
+          <td class="text-right">{{ column_error_code }}</td>
+          <td>Error Explanation</td>
           <td>{{ column_status }}</td>
           <td>{{ column_date_added }}</td>
           <td class="text-right">{{ column_action }}</td>
@@ -18,8 +18,8 @@
         {% if errors %}
         {% for error in errors %}
         <tr>
-          <td class="text-right">{{ error.error_id }}</td>
-          <td>{{ error.error_code }}</td>
+          <td class="text-right">{{ error.error_code }}</td>
+          <td> {{ error.error_explanation }} </td>
           <td>{{ error.status }}</td>
           <td>{{ error.date_added }}</td>
           <td class="text-right"><a href="{{ error.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
