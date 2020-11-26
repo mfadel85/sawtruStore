@@ -82,6 +82,7 @@ class ControllerExtensionDashboardErrors extends Controller{
         $this->load->language('extension/dashboard/errors');
         $data['user_token'] = $this->session->data['user_token'];
 
+
         $data['errors'] = array();
 
         $filter_data = array(
@@ -99,10 +100,8 @@ class ControllerExtensionDashboardErrors extends Controller{
                 'error_code'         => $result['error_code'],
                 'error_explanation'  => $result['error_explanation'],
                 'status'             => $result['status'],
-                //'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'date_added'         => $result['date_added'],
-                'view'               => $this->url->link('tool/errors', 'user_token=' . $this->session->data['user_token'] . '&error_id=' . $result['error_id'], true),
-
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'view'               => $this->url->link('setting/errors', 'user_token=' . $this->session->data['user_token'] . '&error_id=' . $result['error_id'], true),
             );
 
         }
