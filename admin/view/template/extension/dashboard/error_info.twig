@@ -1,0 +1,36 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-exclamation-triangle"></i> {{ heading_title }}</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <td class="text-right">{{ column_error_id }}</td>
+          <td>{{ column_error_coce }}</td>
+          <td>{{ column_status }}</td>
+          <td>{{ column_date_added }}</td>
+          <td class="text-right">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% if errors %}
+        {% for error in errors %}
+        <tr>
+          <td class="text-right">{{ error.error_id }}</td>
+          <td>{{ error.error_code }}</td>
+          <td>{{ error.status }}</td>
+          <td>{{ error.date_added }}</td>
+          <td class="text-right"><a href="{{ error.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td class="text-center" colspan="6">{{ text_no_results }}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
