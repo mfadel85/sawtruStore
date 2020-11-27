@@ -18,4 +18,11 @@ class ModelSettingErrors extends Model {
  
         return  $data['errors'];
     }
+
+    public function getTotalFaults(){
+        $sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "fault`";
+		$query = $this->db->query($sql);
+		return $query->row['total'];
+
+    }
 }
