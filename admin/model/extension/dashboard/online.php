@@ -1,6 +1,8 @@
 <?php
 class ModelExtensionDashboardOnline extends Model {
 	public function getTotalOnline($data = array()) {
+		// to be calculated
+		return "500";
 		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "customer_online` co LEFT JOIN " . DB_PREFIX . "customer c ON (co.customer_id = c.customer_id)";
 
 		$implode = array();

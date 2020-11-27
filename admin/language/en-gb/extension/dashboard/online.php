@@ -1,11 +1,11 @@
 <?php
 // Heading
-$_['heading_title']    = 'People Online';
+$_['heading_title']    = 'Cash';
 
 // Text
 $_['text_extension']   = 'Extensions';
-$_['text_success']     = 'Success: You have modified dashboard online!';
-$_['text_edit']        = 'Edit Dashboard Online';
+$_['text_success']     = 'Success: You have modified dashboard Cash!';
+$_['text_edit']        = 'Edit Dashboard Cash';
 $_['text_view']        = 'View more...';
 
 // Entry
