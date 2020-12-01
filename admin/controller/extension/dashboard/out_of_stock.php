@@ -2,9 +2,7 @@
 class ControllerExtensionDashboardOutOfStock extends Controller {
     private $error = array();
 
-    public function idnex(){
-		print_r("we qare hre");
-		die();
+    public function index(){
 		$this->load->language('extension/dashboard/out_of_stock');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -103,8 +101,8 @@ class ControllerExtensionDashboardOutOfStock extends Controller {
             $data['products'][] = array(
                 'product_id'           => $result['product_id'],
                 'product_code'         => $result['product_code'],
-                'product_name'  => $result['product_name'],
-                'view'               => $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . '&error_id=' . $result['error_id'], true),
+                'product_name'         => $result['product_name'],
+                'view'                 => $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'], true),
             );
 
         }

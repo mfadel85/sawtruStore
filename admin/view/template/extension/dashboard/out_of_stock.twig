@@ -1,1 +1,36 @@
-test
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-shopping-cart"></i> {{ heading_title }}</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+          <thead>
+        <tr>
+          <td class="text-right">{{ column_product_id }}</td>
+          <td>{{ column_customer }}</td>
+          <td>{{ column_product_name }}</td>
+          <td>{{ column_status }}</td>
+          <td>{{ column_date_added }}</td>
+          <td class="text-right">{{ column_action }}</td>
+        </tr>
+      </thead>
+            <tbody>
+        {% if products %}
+        {% for product in products %}
+        <tr>
+          <td class="text-right">{{ product.product_id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.product_code }}</td>
+          <td>{{ product.product_name }}</td>
+          <td class="text-right"><a href="{{ product.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td class="text-center" colspan="6">{{ text_no_results }}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
