@@ -7,10 +7,8 @@
           <thead>
         <tr>
           <td class="text-right">{{ column_product_id }}</td>
-          <td>{{ column_customer }}</td>
           <td>{{ column_product_name }}</td>
-          <td>{{ column_status }}</td>
-          <td>{{ column_date_added }}</td>
+          <td>{{ column_product_code }}</td>
           <td class="text-right">{{ column_action }}</td>
         </tr>
       </thead>
@@ -19,9 +17,8 @@
         {% for product in products %}
         <tr>
           <td class="text-right">{{ product.product_id }}</td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.product_code }}</td>
           <td>{{ product.product_name }}</td>
+          <td>{{ product.product_code }}</td>
           <td class="text-right"><a href="{{ product.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
         </tr>
         {% endfor %}

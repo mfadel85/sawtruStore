@@ -8,8 +8,8 @@ $_['text_success']      = 'Success: You have modified dashboard Out Of Stock !';
 $_['text_edit']         = 'Edit Dashboard Out Of Stock';
 
 // Column
-$_['column_error_id']   = 'Error ID';
-$_['column_error_code']   = 'Error Code';
+$_['column_product_id']   = 'Product ID';
+$_['column_product_code']   = 'Product Code';
 $_['column_error_explanation']   = 'Error Explanatoin';
 $_['column_status']     = 'Status';
 $_['column_date_added'] = 'Date Added';
