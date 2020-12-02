@@ -47,7 +47,7 @@ class ControllerSaleWithdraw extends Controller {
 		} else {
 			$data['success'] = '';
         }
-        if (isset($this->request->get['page'])) {
+        		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
 		} else {
 			$page = 1;
