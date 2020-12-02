@@ -88,6 +88,10 @@ class ControllerExtensionDashboardChart extends Controller {
 
 		$data['user_token'] = $this->session->data['user_token'];
 
+		$data['categories'] = array();
+		$this->load->model('catalog/category');
+		$data['categories'] = $this->model_catalog_category->getCategories();
+
 		return $this->load->view('extension/dashboard/chart_info', $data);
 	}
 
@@ -115,6 +119,19 @@ class ControllerExtensionDashboardChart extends Controller {
 
 		switch ($range) {
 			default:
+				if(substr($range,0,5) =='catID'){
+					$catID = substr($range,6,10);
+					$results = $this->model_extension_dashboard_chart->getTotalOrdersByCategory($catID);
+					foreach ($results as $key => $value) {
+						$json['order']['data'][] = array($key, $value['total']);
+					}
+					for ($i = 1; $i <= 12; $i++) {
+						$json['xaxis'][] = array($i, date('M', mktime(0, 0, 0, $i)));
+					}
+					break;
+
+				}
+			break;
 			case 'day':
 				$results = $this->model_extension_dashboard_chart->getTotalOrdersByDay();
 
