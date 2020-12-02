@@ -27,7 +27,40 @@ class ModelExtensionDashboardChart extends Model {
 
 		return $order_data;
 	}
+	public function getTotalOrdersByCategory($catID){
+		$implode = array();
 
+		foreach ($this->config->get('config_complete_status') as $order_status_id) {
+			$implode[] = "'" . (int)$order_status_id . "'";
+		}
+
+		$order_data = array();
+
+		for ($i = 1; $i <= 12; $i++) {
+			$order_data[$i] = array(
+				'month' => date('M', mktime(0, 0, 0, $i)),
+				'total' => 0
+			);
+		}
+
+		$query = $this->db->query("SELECT COUNT(*) AS total, date_added ,name 
+		FROM `oc_order` oo join oc_order_product oop 
+		on oo.order_id=oop.order_id 
+		join oc_product_to_category optc 
+		on oop.product_id = optc.product_id 
+		WHERE order_status_id IN(5) 
+		AND YEAR(date_added) = YEAR(NOW()) and optc.category_id = $catID 
+		GROUP BY MONTH(date_added)");
+
+		foreach ($query->rows as $result) {
+			$order_data[date('n', strtotime($result['date_added']))] = array(
+				'month' => date('M', strtotime($result['date_added'])),
+				'total' => $result['total']
+			);
+		}
+
+		return $order_data;
+	}
 	public function getTotalOrdersByWeek() {
 		$implode = array();
 
@@ -48,7 +81,10 @@ class ModelExtensionDashboardChart extends Model {
 			);
 		}
 
-		$query = $this->db->query("SELECT COUNT(*) AS total, date_added FROM `" . DB_PREFIX . "order` WHERE order_status_id IN(" . implode(",", $implode) . ") AND DATE(date_added) >= DATE('" . $this->db->escape(date('Y-m-d', $date_start)) . "') GROUP BY DAYNAME(date_added)");
+		$query = $this->db->query("SELECT COUNT(*) AS total, date_added 
+		FROM `" . DB_PREFIX . "order` WHERE order_status_id IN(" . implode(",", $implode) . ") 
+		AND DATE(date_added) >= DATE('" . $this->db->escape(date('Y-m-d', $date_start)) . "') 
+		GROUP BY DAYNAME(date_added)");
 
 		foreach ($query->rows as $result) {
 			$order_data[date('w', strtotime($result['date_added']))] = array(
@@ -106,7 +142,9 @@ class ModelExtensionDashboardChart extends Model {
 			);
 		}
 
-		$query = $this->db->query("SELECT COUNT(*) AS total, date_added FROM `" . DB_PREFIX . "order` WHERE order_status_id IN(" . implode(",", $implode) . ") AND YEAR(date_added) = YEAR(NOW()) GROUP BY MONTH(date_added)");
+		$query = $this->db->query("SELECT COUNT(*) AS total, date_added 
+		FROM `" . DB_PREFIX . "order` WHERE order_status_id IN(" . implode(",", $implode) . ") 
+		AND YEAR(date_added) = YEAR(NOW()) GROUP BY MONTH(date_added)");
 
 		foreach ($query->rows as $result) {
 			$order_data[date('n', strtotime($result['date_added']))] = array(
