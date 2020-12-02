@@ -106,7 +106,7 @@ class ControllerExtensionDashboardOnline extends Controller {
 			$data['total'] = $online_total;
 		}*/
 
-		$data['online'] = $this->url->link('sale/order', 'user_token=' . $this->session->data['user_token'], true);
+		$data['online'] = $this->url->link('sale/withdraw', 'user_token=' . $this->session->data['user_token'], true);
 
 		return $this->load->view('extension/dashboard/online_info', $data);
 	}
