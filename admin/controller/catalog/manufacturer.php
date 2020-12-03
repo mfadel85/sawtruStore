@@ -175,6 +175,10 @@ class ControllerCatalogManufacturer extends Controller {
 			$data['manufacturers'][] = array(
 				'manufacturer_id' => $result['manufacturer_id'],
 				'name'            => $result['name'],
+				'iban'            => $result['iban'],
+				'address'         => $result['address'],
+				'commercialName'  => $result['commercialName'],
+				'telephone'       => $result['telephone'],
 				'sort_order'      => $result['sort_order'],
 				'edit'            => $this->url->link('catalog/manufacturer/edit', 'user_token=' . $this->session->data['user_token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, true)
 			);
@@ -314,6 +318,38 @@ class ControllerCatalogManufacturer extends Controller {
 			$data['name'] = '';
 		}
 
+		if (isset($this->request->post['address'])) {
+			$data['address'] = $this->request->post['address'];
+		} elseif (!empty($manufacturer_info)) {
+			$data['address'] = $manufacturer_info['address'];
+		} else {
+			$data['address'] = '';
+		}
+
+		if (isset($this->request->post['commercialName'])) {
+			$data['commercialName'] = $this->request->post['commercialName'];
+		} elseif (!empty($manufacturer_info)) {
+			$data['commercialName'] = $manufacturer_info['commercialName'];
+		} else {
+			$data['commercialName'] = '';
+		}
+
+		if (isset($this->request->post['iban'])) {
+			$data['iban'] = $this->request->post['iban'];
+		} elseif (!empty($manufacturer_info)) {
+			$data['iban'] = $manufacturer_info['iban'];
+		} else {
+			$data['iban'] = '';
+		}
+
+		if (isset($this->request->post['telephone'])) {
+			$data['telephone'] = $this->request->post['telephone'];
+		} elseif (!empty($manufacturer_info)) {
+			$data['telephone'] = $manufacturer_info['telephone'];
+		} else {
+			$data['telephone'] = '';
+		}
+		
 		$this->load->model('setting/store');
 
 		$data['stores'] = array();
