@@ -1,7 +1,13 @@
 <?php
 class ModelCatalogManufacturer extends Model {
 	public function addManufacturer($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', sort_order = '" . (int)$data['sort_order'] . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer 
+		SET name = '" . $this->db->escape($data['name']) . "', 
+		iban = '" . $this->db->escape($data['iban']) . "', 
+		address = '" . $this->db->escape($data['address']) . "', 
+		telephone = '" . $this->db->escape($data['telephone']) . "', 
+		commercialName = '" . $this->db->escape($data['commercialName']) . "', 
+		sort_order = '" . (int)$data['sort_order'] . "'");
 
 		$manufacturer_id = $this->db->getLastId();
 
@@ -32,7 +38,14 @@ class ModelCatalogManufacturer extends Model {
 	}
 
 	public function editManufacturer($manufacturer_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', sort_order = '" . (int)$data['sort_order'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("UPDATE " . DB_PREFIX . "manufacturer 
+		SET name = '" . $this->db->escape($data['name']) . "',
+		iban = '" . $this->db->escape($data['iban']) . "', 
+		address = '" . $this->db->escape($data['address']) . "', 
+		telephone = '" . $this->db->escape($data['telephone']) . "', 
+		commercialName = '" . $this->db->escape($data['commercialName']) . "', 
+		 sort_order = '" . (int)$data['sort_order'] . "' 
+		 WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape($data['image']) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");

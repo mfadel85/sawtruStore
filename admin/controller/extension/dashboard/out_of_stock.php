@@ -102,7 +102,7 @@ class ControllerExtensionDashboardOutOfStock extends Controller {
                 'product_id'           => $result['product_id'],
                 'product_code'         => $result['product_code'],
                 'product_name'         => $result['product_name'],
-                'view'                 => $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'], true),
+                'view'                 => $this->url->link('catalog/supply/addSupply', 'user_token=' . $this->session->data['user_token'] . '&quantity=20&product_id=' . $result['product_id'], true),
             );
 
         }
