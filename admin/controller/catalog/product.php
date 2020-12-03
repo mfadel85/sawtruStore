@@ -1506,7 +1506,6 @@ class ControllerCatalogProduct extends Controller {
 		if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen($this->request->post['model']) > 64)) {
 			$this->error['model'] = $this->language->get('error_model');
 		}
-		print_r(" Manu : $this->request->post['manufacturer']");
 		if ((utf8_strlen($this->request->post['manufacturer']) < 1) || (utf8_strlen($this->request->post['manufacturer']) > 64)) {
 			$this->error['manufacturer'] = $this->language->get('error_manufacturer');
 		}

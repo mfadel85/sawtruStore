@@ -16,17 +16,19 @@ class ControllerCommonColumnLeft extends Controller {
 				'children' => array()
 			);
 			
-			// Catalog
+			// Catalog =  Products
 			$catalog = array();
-			
-			if ($this->user->hasPermission('access', 'catalog/category')) {
+			$store   = array();
+			if ($this->user->hasPermission('access', 'catalog/supply')) {
 				$catalog[] = array(
-					'name'	   => $this->language->get('text_category'),
-					'href'     => $this->url->link('catalog/category', 'user_token=' . $this->session->data['user_token'], true),
+					'name'	   => $this->language->get('text_supply'),
+					'href'     => $this->url->link('catalog/supply', 'user_token=' . $this->session->data['user_token'], true),
 					'children' => array()		
 				);
 			}
-			
+
+
+
 			if ($this->user->hasPermission('access', 'catalog/product')) {
 				$catalog[] = array(
 					'name'	   => $this->language->get('text_product'),
@@ -43,21 +45,7 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 
-			if ($this->user->hasPermission('access', 'catalog/unit')) {
-				$catalog[] = array(
-					'name'	   => $this->language->get('text_unit'),
-					'href'     => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
 
-			if ($this->user->hasPermission('access', 'catalog/shelf')) {
-				$catalog[] = array(
-					'name'	   => $this->language->get('text_shelf'),
-					'href'     => $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
 
 			if ($this->user->hasPermission('access', 'catalog/recurring')) {
 				$catalog[] = array(
@@ -126,13 +114,7 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 			
-			if ($this->user->hasPermission('access', 'catalog/review')) {		
-				$catalog[] = array(
-					'name'	   => $this->language->get('text_review'),
-					'href'     => $this->url->link('catalog/review', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);		
-			}
+
 			
 			if ($this->user->hasPermission('access', 'catalog/information')) {		
 				$catalog[] = array(
@@ -268,7 +250,13 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);	
 			}
-			
+			if ($this->user->hasPermission('access', 'catalog/category')) {
+				$sale[] = array(
+					'name'	   => $this->language->get('text_category'),
+					'href'     => $this->url->link('catalog/category', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}				
 			if ($this->user->hasPermission('access', 'sale/recurring')) {	
 				$sale[] = array(
 					'name'	   => $this->language->get('text_recurring'),
@@ -284,7 +272,13 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);	
 			}
-			
+			if ($this->user->hasPermission('access', 'catalog/review')) {		
+				$sale[] = array(
+					'name'	   => $this->language->get('text_review'),
+					'href'     => $this->url->link('catalog/review', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);		
+			}			
 			// Voucher
 			$voucher = array();
 			
@@ -684,7 +678,41 @@ class ControllerCommonColumnLeft extends Controller {
 				'href'     => '',
 				'children' => $report
 			);	
+			$store = array();
+			if ($this->user->hasPermission('access', 'setting/errors')) {
+				$store[] = array(
+					'name'	   => $this->language->get('text_errors'),
+					'href'     => $this->url->link('setting/errors', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}	
+
+			if ($this->user->hasPermission('access', 'catalog/unit')) {
+				$store[] = array(
+					'name'	   => $this->language->get('text_unit'),
+					'href'     => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+
+			if ($this->user->hasPermission('access', 'catalog/shelf')) {
+				$store[] = array(
+					'name'	   => $this->language->get('text_shelf'),
+					'href'     => $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			} 
+
+
 			
+			$data['menus'][] = array(
+				'id'       => 'menu-store',
+				'icon'	   => 'fa-bar-chart-o', 
+				'name'	   => $this->language->get('text_store'),
+				'href'     => '',
+				'children' => $store
+			);	
+			//setting/errors
 			// Stats
 			$this->load->model('sale/order');
 	
