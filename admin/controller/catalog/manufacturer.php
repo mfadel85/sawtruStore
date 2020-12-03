@@ -180,7 +180,8 @@ class ControllerCatalogManufacturer extends Controller {
 				'commercialName'  => $result['commercialName'],
 				'telephone'       => $result['telephone'],
 				'sort_order'      => $result['sort_order'],
-				'edit'            => $this->url->link('catalog/manufacturer/edit', 'user_token=' . $this->session->data['user_token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, true)
+				'edit'            => $this->url->link('catalog/manufacturer/edit', 'user_token=' . $this->session->data['user_token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, true),
+				'showProducts'    => $this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . '&filter_supplier=' . $result['manufacturer_id'] . $url, true)
 			);
 		}
 
