@@ -22,6 +22,7 @@ $_['column_product_name']    = 'Product Name';
 
 $_['column_sort_order'] = 'Sort Order';
 $_['column_action']     = 'Action';
+$_['button_show']       = 'Show products';
 
 // Entry
 $_['entry_name']             = 'Manufacturer Name';
