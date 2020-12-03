@@ -11,7 +11,31 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->getList();
 	}
+	public function addCat(){
+		$this->load->language('catalog/category');
 
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('catalog/category');	
+		$data = $this->request->get;
+		$data['status'] = 1;
+		$data['parent_id'] = 0;
+		$data['description'] = '';
+		$data['meta_keyword'] = '';
+		$data['meta_description'] = '';
+		$data['sort_order'] = 0;
+		$data['column'] = 1;
+		$data['category_description'][1] = array(
+			'meta_title'=> $data['cat_name'],
+			'name'=> $data['cat_name'],
+			'description' => '',
+			'meta_description' => '',
+			'meta_keyword' => ''
+		);
+		$this->model_catalog_category->addCategory($data);
+		//$this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+	
+	}
 	public function add() {
 		$this->load->language('catalog/category');
 
