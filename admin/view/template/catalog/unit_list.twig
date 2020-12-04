@@ -67,7 +67,7 @@
                       <td class="text-left">{{ unit.direction }}</td>
 
                       <td class="text-right"><a href="{{ unit.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
-                      <td class="text-right"><a href="{{ unit.empty }}" data-toggle="tooltip" title="{{ button_empty }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                      <td class="text-right"><a href="{{ unit.empty }}" data-toggle="tooltip" title="{{ button_empty }}"  onclick="confirm('{{ text_confirm }}') ? true : false;" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
 
                       </tr>
                     {% endfor %}

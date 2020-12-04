@@ -25,6 +25,7 @@ $_['column_name']            = 'Unit Name';
 $_['column_direction']            = 'Direction';
 $_['column_barcode']         = 'Barcode';
 $_['column_sort_order']      = 'Sort Order';
+$_['column_empty']           = 'Empty Unit';
 
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';
