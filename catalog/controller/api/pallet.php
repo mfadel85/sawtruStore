@@ -1,7 +1,6 @@
 <?php
 class ControllerApiPallet extends Controller
 {
-
 	public function getPallet(){
 		$json = array();		
 		if (!isset($_POST['palletID']) ) {

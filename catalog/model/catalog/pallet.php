@@ -262,7 +262,7 @@ class ModelCatalogPallet extends Model {
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1 
 				where start_pallet_id = $beltID
 			");
-			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
+			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 1 where pallet_id = $beltID");
 
 			/// based on prev position and belt count if prev position is the first,
 			/// if it is the last, 
@@ -290,7 +290,7 @@ class ModelCatalogPallet extends Model {
 				$updated = $this->db->query("
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i 
 				where start_pallet_id = $beltID");
-				$updated = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
+				$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 0 where pallet_id = $beltID");
 
 				// if update gave no results then create
 			}

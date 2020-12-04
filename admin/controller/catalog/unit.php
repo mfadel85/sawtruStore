@@ -8,6 +8,7 @@ class ControllerCatalogUnit extends Controller {
         $this->load->model('catalog/unit');
         $this->getList();
     }
+    
     protected function getList(){
         //filters
         $data['error_warning'] = false;
