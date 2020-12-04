@@ -817,6 +817,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	color:white;
 }
 
-.unitTable .empty{
+ .unitTable tr td{
 	color: green;
+	padding: 4px !important;
 }

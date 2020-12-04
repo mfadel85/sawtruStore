@@ -1,9 +1,6 @@
 <?php
 class ControllerApiPallet extends Controller
 {
-	public function info(){
-		print_r("yalan söyleme");
-	}
 
 	public function getPallet(){
 		$json = array();		
@@ -18,7 +15,7 @@ class ControllerApiPallet extends Controller
 		$json = $this->model_catalog_pallet->getPallet($palletID);
 		//print_r($product);
 		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
+		$this->response->setOutput(json_encode($json)); 
 	}
 
 	public function getPalletContent(){
