@@ -32,7 +32,7 @@ class ControllerCatalogUnit extends Controller {
         $unit_total = $this->model_catalog_unit->getTotalUnits($filter_data);
         $results = $this->model_catalog_unit->getUnits($filter_data);
         // get units by direction?
-        print_r($results);
+        //print_r($results);
         $data['left'] = array();
         $data['right'] = array();
         foreach($results as $result){
@@ -45,10 +45,11 @@ class ControllerCatalogUnit extends Controller {
                 'empty'     => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
             );
             // is it empty or full? ,id
+            $empty = $this->checkStatus($result['unit_id']);
             $element = array(
                 'id'=>$result['unit_id'],
                 'name'      => $result['name'],
-                 'status'=> "empty"
+                'status'=> "empty"
             );
             if($result['direction'] == 'Left'){
                 $data['left'][] = $element;
@@ -87,6 +88,12 @@ class ControllerCatalogUnit extends Controller {
 
 		$this->response->setOutput($this->load->view('catalog/unit_list', $data));
     }
+    // empty or full or partially full
+    protected function checkStatus($unitID){
+        $this->load->model('catalog/unit');
+        $result = $this->model_catalog_unit->checkStatus($unitID);
+        return $result;
+    }
     public function add(){
         $this->load->language('catalog/unit');
         $this->document->setTitle($this->language->get('heading_title'));
@@ -97,7 +104,6 @@ class ControllerCatalogUnit extends Controller {
 			$this->session->data['success'] = $this->language->get('text_success');
 			$url = '';
 			$this->response->redirect($this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true));
-
         }
         $this->getForm();
     }

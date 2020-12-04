@@ -25,6 +25,9 @@ class ModelCatalogUnit extends Model {
         $this->db->query("DELETE FROM " . DB_PREFIX . "unit WHERE unit_id = '" . (int)$unit_id . "'");
 		$this->cache->delete('unit_id');
     }
+    public function checkStatus($unitID){
+        
+    }
     public function getTotalUnits($data = array()){
         $sql = "SELECT COUNT(*) as total FROM oc_unit";
         $query = $this->db->query($sql);

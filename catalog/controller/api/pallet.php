@@ -41,13 +41,13 @@ class ControllerApiPallet extends Controller
 	public function assignPalletProduct(){
 
 		$json = array();
-		if(!isset($_POST['palletID']) || !isset($_POST['productID']) || $_POST['bentCount']==''){
+		if(!isset($_POST['barcode']) || !isset($_POST['productID']) || $_POST['bentCount']==''){
 			$json['error']=1;
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($json));
 		}
 		$this->load->model('catalog/pallet');
-		$valid = $this->model_catalog_pallet->verifyShelfProduct($_POST['palletID'],$_POST['productID']);
+		$valid = $this->model_catalog_pallet->verifyShelfProduct($_POST['barcode'],$_POST['productID']);
 		error_log("$valid is valid");
 		if(!$valid){
 			$json['error']=1;
@@ -56,13 +56,13 @@ class ControllerApiPallet extends Controller
 
 		}
 		else {
-			$palletID  = $_POST['palletID'];
+			$barcode  = $_POST['barcode'];
 			$productID = $_POST['productID'];
 			$bentCount = $_POST['bentCount'];
 			$update    = $_POST['update'];
-			error_log("$palletID $productID  $bentCount $update");
+			error_log("$barcode $productID  $bentCount $update");
 			/// check if it can't be assigned, or updated???
-			$this->model_catalog_pallet->assignPalletProduct($palletID,$productID,$bentCount,$update);
+			$this->model_catalog_pallet->assignPalletProduct($barcode,$productID,$bentCount,$update);
 		}
 
 	}
