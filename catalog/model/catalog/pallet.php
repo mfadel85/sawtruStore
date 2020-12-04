@@ -221,6 +221,7 @@ class ModelCatalogPallet extends Model {
 					// to delete the record of $nextPalletID
 					if($palletStats == "Assigned Empty") {
 						$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
+						$this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
 					}
 					$assignable = true;
 					continue;
@@ -246,6 +247,8 @@ class ModelCatalogPallet extends Model {
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
 					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);");
+				$assigned = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
+
 			}
 				
 		}	
@@ -259,6 +262,8 @@ class ModelCatalogPallet extends Model {
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1 
 				where start_pallet_id = $beltID
 			");
+			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
+
 			/// based on prev position and belt count if prev position is the first,
 			/// if it is the last, 
 			///if it is in the middle
@@ -283,7 +288,10 @@ class ModelCatalogPallet extends Model {
 				
 				error_log("We are here to live in another way: update next cells");
 				$updated = $this->db->query("
-				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i where start_pallet_id = $beltID");
+				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i 
+				where start_pallet_id = $beltID");
+				$updated = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
+
 				// if update gave no results then create
 			}
 		

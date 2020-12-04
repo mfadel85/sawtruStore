@@ -26,7 +26,8 @@ class ModelCatalogUnit extends Model {
 		$this->cache->delete('unit_id');
     }
     public function checkStatus($unitID){
-        
+        //SELECT * FROM `oc_pallet` WHERE unit_id = $unitID
+
     }
     public function getTotalUnits($data = array()){
         $sql = "SELECT COUNT(*) as total FROM oc_unit";
