@@ -33,7 +33,7 @@ class ModelCatalogUnit extends Model {
     }
     public function getUnits($data= array()){
         $units = array();
-        $sql = "SELECT * FROM " . DB_PREFIX . "unit";
+        $sql = "SELECT * FROM " . DB_PREFIX . "unit order by direction";
         $query = $this->db->query($sql);
         
         foreach($query->rows as $result){

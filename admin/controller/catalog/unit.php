@@ -31,13 +31,16 @@ class ControllerCatalogUnit extends Controller {
 
         $unit_total = $this->model_catalog_unit->getTotalUnits($filter_data);
         $results = $this->model_catalog_unit->getUnits($filter_data);
+        // get units by direction?
+        print_r($results);
         foreach($results as $result){
             $data['units'][] = array(
-                'unit_id' => $result['unit_id'],
-                'barcode' => $result['barcode'],
-                'name'    => $result['name'],
-                'edit'    => $this->url->link('catalog/unit/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true),
-                'empty'   => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
+                'unit_id'   => $result['unit_id'],
+                'barcode'   => $result['barcode'],
+                'name'      => $result['name'],
+                'direction' => $result['direction'],
+                'edit'      => $this->url->link('catalog/unit/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true),
+                'empty'     => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
 
             );
         }

@@ -22,6 +22,7 @@ $_['entry_sort_order']       = 'Sort Order';
 
 // Column
 $_['column_name']            = 'Unit Name';
+$_['column_direction']            = 'Direction';
 $_['column_barcode']         = 'Barcode';
 $_['column_sort_order']      = 'Sort Order';
 
