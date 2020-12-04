@@ -388,7 +388,39 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);
 			}
-			
+
+			$report = array();
+							
+			if ($this->user->hasPermission('access', 'report/report')) {
+				$report[] = array(
+					'name'	   => $this->language->get('text_reports'),
+					'href'     => $this->url->link('report/report', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+					
+			if ($this->user->hasPermission('access', 'report/online')) {
+				$report[] = array(
+					'name'	   => $this->language->get('text_online'),
+					'href'     => $this->url->link('report/online', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+											
+			if ($this->user->hasPermission('access', 'report/statistics')) {
+				$report[] = array(
+					'name'	   => $this->language->get('text_statistics'),
+					'href'     => $this->url->link('report/statistics', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}	
+			if ($report) {																
+				$marketing[] = array(
+					'name'	   => $this->language->get('text_reports'),
+					'href'     => '',
+					'children' => $report	
+				);
+			}			
 			if ($marketing) {
 				$data['menus'][] = array(
 					'id'       => 'menu-marketing',
@@ -590,13 +622,7 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 			
-			if ($localisation) {																
-				$system[] = array(
-					'name'	   => $this->language->get('text_localisation'),
-					'href'     => '',
-					'children' => $localisation	
-				);
-			}
+
 			
 			// Tools	
 			$maintenance = array();
@@ -646,39 +672,15 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 			
-			$report = array();
-							
-			if ($this->user->hasPermission('access', 'report/report')) {
-				$report[] = array(
-					'name'	   => $this->language->get('text_reports'),
-					'href'     => $this->url->link('report/report', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
-					
-			if ($this->user->hasPermission('access', 'report/online')) {
-				$report[] = array(
-					'name'	   => $this->language->get('text_online'),
-					'href'     => $this->url->link('report/online', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
-											
-			if ($this->user->hasPermission('access', 'report/statistics')) {
-				$report[] = array(
-					'name'	   => $this->language->get('text_statistics'),
-					'href'     => $this->url->link('report/statistics', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}	
-			
-			$data['menus'][] = array(
+
+
+			/*$data['menus'][] = array(
 				'id'       => 'menu-report',
 				'icon'	   => 'fa-bar-chart-o', 
 				'name'	   => $this->language->get('text_reports'),
 				'href'     => '',
 				'children' => $report
-			);	
+			);*/	
 			$store = array();
 			if ($this->user->hasPermission('access', 'setting/errors')) {
 				$store[] = array(
@@ -687,7 +689,13 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);
 			}	
-
+			if ($localisation) {																
+				$store[] = array(
+					'name'	   => $this->language->get('text_localisation'),
+					'href'     => '',
+					'children' => $localisation	
+				);
+			}
 			if ($this->user->hasPermission('access', 'catalog/unit')) {
 				$store[] = array(
 					'name'	   => $this->language->get('text_unit'),
