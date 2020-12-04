@@ -55,40 +55,6 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 			
-			if ($this->user->hasPermission('access', 'catalog/filter')) {
-				$catalog[] = array(
-					'name'	   => $this->language->get('text_filter'),
-					'href'     => $this->url->link('catalog/filter', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
-			
-			// Attributes
-			$attribute = array();
-			
-			if ($this->user->hasPermission('access', 'catalog/attribute')) {
-				$attribute[] = array(
-					'name'     => $this->language->get('text_attribute'),
-					'href'     => $this->url->link('catalog/attribute', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()	
-				);
-			}
-			
-			if ($this->user->hasPermission('access', 'catalog/attribute_group')) {
-				$attribute[] = array(
-					'name'	   => $this->language->get('text_attribute_group'),
-					'href'     => $this->url->link('catalog/attribute_group', 'user_token=' . $this->session->data['user_token'], true),
-					'children' => array()		
-				);
-			}
-			
-			if ($attribute) {
-				$catalog[] = array(
-					'name'	   => $this->language->get('text_attribute'),
-					'href'     => '',
-					'children' => $attribute
-				);
-			}
 			
 			/*if ($this->user->hasPermission('access', 'catalog/option')) {
 				$catalog[] = array(
@@ -278,7 +244,42 @@ class ControllerCommonColumnLeft extends Controller {
 					'href'     => $this->url->link('catalog/review', 'user_token=' . $this->session->data['user_token'], true),
 					'children' => array()		
 				);		
-			}			
+			}	
+			if ($this->user->hasPermission('access', 'catalog/filter')) {
+				$sale[] = array(
+					'name'	   => $this->language->get('text_filter'),
+					'href'     => $this->url->link('catalog/filter', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+			
+			// Attributes
+			$attribute = array();
+			
+			if ($this->user->hasPermission('access', 'catalog/attribute')) {
+				$attribute[] = array(
+					'name'     => $this->language->get('text_attribute'),
+					'href'     => $this->url->link('catalog/attribute', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()	
+				);
+			}
+			
+			if ($this->user->hasPermission('access', 'catalog/attribute_group')) {
+				$attribute[] = array(
+					'name'	   => $this->language->get('text_attribute_group'),
+					'href'     => $this->url->link('catalog/attribute_group', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);
+			}
+			
+			if ($attribute) {
+				$sale[] = array(
+					'name'	   => $this->language->get('text_attribute'),
+					'href'     => '',
+					'children' => $attribute
+				);
+			}
+								
 			// Voucher
 			$voucher = array();
 			
