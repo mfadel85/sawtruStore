@@ -33,6 +33,8 @@ class ControllerCatalogUnit extends Controller {
         $results = $this->model_catalog_unit->getUnits($filter_data);
         // get units by direction?
         print_r($results);
+        $data['left'] = array();
+        $data['right'] = array();
         foreach($results as $result){
             $data['units'][] = array(
                 'unit_id'   => $result['unit_id'],
@@ -41,9 +43,21 @@ class ControllerCatalogUnit extends Controller {
                 'direction' => $result['direction'],
                 'edit'      => $this->url->link('catalog/unit/edit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true),
                 'empty'     => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
-
             );
+            // is it empty or full? ,id
+            $element = array(
+                'id'=>$result['unit_id'],
+                'name'      => $result['name'],
+                 'status'=> "empty"
+            );
+            if($result['direction'] == 'Left'){
+                $data['left'][] = $element;
+            }
+            else if($result['direction'] == 'Right'){
+                $data['right'][] = $element;
+            }
         }
+        $data['unitCount'] = count($data['right']) + count($data['left']);
         $data['user_token'] = $this->session->data['user_token'];
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];

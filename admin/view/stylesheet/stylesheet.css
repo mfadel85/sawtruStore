@@ -816,3 +816,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	background-color:navy;
 	color:white;
 }
+
+.unitTable .empty{
+	color: green;
+}
