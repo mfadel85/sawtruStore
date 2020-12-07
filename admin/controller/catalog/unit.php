@@ -95,6 +95,42 @@ class ControllerCatalogUnit extends Controller {
         $result = $this->model_catalog_unit->checkStatus($unitID);
         return $result;
     }
+    public function displayUnit(){
+        $this->load->language('catalog/unit');
+        $this->load->model('catalog/unit');
+
+        $data['error_warning'] = false;
+        $data['breadcrumbs'] = array();
+
+        $data['breadcumbs'][] =array(
+            'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+        );
+        $url = '';
+        $data['breadcrumbs'][] = array(
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true)
+		);
+        $unitID = $this->request->get['id'];
+        $unit = $this->model_catalog_unit->getUnitDetails($unitID);
+        $unitDetail = array();
+        $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
+        $unitData = array();
+        // get the count of belts in a shelf
+        foreach($unit as $shelf){
+            $shelfID      = $shelf['id'];
+            $shelfContent = $shelf['contents'];
+            $unitDetail[]= ['shelfID'=> $shelfID,'contents'=> $shelfContent];
+        }
+        $data['beltCount'] = $beltCount;
+        $data['unit'] =$unitDetail;
+        $data['header'] = $this->load->controller('common/header');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+
+		$this->response->setOutput($this->load->view('catalog/unit_display', $data));
+    }
+
     public function add(){
         $this->load->language('catalog/unit');
         $this->document->setTitle($this->language->get('heading_title'));

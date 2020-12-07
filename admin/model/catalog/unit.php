@@ -63,7 +63,32 @@ class ModelCatalogUnit extends Model {
         }
         return $units;
     }
+    public function getBeltCount($unitID){
+        $shelfID = $this->db->query("select shelf_id from oc_shelf where unit_id=$unitID limit 0,1")->rows[0]['shelf_id'];
+        $query = "select count(*) as count from oc_pallet where shelf_id =$shelfID";
+        $count = $this->db->query($query)->row['count'];
+        return $count;
+    }
+    public function getUnitDetails($unitID){
+        $unit = array();
+        // get all rows in that unit
+        $shelves = $this->db->query("select shelf_id from oc_shelf where unit_id = $unitID");
+        foreach($shelves->rows  as $shelf)
+        {
+            $shelfID = $shelf['shelf_id'];
+            $shelf = array('id' => $shelfID,'contents'=> array() );
+            $query = "select * from oc_pallet where shelf_id =$shelfID";
+            $results = $this->db->query($query);
+            foreach($results->rows as $belt){
+                $shelf['contents'][] = array($belt['pallet_id'],$belt['product_id'],$belt['quantity']);
+            }
+            $unit[]=$shelf;
+        }
+        //print_r($unit);
+        return $unit;
 
+        
+    }
     public function getUnit($unit_id){
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "unit p  WHERE p.unit_id = '" . (int)$unit_id . "' ");
 		return $query->row;        
