@@ -807,7 +807,10 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	content: "\e91c";
 }
 
-
+.unitTable {
+	border-collapse: separate;
+	border-spacing: 0 40px;
+}
  .unitTable tr td{
 	color: green;
 	/*padding: 4px !important;	*/
