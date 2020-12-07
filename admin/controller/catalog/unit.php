@@ -46,11 +46,11 @@ class ControllerCatalogUnit extends Controller {
                 'empty'     => $this->url->link('catalog/unit/emptyUnit', 'user_token=' . $this->session->data['user_token'] . '&unit_id=' . $result['unit_id'] . $url, true)
             );
             // is it empty or full? ,id
-            $empty = $this->checkStatus($result['unit_id']);
+            $status = $this->checkStatus($result['unit_id']);
             $element = array(
                 'id'=>$result['unit_id'],
                 'name'      => $result['name'],
-                'status'=> "empty"
+                'status'=> $status
             );
             if($result['direction'] == 'Left'){
                 $data['left'][] = $element;

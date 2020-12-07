@@ -804,12 +804,16 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	content: "\e91c";
 }
 
-.full {
+.Full {
 	background-color: red;
 	color:black;
 }
-.empty {
+.Empty {
 	background-color:green;
+	color:wheat;
+}
+.Partially {
+	background-color:grey;
 	color:wheat;
 }
 .assigned {

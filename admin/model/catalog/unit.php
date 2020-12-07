@@ -27,6 +27,24 @@ class ModelCatalogUnit extends Model {
     }
     public function checkStatus($unitID){
         //SELECT * FROM `oc_pallet` WHERE unit_id = $unitID
+        $status = " Empty";
+        $fullCount = 0;
+        $emptyCount = 0;
+        $allBelts = $this->db->query("SELECT * from oc_pallet where unit_id=$unitID");
+        foreach($allBelts->rows as $belt){
+            if($belt['quantity'] > 0){
+                $status = " Partially";
+                $fullCount++;
+            }
+            else {
+                $emptyCount++;
+            }
+        }
+        if($fullCount == 0){
+            $status = " Empty";
+        }
+
+        return $status;
 
     }
     public function getTotalUnits($data = array()){
