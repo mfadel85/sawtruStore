@@ -13,7 +13,6 @@ $_['text_success']           = 'Success: You have modified Units!';
 $_['text_list']              = 'Unit List';
 $_['text_add']               = 'Add Unit';
 $_['text_edit']              = 'Edit Unit';
-$_['text_add']               = 'Add Unit';
 
 $_['entry_name']             = 'Unit Name';
 $_['entry_barcode']          = 'Unit Barcode';
