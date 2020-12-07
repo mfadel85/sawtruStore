@@ -63,8 +63,30 @@ class ModelCatalogUnit extends Model {
         }
         return $units;
     }
+    public function getBeltProductInfo($beltID,$productID){
+		$productInfo = $this->db->query("
+		select op.*,unit,name from " . DB_PREFIX . "product op
+			join " . DB_PREFIX . "length_class_description olcd 
+			on op.length_class_id = olcd.length_class_id
+			join " . DB_PREFIX . "product_description opd
+			on op.product_id = opd.product_id
+            where op.product_id = $productID and olcd.language_id = 1");
+            
+		$width     = $productInfo->row['width']; // this factor is for the available positions, we should get classID also, 
+		$length    = $productInfo->row['length'];
+		$height    = $productInfo->row['height'];
+		$name      = $productInfo->row['name'];
+		$beltCount = $productInfo->row['bent_count'];
+        $weight    = $productInfo->row['weight'];
+        $max       = floor(PALLET_DEPTH / $width);
+
+		$availableSpace = PALLET_DEPTH - $count*$width;
+		$countAvailable = floor($availableSpace / $width);
+		$result = [$countAvailable, $name,$beltCount,$pallet,$max];
+		return $result;
+    }
     public function getBeltCount($unitID){
-        $shelfID = $this->db->query("select shelf_id from oc_shelf where unit_id=$unitID limit 0,1")->rows[0]['shelf_id'];
+        $shelfID = $this->db->query("SELECT shelf_id from oc_shelf where unit_id=$unitID limit 0,1")->rows[0]['shelf_id'];
         $query = "select count(*) as count from oc_pallet where shelf_id =$shelfID";
         $count = $this->db->query($query)->row['count'];
         return $count;
@@ -72,22 +94,45 @@ class ModelCatalogUnit extends Model {
     public function getUnitDetails($unitID){
         $unit = array();
         // get all rows in that unit
-        $shelves = $this->db->query("select shelf_id from oc_shelf where unit_id = $unitID");
+        $shelves = $this->db->query("SELECT shelf_id from oc_shelf where unit_id = $unitID");
         foreach($shelves->rows  as $shelf)
         {
             $shelfID = $shelf['shelf_id'];
             $shelf = array('id' => $shelfID,'contents'=> array() );
-            $query = "select * from oc_pallet where shelf_id =$shelfID";
+            $query = "SELECT * from oc_pallet where shelf_id =$shelfID";
             $results = $this->db->query($query);
             foreach($results->rows as $belt){
-                $shelf['contents'][] = array($belt['pallet_id'],$belt['product_id'],$belt['quantity']);
+                $productID   = $belt['product_id'];
+                $productName = '';
+                if(isset($productID)){
+		            $count =  $belt['quantity'];
+                    $productInfo = $this->db->query("
+                    SELECT name,width from oc_product_description opd 
+                    join oc_product  op on opd.product_id = op.product_id
+                    where opd.product_id =$productID");
+                    $productName = $productInfo->row['name'];
+                    $width = $productInfo->row['width'];
+                    $full = false;
+                    $max       = floor(57 / $width);
+                    $availableSpace = 57 - $count*$width;
+                    $countAvailable = floor($availableSpace / $width);    
+                    $shelf['contents'][] = array(
+                        $belt['pallet_id'],
+                        $belt['product_id'],
+                        $productName,
+                        $belt['quantity'],
+                        $full,
+                        $max,
+                        $countAvailable);                
+                }
+                else {
+                    $shelf['contents'][] = array('',0,'','','','','');                
+                }
             }
             $unit[]=$shelf;
         }
         //print_r($unit);
         return $unit;
-
-        
     }
     public function getUnit($unit_id){
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "unit p  WHERE p.unit_id = '" . (int)$unit_id . "' ");

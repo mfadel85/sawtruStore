@@ -406,6 +406,9 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 .table thead > tr > td, .table tbody > tr > td {
 	vertical-align: middle;
 }
+.cell {
+	border-bottom: 3px !important;
+}
 .table a.asc:after {
 	content: " \f106";
 	font-family: FontAwesome;
@@ -804,24 +807,29 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	content: "\e91c";
 }
 
-.Full {
-	background-color: red;
-	color:black;
+
+ .unitTable tr td{
+	color: green;
+	/*padding: 4px !important;	*/
+	min-height: 5px;
 }
+
+
+
 .Empty {
 	background-color:green;
-	color:wheat;
+	color:white !important;
 }
 .Partially {
-	background-color:grey;
+	background-color:777;
 	color:wheat;
 }
 .assigned {
 	background-color:navy;
 	color:white;
 }
-
- .unitTable tr td{
-	color: green;
-	padding: 4px !important;
+.Full {
+	background-color: red;
+	color:white  !important;
 }
+
