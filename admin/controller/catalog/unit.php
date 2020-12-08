@@ -3,6 +3,21 @@ class ControllerCatalogUnit extends Controller {
     private $error = array();
 
     public function index(){
+
+        $this->document->addScript('view/javascript/jquery-ui.js');
+        $this->document->addStyle('view/stylesheet/jquery-ui.css');
+
+
+		$this->document->addStyle('view/vendor/animate/animate.css');
+		$this->document->addStyle('view/vendor/select2/select2.min.css');	
+		$this->document->addStyle('view/vendor/perfect-scrollbar/perfect-scrollbar.css');
+		$this->document->addStyle('view/css/util.css');
+		$this->document->addStyle('view/css/main.css');
+
+		$this->document->addScript('view/vendor/bootstrap/js/popper.js');
+		$this->document->addScript('view/vendor/select2/select2.min.js');
+		$this->document->addScript('view/js/main.js');
+
         $this->load->language('catalog/unit');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('catalog/unit');
@@ -96,9 +111,25 @@ class ControllerCatalogUnit extends Controller {
         return $result;
     }
     public function displayUnit(){
+        $this->document->addScript('view/javascript/jquery-ui.js');
+        $this->document->addStyle('view/stylesheet/jquery-ui.css');
+
+
+		$this->document->addStyle('view/vendor/animate/animate.css');
+		$this->document->addStyle('view/vendor/select2/select2.min.css');	
+		$this->document->addStyle('view/vendor/perfect-scrollbar/perfect-scrollbar.css');
+		$this->document->addStyle('view/css/util.css');
+		$this->document->addStyle('view/css/main.css');
+
+		$this->document->addScript('view/vendor/bootstrap/js/popper.js');
+		$this->document->addScript('view/vendor/select2/select2.min.js');
+		$this->document->addScript('view/js/main.js');
         $this->load->language('catalog/unit');
         $this->load->model('catalog/unit');
+        $this->load->model('catalog/product');
 
+		$data['products'] = array();
+		$data['products'] = $this->model_catalog_product->getProducts();
         $data['error_warning'] = false;
         $data['breadcrumbs'] = array();
 
@@ -119,8 +150,10 @@ class ControllerCatalogUnit extends Controller {
         // get the count of belts in a shelf
         foreach($unit as $shelf){
             $shelfID      = $shelf['id'];
+            $physicalRow  = $shelf['physicalRow'];
+
             $shelfContent = $shelf['contents'];
-            $unitDetail[]= ['shelfID'=> $shelfID,'contents'=> $shelfContent];
+            $unitDetail[]= ['shelfID'=> $shelfID,'physicalRow'=>$physicalRow,'contents'=> $shelfContent];
         }
         $data['beltCount'] = $beltCount;
         $data['unit'] =$unitDetail;

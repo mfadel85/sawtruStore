@@ -37,7 +37,7 @@
         </tr>
         {% for shelf in unit %}
         <tr id=" {{ shelf.shelfID }} ">
-        <td></td>
+        <td>{{ shelf.physicalRow }}</td>
           {% for belt in shelf.contents %}
           <td
               {% if belt[3] == 0 %}
@@ -57,13 +57,132 @@
         {% endfor %}
         </table>
       </div>
-      <div class="col-md-2"> 
-        Product List
-
+		<div class="col-sm-2" >
+			<div style="background-color:grey;" >
+        <h2 >Products List</h2>
       </div>
+			<input type="text" placeholder="type some product" />
+			<ul>
+			{% for product in products %}
+				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}}</li>
+			{% endfor %}
+			</ul>		
+		</div>
     </div>
 
   </div>
+<script type="text/javascript">
 
+	function allElementsFromPoint(x, y) {
+		console.log('movement');
+		var element, elements = [];
+		element = document.elementFromPoint(x, y);
+		console.log('element',element,x,y);
+		return element;
+	}
+  
+	$(".draggable").draggable({ 
+		revert: true,
+		cursor: "move",
+		start: function(event, ui) {
+				console.log('event is being dropped');
+                 //to get the id
+                 //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
+                console.dir('object is :',$(event.target).attr("id"));
+				console.dir(ui.helper.context.id);
+				console.dir(ui.helper.context.innerHTML);
+
+                console.log(ui.helper.clone());
+			},
+
+		stop:function(event,ui){
+			var el = allElementsFromPoint(event.pageX,event.pageY);
+			const productName = ui.helper.context.innerHTML;
+			console.log(ui.helper.context);
+			const palletCount = ui.helper.context.getAttribute("data-pallet-count");
+			const productID = ui.helper.context.getAttribute("id");
+			var td = $(el).filter('td').not($(this));
+			// now as you got the cell get its parent col and row: get the row and col of it
+			console.log('elements',td);
+			var pageX  = td[0].offsetLeft;
+			var pageY  = td[0].offsetTop;
+			console.log('element id',td[0].id);
+			const barCode = td[0].getAttribute("data-barcode");
+			const filled = td[0].getAttribute("data-filled");
+			const assignedProductID = td[0].getAttribute("data-product-id");
+
+			if(filled != "0"){
+				alert("you can't do this, this bent has already assigned to another product!!");
+				return;
+			}			   
+			const rIndex = td[0].id.indexOf('r');
+			const cIndex = td[0].id.indexOf('c');
+			const row = td[0].id.substring(td[0].id.indexOf('r')+1,td[0].id.indexOf('c'));
+			const col = td[0].id.substring(td[0].id.indexOf('c')+1,td[0].id.length);
+			const maxCol = parseInt(col)+parseInt(palletCount)-1;
+			console.log("col",col,"palletCount",palletCount,"maxCol",maxCol);
+
+			if(maxCol > 6){ // 6 is column count will be dynamic
+				alert("you can't do this bent, not enought space next to the product !!");
+				return;
+			}
+			let nextCells = [];
+			if(palletCount > 1 )
+			{
+
+				for(let j=1;j<palletCount;j++){
+					let k = parseInt(col)+j;
+					const cellID = "\"#r"+row+"c"+k+"\"";
+					const adjacentCell = $("#r"+row+"c"+k);
+					const filled = adjacentCell[0].getAttribute("data-filled");
+					if (parseInt(filled) >0){
+							alert("you can't do this bent, this product needs more than one bent,the next bent is assigned to another product!!");
+							return;
+					}
+					nextCells.push(k);
+				}
+			}
+
+			console.log('drag ended',pageX,pageY,row,col,barCode);
+			td[0].innerHTML = productName;
+			td.css({background:'yellow'}); 
+			nextCells.forEach(function(item){
+				$("#r"+row+"c"+item).css({background:'yellow'});
+				$("#r"+row+"c"+item).html(productName);
+	
+			});
+			// needed data: start pallet id, product id,  bentCount, created date, modified date
+			// we will add the assign functionality
+			// now we will send ajax request so these changes update in the database , unit_id
+			let update = false;
+			if(assignedProductID != ''){
+				update = true; // to be checke
+			}
+			else if( assignedProductID == '')
+			   update = false;
+
+			console.log(assignedProductID,productID);
+			$.ajax({
+				url: 'http://'+IP+'/store/index.php?route=api/pallet/assignPalletProduct',
+				async: false,
+				type: 'post',
+				data: {  
+					barcode: barCode, productID:productID,bentCount:palletCount,update:update
+				},
+				crossDomain: true,
+				success:function(){
+					//location.reload();
+				}
+			}).done(function(json){
+				console.log(json);
+				if(json['error'] == 1)
+					alert('Not Allowed Operation');
+				//else 
+					//location.reload();
+			});
+		}
+
+	});
+</script>
 </div>
 {{ footer }} 

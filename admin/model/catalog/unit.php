@@ -94,11 +94,12 @@ class ModelCatalogUnit extends Model {
     public function getUnitDetails($unitID){
         $unit = array();
         // get all rows in that unit
-        $shelves = $this->db->query("SELECT shelf_id from oc_shelf where unit_id = $unitID");
+        $shelves = $this->db->query("SELECT shelf_id,shelf_physical_row from oc_shelf where unit_id = $unitID");
         foreach($shelves->rows  as $shelf)
         {
-            $shelfID = $shelf['shelf_id'];
-            $shelf = array('id' => $shelfID,'contents'=> array() );
+            $shelfID     = $shelf['shelf_id'];
+            $physicalRow = $shelf['shelf_physical_row'];
+            $shelf = array('id' => $shelfID,'physicalRow'=> $physicalRow,'contents'=> array() );
             $query = "SELECT * from oc_pallet where shelf_id =$shelfID";
             $results = $this->db->query($query);
             foreach($results->rows as $belt){
