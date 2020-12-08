@@ -121,14 +121,38 @@ class ModelCatalogPallet extends Model {
 
 				}
 
-				$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+				$map[$unitID][$shelfID][] = [
+					$palletID ,
+					 $count,
+					 $productID,
+					 $availableSpace,
+					 $productName,
+					 $beltCount ,
+					 $max,
+					 $column,
+					 $row,
+					 $barcode,
+					 $productID
+				]; /// has to be an array current,produt name,product id ,how many pallets will take]
 				$skipCount = $beltCount -1;
 				if($skipCount>0){
 					for($j=1;$j<$skipCount+1;$j++) 							// $barcode will change
 					{
 						$nextBeltID = $this->getNextBeltID($palletID,$j);
-						$barcode = $this->db->query("select barcode from oc_pallet where pallet_id = $nextBeltID")->rows[0]['barcode'];
-						$map[$unitID][$shelfID][] = [$palletID , $count,$productID,$availableSpace,$productName,$beltCount ,$max,$column+$j,$row,$barcode,$productID]; /// has to be an array current,produt name,product id ,how many pallets will take]
+						$barcode = $this->db->query("SELECT barcode FROM oc_pallet WHERE pallet_id = $nextBeltID")->rows[0]['barcode'];
+						$map[$unitID][$shelfID][] = [
+							$palletID ,
+							$count,
+							$productID,
+							$availableSpace,
+							$productName,
+							$beltCount,
+							$max,
+							$column+$j,
+							$row,
+							$barcode,
+							$productID
+						]; /// has to be an array current,produt name,product id ,how many pallets will take]
 					}
 						
 				}

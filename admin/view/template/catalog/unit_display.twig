@@ -41,9 +41,10 @@
           {% for belt in shelf.contents %}
           <td 
             data-column="column{{ loop.index }}"
-            id="r{{ pallet[8]}}c{{ pallet[7]}}"
+            id="r{{ loop.parent.loop.index }}c{{ loop.index}}"
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
+             data-product-id="{{ belt[2] }}"
             {% if belt[3] == 0 %}
               class="cell Empty"
             {% elseif  belt[3] %}
@@ -76,7 +77,8 @@
 
   </div>
 <script type="text/javascript">
-
+	var IP = '192.168.1.51';
+	const beltWidth= 70;
 	function allElementsFromPoint(x, y) {
 		console.log('movement');
 		var element, elements = [];
@@ -123,7 +125,7 @@
 			const maxCol = parseInt(col)+parseInt(palletCount)-1;
 			console.log("col",col,"palletCount",palletCount,"maxCol",maxCol);
 
-			if(maxCol > 6){ // 6 is column count will be dynamic
+			if(maxCol > 11){ // 6 is column count will be dynamic
 				alert("you can't do this bent, not enought space next to the product !!");
 				return;
 			}
@@ -172,14 +174,14 @@
 				},
 				crossDomain: true,
 				success:function(){
-					//location.reload();
+					location.reload();
 				}
 			}).done(function(json){
 				console.log(json);
 				if(json['error'] == 1)
 					alert('Not Allowed Operation');
-				//else 
-					//location.reload();
+				else 
+					location.reload();
 			});
 		}
 

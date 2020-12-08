@@ -130,7 +130,7 @@ class ModelCatalogUnit extends Model {
                     );                
                 }
                 else {
-                    $shelf['contents'][] = array('',0,'',0,'','','');                
+                    $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode']);                
                 }
             }
             $unit[]=$shelf;
