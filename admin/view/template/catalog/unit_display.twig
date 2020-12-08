@@ -40,6 +40,8 @@
         <td>{{ shelf.physicalRow }}</td>
           {% for belt in shelf.contents %}
           <td 
+            data-column="column{{ loop.index }}"
+            id="r{{ pallet[8]}}c{{ pallet[7]}}"
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
             {% if belt[3] == 0 %}
