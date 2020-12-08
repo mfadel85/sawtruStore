@@ -102,6 +102,7 @@ class ModelCatalogUnit extends Model {
             $shelf = array('id' => $shelfID,'physicalRow'=> $physicalRow,'contents'=> array() );
             $query = "SELECT * from oc_pallet where shelf_id =$shelfID";
             $results = $this->db->query($query);
+
             foreach($results->rows as $belt){
                 $productID   = $belt['product_id'];
                 $productName = '';
@@ -124,10 +125,12 @@ class ModelCatalogUnit extends Model {
                         $belt['quantity'],
                         $full,
                         $max,
-                        $countAvailable);                
+                        $countAvailable,
+                        $belt['barcode']
+                    );                
                 }
                 else {
-                    $shelf['contents'][] = array('',0,'','','','','');                
+                    $shelf['contents'][] = array('',0,'',0,'','','');                
                 }
             }
             $unit[]=$shelf;

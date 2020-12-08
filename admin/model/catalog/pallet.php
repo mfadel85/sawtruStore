@@ -1,7 +1,7 @@
 <?php
 
 define('PALLET_DEPTH', 57);
-define('COLUMN_COUNT', 6);
+define('COLUMN_COUNT', 11);
 
 class ModelCatalogPallet extends Model {
 	public function getPallet($palletID){
@@ -60,6 +60,9 @@ class ModelCatalogPallet extends Model {
 		$countAvailable = floor($availableSpace / $width);
 		$result = [$countAvailable, $name,$beltCount,$pallet,$max];
 		return $result;
+	}
+	public function getMax($productID,$beltID,$depth){
+
 	}
     public function getMap(){
 		$map = array();

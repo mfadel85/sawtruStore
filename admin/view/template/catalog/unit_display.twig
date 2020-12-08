@@ -39,12 +39,14 @@
         <tr id=" {{ shelf.shelfID }} ">
         <td>{{ shelf.physicalRow }}</td>
           {% for belt in shelf.contents %}
-          <td
-              {% if belt[3] == 0 %}
+          <td 
+            data-barcode="{{ belt[7]}}" 
+            data-filled="{{ belt[3] }}"
+            {% if belt[3] == 0 %}
               class="cell Empty"
-              {% elseif  belt[3] %}
+            {% elseif  belt[3] %}
               class="cell Full"
-              {% endif %}
+            {% endif %}
           >
           {% if belt[1] > 0 %}
            {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} 
@@ -80,19 +82,16 @@
 		console.log('element',element,x,y);
 		return element;
 	}
-  
+
 	$(".draggable").draggable({ 
 		revert: true,
 		cursor: "move",
 		start: function(event, ui) {
 				console.log('event is being dropped');
-                 //to get the id
-                 //ui.draggable.attr('id') or ui.draggable.get(0).id or ui.draggable[0].id
-                console.dir('object is :',$(event.target).attr("id"));
+        console.dir('object is :',$(event.target).attr("id"));
 				console.dir(ui.helper.context.id);
 				console.dir(ui.helper.context.innerHTML);
-
-                console.log(ui.helper.clone());
+        console.log(ui.helper.clone());
 			},
 
 		stop:function(event,ui){
