@@ -30,12 +30,14 @@
       <div class="col-md-10">
         <table class="table table-bordered unitTableD"> 
         <tr>
+        <th>ShelfNo</th>
         {% for i in range(1, beltCount) %}
           <th>  {{ i }}</th>
         {% endfor %}
         </tr>
         {% for shelf in unit %}
         <tr id=" {{ shelf.shelfID }} ">
+        <td></td>
           {% for belt in shelf.contents %}
           <td
               {% if belt[3] == 0 %}
