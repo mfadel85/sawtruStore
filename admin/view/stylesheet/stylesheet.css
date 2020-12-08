@@ -808,11 +808,21 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 }
 
 .unitTable {
+
+}
+
+.unitTableD {
 	border-collapse: separate;
 	border-spacing: 0 40px;
+	border-right: 7px solid #cdd0d4 !important;
+	border-left:  7px solid #cdd0d4 !important;
+
 }
+
  .unitTable tr td{
 	color: green;
+	border-left:  2px solid #cdd0d4 !important;
+
 	/*padding: 4px !important;	*/
 	min-height: 5px;
 }
