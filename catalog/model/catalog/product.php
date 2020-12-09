@@ -591,7 +591,7 @@ class ModelCatalogProduct extends Model {
 			join oc_unit ocu on ocu.unit_id = os.unit_id
 			join oc_product opd on opd.product_id = optp.product_id
 			join oc_product_description opdp on opdp.product_id = optp.product_id
-			WHERE opd.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
+			WHERE op.status=1 and opd.product_id = " . (int)$productID . " and optp.status='Sold' limit 0,".$quantity ;
 		$position_query = $this->db->query($positionQueryString);
 
 		foreach($position_query->rows as $result){

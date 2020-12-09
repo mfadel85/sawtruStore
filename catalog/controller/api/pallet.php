@@ -34,7 +34,16 @@ class ControllerApiPallet extends Controller
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));		 		
 	}
-
+	public function disableShelf(){
+		$shelfID = $_GET['id'];
+		$this->load->model('catalog/pallet');
+		$belts = $this->model_catalog_pallet->getBelts($shelfID);
+		foreach($belts as $belt){
+			print_r($belt['pallet_id']);
+			print_r("<BR>");
+			$this->model_catalog_pallet->disableBelt($belt['pallet_id']);
+		}
+	}
 
 	public function disableBelt(){
 		// beltID will be taken from UnitID, ShelfID/ShelfNO, BeltNo

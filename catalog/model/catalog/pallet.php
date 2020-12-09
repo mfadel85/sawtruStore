@@ -42,12 +42,20 @@ class ModelCatalogPallet extends Model {
 		if($active->row['status']){
 			$productID = $active->row['product_id'];
 			$quantity  = $active->row['quantity'];
-			$this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$quantity where product_id=$productID");
+			if($quantity > 0){
+				print_r("<br>I have been here <br>");
+				$this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$quantity where product_id=$productID");
+			}
+			print_r("<br>I have been here <br>");
 			$query ="UPDATE oc_pallet set status = 0 where pallet_id=$beltID";
 			$this->db->query($query);
+
 		}
 	}
-
+	public function getBelts($shelfID){
+		$belts=$this->db->query("SELECT * from oc_pallet where shelf_id=$shelfID")->rows;
+		return $belts;
+	}
 	public function getAvailablePositionsCount($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
 		error_log("Belt Barcode is : $beltBarcode, Product ID is $productID");
