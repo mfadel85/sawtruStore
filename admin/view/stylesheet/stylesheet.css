@@ -846,7 +846,10 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	color:white  !important;
 }
 
-
+.inactive {
+	background-color: grey;
+	color:white  !important;	
+}
 
 .CellWithComment{
 	position:relative;

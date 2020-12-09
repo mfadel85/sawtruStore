@@ -87,7 +87,7 @@ class ModelCatalogUnit extends Model {
     }
     public function getBeltCount($unitID){
         $shelfID = $this->db->query("SELECT shelf_id from oc_shelf where unit_id=$unitID limit 0,1")->rows[0]['shelf_id'];
-        $query = "select count(*) as count from oc_pallet where shelf_id =$shelfID";
+        $query = "select count(*) as count from oc_pallet where shelf_id =$shelfID ";
         $count = $this->db->query($query)->row['count'];
         return $count;
     }
@@ -100,13 +100,13 @@ class ModelCatalogUnit extends Model {
             $shelfID     = $shelf['shelf_id'];
             $physicalRow = $shelf['shelf_physical_row'];
             $shelf = array('id' => $shelfID,'physicalRow'=> $physicalRow,'contents'=> array() );
-            $query = "SELECT * from oc_pallet where shelf_id =$shelfID";
+            $query = "SELECT * from oc_pallet where shelf_id =$shelfID ";
             $results = $this->db->query($query);
 
             foreach($results->rows as $belt){
                 $productID   = $belt['product_id'];
                 $productName = '';
-                if(isset($productID)){
+                if(isset($productID) && $belt['status']){
 		            $count =  $belt['quantity'];
                     $productInfo = $this->db->query("
                     SELECT name,width from oc_product_description opd 
@@ -126,11 +126,16 @@ class ModelCatalogUnit extends Model {
                         $full,
                         $max,
                         $countAvailable,
-                        $belt['barcode']
+                        $belt['barcode'],
+                        1, /* active or inactive*/
+                        ''
                     );                
                 }
                 else {
-                    $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode']);                
+                    if(!$belt['status'])
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt');                
+                    else
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'');                
                 }
             }
             $unit[]=$shelf;

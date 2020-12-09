@@ -44,7 +44,9 @@
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
              data-product-id="{{ belt[2] }}"
-            {% if belt[3] == 0 %}
+            {% if belt[8] == 0 %}
+              class="cell CellWithComment Empty inactive"
+            {% elseif belt[3] == 0 %}
               class="cell CellWithComment Empty"
             {% elseif  belt[3] %}
               class="cell CellWithComment Full"
@@ -55,7 +57,7 @@
           {% else  %}
              No Product
           {% endif %}
-		    <span class="CellComment"> {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} </span>
+		    <span class="CellComment">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} </span>
 
            </td>
           {% endfor %}

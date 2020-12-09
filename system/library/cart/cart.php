@@ -256,7 +256,7 @@ class Cart {
 					join oc_pallet op on optp.start_pallet = op.pallet_id 
 					join oc_shelf os on os.shelf_id = op.shelf_id 
 					join oc_unit ocu on ocu.unit_id = os.unit_id
-					WHERE product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
+					WHERE op.status=1 and  product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
 					//error_log($positionQueryString);
 					//die();
 				$position_query = $this->db->query($positionQueryString);

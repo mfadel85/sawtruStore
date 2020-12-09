@@ -36,6 +36,19 @@ class ModelCatalogPallet extends Model {
 		else 
 			return false;
 	}
+	public function disableBelt($beltID){
+		print_r("we are here");
+		$isItActive = "SELECT status,product_id,quantity  from oc_pallet where pallet_id=$beltID";
+		$active = $this->db->query($isItActive);
+		if($active->row['status']){
+			$productID = $active->row['product_id'];
+			$quantity  = $active->row['quantity'];
+			$this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$quantity where product_id=$productID");
+			$query ="UPDATE oc_pallet set status = 0 where pallet_id=$beltID";
+			$this->db->query($query);
+		}
+	}
+
 	public function getAvailablePositionsCount($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
 		error_log("Belt Barcode is : $beltBarcode, Product ID is $productID");
