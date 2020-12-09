@@ -1,0 +1,78 @@
+/* Admin-Login by Reitier https://www.soluciones-opencart.com */
+html, body {
+    height: 100%;
+    padding: 0;
+    color: #666666 !Important;
+    text-rendering: optimizeLegibility;
+    background: #000000 url(bg.jpg) top center no-repeat!Important;
+}
+#container {
+    min-height: 100%;
+    width: 100%;
+    position: relative;
+}
+#header {
+    min-height: 0px;
+    background: #000000;
+    margin: 0;
+    padding: 0;
+}
+#content {
+    padding-bottom: 180px;
+    transition: all 0.3s;
+}
+.container-fluid {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+#footer {
+    height: 100px;
+    text-align: center;
+}
+.row {
+    padding-top: 100px !Important;
+}
+.panel {
+    background: transparent !Important;
+}
+.panel-body {
+    background: #191111 !Important;
+    color: #666666 !Important;
+    border-radius: 15px;
+}
+.panel-default {
+    border: 1px solid #191111 !Important;
+    border-top: 0px !Important;
+    border-radius: 15px !Important;
+    border-left: 0px !Important;
+    border-right: 0px !Important;
+}
+.panel .panel-heading {
+    visibility: hidden;
+}
+.panel-title {
+    visibility: hidden;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #f56b6b !Important;
+    border-color: #000000 !Important;
+}
+.btn-primary:active:hover, .btn-primary.active:hover, .open > .btn-primary.dropdown-toggle:hover, .btn-primary:active:focus, .btn-primary.active:focus, .open > .btn-primary.dropdown-toggle:focus, .btn-primary:active.focus, .btn-primary.active.focus, .open > .btn-primary.dropdown-toggle.focus {
+    color: #fff !Important;
+    background-color: #b54848 !Important;
+    border-color: #000000 !Important;
+ }
+ a:link {
+ 	color: #f56b6b !Important;
+ }
+ a:hover, a:focus, a:visited {
+    color: #b54848 !Important;
+}
+.alert-danger {
+    background-color: #191111 !Important;
+    border-color: #191111 !Important;
+    color: #f56b6b !Important;
+}
