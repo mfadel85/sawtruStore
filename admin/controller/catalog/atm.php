@@ -49,9 +49,15 @@ class ControllerCatalogATM extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('catalog/atm', $data));         
-
     }
     public function udpate(){
-
+        $this->document->setTitle($this->language->get('heading_title'));
+        $this->load->model('catalog/atm');
+        if(($this->request->server['REQUEST_METHOD'] == 'POST') /*&& $this->validateForm()*/){
+            $this->model_catalog_atm->updateAtm($this->request->get['id'],$this->request->post);
+			$this->session->data['success'] = $this->language->get('text_success');
+            $url = '';
+            $this->response->redirect($this->url->link('catalog/atm', 'user_token=' . $this->session->data['user_token'] . $url, true));
+        }
     }
 }
