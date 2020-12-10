@@ -20,7 +20,7 @@ class ControllerCheckoutSuccess extends Controller {
 						$currentArary['quantity'] = 1;
 						$currentArary['xPos'] = $product['xPos'][$i];
 						$currentArary['yPos'] = $product['yPos'][$i];
-						$currentArary['unitID'] = $product['unit_id'];/// check this
+						$currentArary['unitID'] = $product['unit_id'][$i];/// check this
 						$currentArary['direction'] = $product['direction'][$i];/// check this
 						$currentArary['bentCount'] = $product['bent_count']; 
 						$currentArary['price']     = $product['price']; 
@@ -106,7 +106,7 @@ class ControllerCheckoutSuccess extends Controller {
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-
+		/// mabye ball
 		try {
 			$address=CONNECTORIP;
 			$port="11111";
