@@ -143,8 +143,6 @@ class Cart {
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
-					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
-					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
 					'direction'       => $unitInformation[2],
 					'unit_id'         => $unitInformation[3],
 					'product_id'      => $product_query->row['product_id'],
@@ -409,7 +407,7 @@ class Cart {
 				} else {
 					$recurring = false;
 				}
-				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
+				$unitInformation = $this->getProductInfomation($cart['product_id'],$cart['quantity']);
 				/*$positionQueryString = "
 				SELECT 
 					shelf_physical_row,
