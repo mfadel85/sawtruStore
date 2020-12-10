@@ -30,7 +30,152 @@ class Cart {
 		}
 	}
 
-	public function prepareOrder($order){
+	public function getUnitInformation($productID,$quantity){
+		$positionQueryString = "
+		SELECT 
+			shelf_physical_row,
+			optp.product_id,
+			optp.shelf_id,
+			optp.unit_id as unitID,
+			ocu.direction as direction,
+			optp.start_pallet,
+			op.x_position as xPos ,
+			os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
+			join oc_pallet op on optp.start_pallet = op.pallet_id 
+			join oc_shelf os on os.shelf_id = op.shelf_id 
+			join oc_unit ocu on ocu.unit_id = os.unit_id
+			WHERE op.status=1 
+			and  product_id = " . (int)$productID . " 
+			and optp.status='Ready' ORDER BY ocu.sort_order  limit 0,".$quantity  ;
+			//error_log($positionQueryString);
+			//die();
+		$position_query = $this->db->query($positionQueryString);
+
+		//print_r($position_query);
+		if($quantity == 1){
+			$xPos = $position_query->row['xPos'];
+			$yPos = $position_query->row['shelf_physical_row'];
+			$direction =  $position_query->row['direction'];
+			$unitID = $position_query->row['unitID'];
+		}
+
+		else if($quantity > 1){
+
+			$xPos = array();
+			$yPos = array();
+			$direction = array();
+			$unitID = array();
+			foreach($position_query->rows as $product){
+				$xPos[] = $product['xPos'];/// Null ??
+				$yPos[] = $product['yPos'];/// Null ??
+				$direction[] =  $product['direction'];/// Null ??
+				$unitID[] =  $product['unitID'];/// Null ??
+
+
+			}
+		}
+		return [$xPos,$yPos,$direction,$unitID];
+	}
+
+	public function getOrderForPLC(){
+		$product_data = array();
+		$cart_query = $this->db->query("
+			SELECT * FROM " . DB_PREFIX . "cart 
+			WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' 
+			AND customer_id = '" . (int)$this->customer->getId() . "' 
+			AND session_id = '" . $this->db->escape($this->session->getId()) 
+		. "'");
+
+		foreach ($cart_query->rows as $cart) {
+
+			$stock = true;
+
+			$product_query = $this->db->query("
+				SELECT * FROM " . DB_PREFIX . "product_to_store p2s 
+				LEFT JOIN " . DB_PREFIX . "product p 
+				ON (p2s.product_id = p.product_id) 
+				LEFT JOIN " . DB_PREFIX . "product_description pd 
+				ON (p.product_id = pd.product_id) 
+				WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.product_id = '" . (int)$cart['product_id'] . "' 
+				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND p.date_available <= NOW() AND p.status = '1'
+			");	
+			if ($product_query->num_rows && ($cart['quantity'] > 0)) {
+				$price = $product_query->row['price'];
+
+				// Product Discounts
+				$discount_quantity = 0;
+
+				foreach ($cart_query->rows as $cart_2) {
+					if ($cart_2['product_id'] == $cart['product_id']) {
+						$discount_quantity += $cart_2['quantity'];
+					}
+				}
+
+				$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+
+				if ($product_discount_query->num_rows) {
+					$price = $product_discount_query->row['price'];
+				}
+
+				// Product Specials
+				$product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+
+				if ($product_special_query->num_rows) {
+					$price = $product_special_query->row['price'];
+				}
+
+				// Reward Points
+				$product_reward_query = $this->db->query("SELECT points FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'");
+
+				if ($product_reward_query->num_rows) {
+					$reward = $product_reward_query->row['points'];
+				} else {
+					$reward = 0;
+				}	
+				// Stock
+				if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $cart['quantity'])) {
+					$stock = false;
+				}	
+				$recurring = false;	
+				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
+				$product_data[] = array(
+					'cart_id'         => $cart['cart_id'],
+					'bent_count'      => $product_query->row['bent_count'],
+					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
+					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
+					'direction'       => $unitInformation[2],
+					'unit_id'         => $unitInformation[3],
+					'product_id'      => $product_query->row['product_id'],
+					'name'            => $product_query->row['name'],
+					'model'           => $product_query->row['model'],
+					'shipping'        => $product_query->row['shipping'],
+					'image'           => $product_query->row['image'],
+					'quantity'        => $cart['quantity'],
+					'minimum'         => $product_query->row['minimum'],
+					'subtract'        => $product_query->row['subtract'],
+					'stock'           => $stock,
+					'price'           => ($price + $option_price),
+					'total'           => ($price + $option_price) * $cart['quantity'],
+					'reward'          => $reward * $cart['quantity'],
+					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
+					'tax_class_id'    => $product_query->row['tax_class_id'],
+					'weight'          => ($product_query->row['weight'] + $option_weight) * $cart['quantity'],
+					'weight_class_id' => $product_query->row['weight_class_id'],
+					'length'          => $product_query->row['length'],
+					'width'           => $product_query->row['width'],
+					'height'          => $product_query->row['height'],
+					'length_class_id' => $product_query->row['length_class_id'],
+					'recurring'       => $recurring
+				);
+			} else {
+
+				$this->remove($cart['cart_id']);
+			}					
+					
+		}
+		return $product_data;
 
 	}
 
@@ -38,13 +183,28 @@ class Cart {
 
 		$product_data = array();
 
-		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		$cart_query = $this->db->query("
+			SELECT * FROM " . DB_PREFIX . "cart 
+			WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' 
+			AND customer_id = '" . (int)$this->customer->getId() . "' 
+			AND session_id = '" . $this->db->escape($this->session->getId()) 
+		. "'");
 
 		foreach ($cart_query->rows as $cart) {
 
 			$stock = true;
 
-			$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_store p2s LEFT JOIN " . DB_PREFIX . "product p ON (p2s.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND p2s.product_id = '" . (int)$cart['product_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() AND p.status = '1'");
+			$product_query = $this->db->query("
+				SELECT * FROM " . DB_PREFIX . "product_to_store p2s 
+				LEFT JOIN " . DB_PREFIX . "product p 
+				ON (p2s.product_id = p.product_id) 
+				LEFT JOIN " . DB_PREFIX . "product_description pd 
+				ON (p.product_id = pd.product_id) 
+				WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.product_id = '" . (int)$cart['product_id'] . "' 
+				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND p.date_available <= NOW() AND p.status = '1'
+			");
 
 			if ($product_query->num_rows && ($cart['quantity'] > 0)) {
 				$option_price = 0;
@@ -54,7 +214,14 @@ class Cart {
 				$option_data = array();
 
 				foreach (json_decode($cart['option']) as $product_option_id => $value) {
-					$option_query = $this->db->query("SELECT po.product_option_id, po.option_id, od.name, o.type FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$cart['product_id'] . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+					$option_query = $this->db->query("
+						SELECT po.product_option_id, po.option_id, od.name, o.type 
+						FROM " . DB_PREFIX . "product_option po 
+						LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) 
+						LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) 
+						WHERE po.product_option_id = '" . (int)$product_option_id . "' 
+						AND po.product_id = '" . (int)$cart['product_id'] . "' 
+						AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 					if ($option_query->num_rows) {
 						if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'radio') {
@@ -242,8 +409,8 @@ class Cart {
 				} else {
 					$recurring = false;
 				}
-
-				$positionQueryString = "
+				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
+				/*$positionQueryString = "
 				SELECT 
 					shelf_physical_row,
 					optp.product_id,
@@ -256,7 +423,9 @@ class Cart {
 					join oc_pallet op on optp.start_pallet = op.pallet_id 
 					join oc_shelf os on os.shelf_id = op.shelf_id 
 					join oc_unit ocu on ocu.unit_id = os.unit_id
-					WHERE op.status=1 and  product_id = " . (int)$cart['product_id'] . " and optp.status='Ready' limit 0,".$cart['quantity'] ;
+					WHERE op.status=1 
+					and  product_id = " . (int)$cart['product_id'] . " 
+					and optp.status='Ready' limit 0,".$cart['quantity'] ;
 					//error_log($positionQueryString);
 					//die();
 				$position_query = $this->db->query($positionQueryString);
@@ -279,21 +448,17 @@ class Cart {
 						$direction[] =  $product['direction'];/// Null ??
 
 					}
-				}
+				}*/
 
-				//print_r("<br>our Query<br>");
-				//print_r($cart['product_id']);
-			
-				//print_r("<br>end of our Query<br>");
 				//// if product out of stock handle
 				/// MFH 
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
-					'xPos'            => $xPos,//// maybe we have multiple xPos
-					'yPos'            => $yPos,/// maybe we have multiple yPos
-					'unit_id'         => $position_query->row['unitID'],
-					'direction'       => $direction,
+					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
+					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
+					'direction'       => $unitInformation[2],
+					'unit_id'         => $unitInformation[3],
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],
 					'model'           => $product_query->row['model'],

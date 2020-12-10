@@ -114,17 +114,10 @@ class ModelCatalogPallet extends Model {
 		return $shelfHeight;
 	}
 	private function getBeltID($barcode){
-		//$realBarcode = false;
-		//$isItBarcode = $this->db->query("select * from oc_pallet where barcode = '$barcode' ");
-		//if(count($isItBarcode->rows) > 0)
-			
-		// sometimes passed as barcode, sometimes passed as id how to distinguish
-		/*if(substr( $barcode, 0, 1 ) !== "0")
-			return $barcode;*/
-		error_log("ZXY-2 Barcode $barcode");
-		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = $barcode");
+		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = '$barcode'");
 		error_log("SELECT pallet_id from oc_pallet where barcode = $barcode");
-		return $barcodeResult->rows[0]['pallet_id'];
+		print_r($barcodeResult);
+		return $barcodeResult->row['pallet_id'];
 	}
 	public function verifyShelfProduct($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
@@ -133,15 +126,10 @@ class ModelCatalogPallet extends Model {
 		$productHeight = $this->getProductHeight($productID);
 		error_log(" shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
 		if((int)$shelfHeight >= (int)$productHeight){
-			error_log(" kill you?");
-
 			return true;
 		}
 		else {
-			error_log(" kill them?");
-
 			return false;
-
 		}
 	}
 	public function verifyProductPallet($beltBarcode,$productID){
@@ -202,11 +190,11 @@ class ModelCatalogPallet extends Model {
 		
 
 	}
-	public function getPalletStatus($palletID){
-		$state = $this->db->query("SELECT * FROM `oc_pallet_product` where start_pallet_id = 13");
+	public function getBeltAssigned($belID){
+		$state = $this->db->query("SELECT * FROM `oc_pallet_product` where start_pallet_id = $belID");
 		if(count($state->row)==1){
 			$status = "Assigned Empty";
-			$isitFilled = $this->db->query("SELECT count(*) as Count FROM `oc_product_to_position` WHERE start_pallet = 13");			
+			$isitFilled = $this->db->query("SELECT count(*) as Count FROM `oc_product_to_position` WHERE start_pallet = $belID");			
 			if(isset($isitFilled->row['count']) && $isitFilled->row['count']>0)
 				$status = "Assigned Not Empty";			
 		}
@@ -215,27 +203,30 @@ class ModelCatalogPallet extends Model {
 		return $status;
 
 	}
-	public function getNextPalletID($palletID,$i){
-		$palletInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $palletID");
-		$row    = $palletInfo->row["shelf_id"];
-		if((int)$palletInfo->row["x_position"]>5)
+	public function getNextPalletID($beltID,$i){
+		error_log("Belt id is $beltID, the value of is $i");
+		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
+		$row    = $beltInfo->row["shelf_id"];
+		if((int)$beltInfo->row["x_position"]>5)
 			return -1;
 
-		$xPos   = (int)$palletInfo->row["x_position"]+$i;
-		$xPosX = (int)$palletInfo->row["x_position"];
-		$unitID = $palletInfo->row["unit_id"];
-		$nextPalletID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
-		return $nextPalletID;
+		$xPos   = (int)$beltInfo->row["x_position"]+$i;
+		$unitID = $beltInfo->row["unit_id"];
+		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
+		return $nextBeltID;
 	}
 	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
+		error_log("$beltBarcode,Product id is $productID,$beltCount,$update", 3, "mylog.log");
 		$beltID = $this->getBeltID($beltBarcode);
 		// check before inserting
 		$assignable = false;
 		if($beltCount > 1 ){
+			error_log("Here we passed");
 			for($i=0;$i<$beltCount-1;$i++){
 				/// get next bent id
 				$nextBeltID = $this->getNextPalletID($beltID,$i);
-				$palletStats = $this->getPalletStatus($nextBeltID);
+				error_log("Belt ID is $bletID, i is $i, next belt id is $nextBeltID");
+				$palletStats = $this->getBeltAssigned($nextBeltID);
 				if($palletStats == "Empty" || $palletStats == "Assigned Empty")
 				{
 					// if assigned empty and the cells before it is also assigned empty
@@ -258,12 +249,14 @@ class ModelCatalogPallet extends Model {
 		else {
 			$assignable = true;
 		}
+		print_r("<BR>Belt Count is $beltCount <BR>");
 
 		if($update == "false" && $assignable){
 			// all the cells to be written
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
 					$beltID = $this->getNextPalletID($beltID,1); 
+					print_r("<BR>Next Belt is $beltID <BR>");
 				}
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
