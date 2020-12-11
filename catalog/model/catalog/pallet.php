@@ -43,10 +43,8 @@ class ModelCatalogPallet extends Model {
 			$productID = $active->row['product_id'];
 			$quantity  = $active->row['quantity'];
 			if($quantity > 0){
-				print_r("<br>I have been here <br>");
 				$this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$quantity where product_id=$productID");
 			}
-			print_r("<br>I have been here <br>");
 			$query ="UPDATE oc_pallet set status = 0 where pallet_id=$beltID";
 			$this->db->query($query);
 
@@ -116,7 +114,6 @@ class ModelCatalogPallet extends Model {
 	private function getBeltID($barcode){
 		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = '$barcode'");
 		error_log("SELECT pallet_id from oc_pallet where barcode = $barcode");
-		print_r($barcodeResult);
 		return $barcodeResult->row['pallet_id'];
 	}
 	public function verifyShelfProduct($beltBarcode,$productID){
@@ -151,7 +148,6 @@ class ModelCatalogPallet extends Model {
 			error_log(" beltBarcode is $beltBarcode, prdct is $productID");
 
 			if(!$this->verifyShelfProduct($beltBarcode,$productID)){
-				//print_r("got you");
 				return "Not Allowed Operation";
 			}
 			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $beltID group by start_pallet");
@@ -252,14 +248,12 @@ class ModelCatalogPallet extends Model {
 		else {
 			$assignable = true;
 		}
-		print_r("<BR>Belt Count is $beltCount <BR>");
 
 		if($update == "false" && $assignable){
 			// all the cells to be written
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
 					$beltID = $this->getNextPalletID($beltID,1); 
-					print_r("<BR>Next Belt is $beltID <BR>");
 				}
 				$assigned = $this->db->query("
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 

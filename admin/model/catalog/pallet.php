@@ -65,6 +65,8 @@ class ModelCatalogPallet extends Model {
 
 	}
     public function getMap(){
+		print_r("<BR>");
+
 		$map = array();
 		//MFH we have to chnage the way we are showing the map
 		$query = $this->db->query("
@@ -139,6 +141,10 @@ class ModelCatalogPallet extends Model {
 					for($j=1;$j<$skipCount+1;$j++) 							// $barcode will change
 					{
 						$nextBeltID = $this->getNextBeltID($palletID,$j);
+						/*print_r("Pallet_id , j<BR>");
+						print_r("$palletID,$j");
+						print_r("<BR>");
+						print_r($nextBeltID);*/
 						$barcode = $this->db->query("SELECT barcode FROM oc_pallet WHERE pallet_id = $nextBeltID")->rows[0]['barcode'];
 						$map[$unitID][$shelfID][] = [
 							$palletID ,
@@ -190,7 +196,7 @@ class ModelCatalogPallet extends Model {
 	public function getNextBeltID($beltID,$i){
 		$palletInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
 		$row    = $palletInfo->row["shelf_id"];
-		if((int)$palletInfo->row["x_position"]>5)
+		if((int)$palletInfo->row["x_position"]>10)
 			return -1;
 
 		$xPos   = (int)$palletInfo->row["x_position"]+$i;
