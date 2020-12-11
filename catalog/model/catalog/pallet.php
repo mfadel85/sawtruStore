@@ -204,10 +204,12 @@ class ModelCatalogPallet extends Model {
 
 	}
 	public function getNextPalletID($beltID,$i){
+		// maxCol is the max column we can choose
+		$maxCol = 10;
 		error_log("Belt id is $beltID, the value of is $i");
 		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
 		$row    = $beltInfo->row["shelf_id"];
-		if((int)$beltInfo->row["x_position"]>5)
+		if((int)$beltInfo->row["x_position"]>$maxCol)
 			return -1;
 
 		$xPos   = (int)$beltInfo->row["x_position"]+$i;
@@ -218,6 +220,8 @@ class ModelCatalogPallet extends Model {
 	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
 		error_log("$beltBarcode,Product id is $productID,$beltCount,$update", 3, "mylog.log");
 		$beltID = $this->getBeltID($beltBarcode);
+		error_log(" Belt ID is $beltID", 3, "mylog.log");
+
 		// check before inserting
 		$assignable = false;
 		if($beltCount > 1 ){
@@ -225,20 +229,20 @@ class ModelCatalogPallet extends Model {
 			for($i=0;$i<$beltCount-1;$i++){
 				/// get next bent id
 				$nextBeltID = $this->getNextPalletID($beltID,$i);
-				error_log("Belt ID is $bletID, i is $i, next belt id is $nextBeltID");
-				$palletStats = $this->getBeltAssigned($nextBeltID);
-				if($palletStats == "Empty" || $palletStats == "Assigned Empty")
+				error_log("Belt ID is $beltID, i is $i, next belt id is $nextBeltID");
+				$beltStatus = $this->getBeltAssigned($nextBeltID);
+				if($beltStatus == "Empty" || $beltStatus == "Assigned Empty")
 				{
 					// if assigned empty and the cells before it is also assigned empty
 					// to delete the record of $nextPalletID
-					if($palletStats == "Assigned Empty") {
+					if($beltStatus == "Assigned Empty") {
 						$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
 						$this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
 					}
 					$assignable = true;
 					continue;
 				}
-				else if($palletStats == "Assigned Not Empty"){
+				else if($beltStatus == "Assigned Not Empty"){
 					$assignable = false;
 					break;
 				}
