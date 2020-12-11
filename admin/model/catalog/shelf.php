@@ -43,8 +43,8 @@ class ModelCatalogShelf extends Model {
     public function generateBelts($shelf_id,$data){// we need barcodes
         
         $unit_id = $this->getUnitID($shelf_id);
-        $beltCount =  (int)$this->db->escape($data['beltCount']);
-        for($i = 0;$i<$beltCount;$i++){
+        //$beltCount =  (int)$this->db->escape($data['beltCount']);// to be changed later
+        for($i = 0;$i<10;$i++){
             $j = 1+$i;
             $inputName = 'barcode'.$j;
             $barcodeValue = $this->db->escape($data[$inputName]);
@@ -66,17 +66,12 @@ class ModelCatalogShelf extends Model {
     public function updateBarcodes($shelf_id,$data){
 
         /// VIN to be implemented
-        print_r($data);
         $beltIDs = array();
         $i = 1;
-        foreach($data as $index=>$barcode){
-            print_r("<BR>select pallet_id from oc_pallet where x_position = $i and shelf_id=$shelf_id<BR>");
+        foreach($data as $index => $barcode){
             $beltID = $this->db->query("select pallet_id from oc_pallet where x_position = $i and shelf_id=$shelf_id");
-            print_r("Belt Query is <BR>");
-            print_r($beltID);
             $id= $beltID->rows[0]['pallet_id'];
-            print_r("<BR>Belt id is :$id <BR>");
-            $updateBelt = $this->db->query("update oc_pallet set barcode = $barcode where pallet_id = $id");
+            $updateBelt = $this->db->query("update oc_pallet set barcode = '$barcode' where pallet_id = $id");
             $i++;
 
         }
