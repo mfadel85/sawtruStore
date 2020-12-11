@@ -32,6 +32,7 @@
           </div>
           <div class="panel-body">
             <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-shelf" class="form-horizontal">
+              <input type="hidden" name="beltCount" value={{beltCount}}" />
               <div class="tab-content">
               {% set k = beltCount %}
                 {% for i in range(1,beltCount) %}
@@ -52,7 +53,6 @@
         </div>  
       </div>
     </div>
-    {{ beltCount }}
     </div>
 </div>
 {{ footer }}

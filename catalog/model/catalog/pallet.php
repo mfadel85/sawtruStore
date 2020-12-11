@@ -176,7 +176,6 @@ class ModelCatalogPallet extends Model {
 		
 		$update = $this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = quantity+1 WHERE product_id = $productID");
 		if($update){
-			error_log("ZXY-1 Belt is is $barcode");
 			$unitIDQuery  = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $beltID");
 			$unitID = $unitIDQuery->rows[0]['unit_id'];
 			$shelfID = $unitIDQuery->rows[0]['shelf_id'];

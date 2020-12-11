@@ -171,7 +171,7 @@ class ControllerCatalogShelf extends Controller {
         }        
         
         $data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
-        $data['beltCount'] = 8;// to be defined automatically
+        $data['beltCount'] = 10;// to be defined automatically
         $data['belts'][] = array();
         $results = $this->model_catalog_shelf->getBelts($this->request->get['shelf_id']);
 
