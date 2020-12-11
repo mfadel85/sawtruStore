@@ -33,20 +33,14 @@ class Cart {
 	public function getUnitInformation($productID,$quantity){
 		$positionQueryString = "
 		SELECT 
-			shelf_physical_row,
-			optp.product_id,
-			optp.shelf_id,
-			optp.unit_id as unitID,
-			ocu.direction as direction,
-			optp.start_pallet,
-			op.x_position as xPos ,
-			os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
+			shelf_physical_row,optp.product_id,optp.shelf_id,optp.unit_id as unitID,ocu.direction as direction,optp.start_pallet,op.x_position as xPos , os.shelf_physical_row as yPos 
+			FROM `oc_product_to_position` optp 
 			join oc_pallet op on optp.start_pallet = op.pallet_id 
 			join oc_shelf os on os.shelf_id = op.shelf_id 
 			join oc_unit ocu on ocu.unit_id = os.unit_id
 			WHERE op.status=1 
-			and  product_id = " . (int)$productID . " 
-			and optp.status='Ready' ORDER BY ocu.sort_order  limit 0,".$quantity  ;
+			and  optp.product_id = " . (int)$productID . " 
+			and optp.status='Ready' ORDER BY ocu.sort_order,os.sort_order,op.x_position  limit 0,".$quantity  ;
 			//error_log($positionQueryString);
 			//die();
 		$position_query = $this->db->query($positionQueryString);
@@ -173,6 +167,10 @@ class Cart {
 			}					
 					
 		}
+		// sort before return
+		/*echo "<pre>";
+		echo $product_data;
+		echo "</pre>";*/
 		return $product_data;
 
 	}
@@ -407,7 +405,7 @@ class Cart {
 				} else {
 					$recurring = false;
 				}
-				$unitInformation = $this->getProductInfomation($cart['product_id'],$cart['quantity']);
+				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
 				/*$positionQueryString = "
 				SELECT 
 					shelf_physical_row,
