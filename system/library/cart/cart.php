@@ -29,11 +29,21 @@ class Cart {
 			}
 		}
 	}
-
+	
 	public function getUnitInformation($productID,$quantity){
 		$positionQueryString = "
 		SELECT 
-			shelf_physical_row,optp.product_id,optp.shelf_id,optp.unit_id as unitID,ocu.direction as direction,optp.start_pallet,op.x_position as xPos , os.shelf_physical_row as yPos 
+			shelf_physical_row,
+			optp.product_id,
+			optp.shelf_id,
+			optp.unit_id as unitID,
+			ocu.direction as direction,
+			optp.start_pallet,
+			op.x_position as xPos ,
+			os.shelf_physical_row as yPos,
+			os.sort_order as shelf_sort_order,
+			ocu.sort_order as unit_sort_order,
+			op.sort_order as belt_sort_order
 			FROM `oc_product_to_position` optp 
 			join oc_pallet op on optp.start_pallet = op.pallet_id 
 			join oc_shelf os on os.shelf_id = op.shelf_id 
@@ -51,6 +61,9 @@ class Cart {
 			$yPos = $position_query->row['shelf_physical_row'];
 			$direction =  $position_query->row['direction'];
 			$unitID = $position_query->row['unitID'];
+			$unitSortOrder  = $position_query->row['unit_sort_order'];
+			$shelfSortOrder = $position_query->row['shelf_sort_order'];
+			$beltSortOrder  = $position_query->row['belt_sort_order'];
 		}
 
 		else if($quantity > 1){
@@ -59,16 +72,21 @@ class Cart {
 			$yPos = array();
 			$direction = array();
 			$unitID = array();
+			$unitSortOrder = array();
+			$shelfSortOrder = array();
+			$beltSortOrder = array();
 			foreach($position_query->rows as $product){
 				$xPos[] = $product['xPos'];/// Null ??
 				$yPos[] = $product['yPos'];/// Null ??
 				$direction[] =  $product['direction'];/// Null ??
 				$unitID[] =  $product['unitID'];/// Null ??
-
+				$unitSortOrder[]  = $position_query->row['unit_sort_order'];
+				$shelfSortOrder[] = $position_query->row['shelf_sort_order'];
+				$beltSortOrder [] = $position_query->row['belt_sort_order'];
 
 			}
 		}
-		return [$xPos,$yPos,$direction,$unitID];
+		return [$xPos,$yPos,$direction,$unitID,$unitSortOrder,$shelfSortOrder,$beltSortOrder];
 	}
 
 	public function getOrderForPLC(){
@@ -79,7 +97,9 @@ class Cart {
 			AND customer_id = '" . (int)$this->customer->getId() . "' 
 			AND session_id = '" . $this->db->escape($this->session->getId()) 
 		. "'");
-
+		print_r("<BR>Before anything Cart Query<BR>");
+		print_r($cart_query);
+		print_r("<BR>END<BR>");
 		foreach ($cart_query->rows as $cart) {
 
 			$stock = true;
@@ -132,8 +152,14 @@ class Cart {
 				if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $cart['quantity'])) {
 					$stock = false;
 				}	
+				$option_weight = 0;
+
+				$option_price = 0;
 				$recurring = false;	
 				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
+				print_r("<BR>UNIT INFO");
+				print_r($unitInformation);
+				print_r("<BR>ENDS<BR>");
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
@@ -406,7 +432,7 @@ class Cart {
 					$recurring = false;
 				}
 				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
-				/*$positionQueryString = "
+				$positionQueryString = "
 				SELECT 
 					shelf_physical_row,
 					optp.product_id,
@@ -415,12 +441,16 @@ class Cart {
 					ocu.direction as direction,
 					optp.start_pallet,
 					op.x_position as xPos ,
-					os.shelf_physical_row as yPos FROM `oc_product_to_position` optp 
+					os.shelf_physical_row as yPos,
+					os.sort_order as shelf_sort_order,
+					ocu.sort_order as unit_sort_order,
+					op.sort_order as belt_sort_order
+					 FROM `oc_product_to_position` optp 
 					join oc_pallet op on optp.start_pallet = op.pallet_id 
 					join oc_shelf os on os.shelf_id = op.shelf_id 
 					join oc_unit ocu on ocu.unit_id = os.unit_id
 					WHERE op.status=1 
-					and  product_id = " . (int)$cart['product_id'] . " 
+					and  optp.product_id = " . (int)$cart['product_id'] . " 
 					and optp.status='Ready' limit 0,".$cart['quantity'] ;
 					//error_log($positionQueryString);
 					//die();
@@ -431,6 +461,10 @@ class Cart {
 					$xPos = $position_query->row['xPos'];
 					$yPos = $position_query->row['shelf_physical_row'];
 					$direction =  $position_query->row['direction'];
+					$unitID = $position_query->row['unitID'];
+					$unitSortOrder  = $position_query->row['unit_sort_order'];
+					$shelfSortOrder = $position_query->row['shelf_sort_order'];
+					$beltSortOrder  = $position_query->row['belt_sort_order'];
 				}
 
 				else if($cart['quantity']> 1){
@@ -442,9 +476,12 @@ class Cart {
 						$xPos[] = $product['xPos'];/// Null ??
 						$yPos[] = $product['yPos'];/// Null ??
 						$direction[] =  $product['direction'];/// Null ??
-
+						$unitID[] =  $product['unitID'];/// Null ??
+						$unitSortOrder[]  = $position_query->row['unit_sort_order'];
+						$shelfSortOrder[] = $position_query->row['shelf_sort_order'];
+						$beltSortOrder [] = $position_query->row['belt_sort_order'];
 					}
-				}*/
+				}
 
 				//// if product out of stock handle
 				/// MFH 
@@ -455,6 +492,10 @@ class Cart {
 					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
 					'direction'       => $unitInformation[2],
 					'unit_id'         => $unitInformation[3],
+					'unit_sort_order'  => $unitInformation[4],
+					'shelf_sort_order' => $unitInformation[5],
+					'belt_sort_order'  => $unitInformation[6],
+
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],
 					'model'           => $product_query->row['model'],

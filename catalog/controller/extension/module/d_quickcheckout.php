@@ -25,7 +25,8 @@ class ControllerExtensionModuleDQuickcheckout extends Controller {
     }
 
     public function index() {
-
+        $productData = $this->cart->getProducts();
+        print_r($productData);
         $data = array();
 
         if(!$this->config->get('d_quickcheckout_status')){

@@ -1,11 +1,30 @@
 <?php
 class ControllerCheckoutSuccess extends Controller {
+	public static function position_compare($position1,$position2){
+		// compare by unit_sort_order, shelf_sort_order, belt_sort_order
+		if($position1['unitSortOrder']< $position1['unitSortOrder'])
+			return 1;
+		elseif($position1['unitSortOrder'] > $position1['unitSortOrder'])
+			return -1;
+		if($position1['shelfSortOrder'] < $position1['shelfSortOrder'])
+			return 1;
+		elseif($position1['shelfSortOrder'] > $position1['shelfSortOrder'])
+			return -1;
+		if($position1['beltSortOrder'] < $position1['beltSortOrder'])
+			return 1;
+		else
+			return -1;			
+
+	}
 	public function index() {
 
 		$this->load->language('checkout/success');
 		$total = $this->cart->getTotal();
 		if (isset($this->session->data['order_id'])) {
-		    $products = $this->cart->getOrderForPLC();
+			$products = $this->cart->getProducts();
+			print_r("<BR>Before anything<BR>");
+			print_r($products);
+			print_r("<BR>END<BR>");
 		    $jsonProducts = [];
 		    $productsCount = 0;
 		    foreach ($products as $product) {
@@ -20,10 +39,13 @@ class ControllerCheckoutSuccess extends Controller {
 						$currentArary['quantity'] = 1;
 						$currentArary['xPos'] = $product['xPos'][$i];
 						$currentArary['yPos'] = $product['yPos'][$i];
-						$currentArary['unitID'] = $product['unit_id'][$i];/// check this
-						$currentArary['direction'] = $product['direction'][$i];/// check this
-						$currentArary['bentCount'] = $product['bent_count']; 
-						$currentArary['price']     = $product['price']; 
+						$currentArary['unitID']       = $product['unit_id'][$i];/// check this
+						$currentArary['direction']     = $product['direction'][$i];/// check this
+						$currentArary['bentCount']     = $product['bent_count']; 
+						$currentArary['price']         = $product['price']; 
+						$currentArary['unitSortOrder']  = $product['unit_sort_order'][$i]; 
+						$currentArary[''] = $product['shelf_sort_order'][$i]; 
+						$currentArary['beltSortOrder']  = $product['belt_sort_order'][$i]; 
 
 						$jsonProducts[] = $currentArary;
 					}
@@ -38,12 +60,20 @@ class ControllerCheckoutSuccess extends Controller {
 					$currentArary['direction'] = $product['direction'];/// check this
 					$currentArary['bentCount'] = $product['bent_count']; 
 					$currentArary['price'] = $product['price']; 
-
+					$currentArary['unitSortOrder']  = $product['unit_sort_order']; 
+					$currentArary['shelfSortOrder'] = $product['shelf_sort_order']; 
+					$currentArary['beltSortOrder']  = $product['belt_sort_order'];
 					$jsonProducts[] = $currentArary;
 
 				}			
 			}
-
+			print_r("<BR>Before<BR>");
+			print_r($jsonProducts);
+			print_r("<BR>END<BR>");
+			usort($jsonProducts, array( $this, "position_compare")); 
+			print_r("<BR>After <BR>");
+			print_r($jsonProducts);
+			print_r("<BR>END<BR>");
 			$order = array(
 				'OrderID'       => $this->session->data['order_id'],
 				'ProductsCount' => $productsCount,
@@ -52,6 +82,7 @@ class ControllerCheckoutSuccess extends Controller {
 				'total'         => $total
 			);
 			print_r($order);
+			
 			$json_data = json_encode($order);// path need to be changed
 			$this->cart->clear();
 
@@ -68,7 +99,7 @@ class ControllerCheckoutSuccess extends Controller {
 			unset($this->session->data['vouchers']);
 			unset($this->session->data['totals']);
 		}
-
+		//die();
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['breadcrumbs'] = array();
