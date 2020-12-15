@@ -54,8 +54,10 @@ class Cart {
 			//error_log($positionQueryString);
 			//die();
 		$position_query = $this->db->query($positionQueryString);
+		/*print_r("<BR>Before anything Position Query<BR>");
+		print_r($position_query);
+		print_r("<BR>END<BR>");*/
 
-		//print_r($position_query);
 		if($quantity == 1){
 			$xPos = $position_query->row['xPos'];
 			$yPos = $position_query->row['shelf_physical_row'];
@@ -163,7 +165,12 @@ class Cart {
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
+					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
+					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
 					'direction'       => $unitInformation[2],
+					'unit_sort_order'  => $unitInformation[4],
+					'shelf_sort_order' => $unitInformation[5],
+					'belt_sort_order'  => $unitInformation[6],
 					'unit_id'         => $unitInformation[3],
 					'product_id'      => $product_query->row['product_id'],
 					'name'            => $product_query->row['name'],

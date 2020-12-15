@@ -37,8 +37,8 @@ class ControllerCheckoutSuccess extends Controller {
 		$this->load->language('checkout/success');
 		$total = $this->cart->getTotal();
 		if (isset($this->session->data['order_id'])) {
-			$products = $this->cart->getProducts();
-			print_r("<BR>Before anything<BR>");
+			$products = $this->cart->getOrderForPLC();
+			print_r("<BR>Before anything Products<BR>");
 			print_r($products);
 			print_r("<BR>END<BR>");
 		    $jsonProducts = [];
