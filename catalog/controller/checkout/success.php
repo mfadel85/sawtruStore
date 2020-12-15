@@ -2,18 +2,34 @@
 class ControllerCheckoutSuccess extends Controller {
 	public static function position_compare($position1,$position2){
 		// compare by unit_sort_order, shelf_sort_order, belt_sort_order
-		if($position1['unitSortOrder']< $position1['unitSortOrder'])
-			return 1;
-		elseif($position1['unitSortOrder'] > $position1['unitSortOrder'])
+		if($position1['unitSortOrder']< $position2['unitSortOrder']){
+			print_r("<BR>first<BR>");
 			return -1;
-		if($position1['shelfSortOrder'] < $position1['shelfSortOrder'])
+		}
+		elseif($position1['unitSortOrder'] > $position2['unitSortOrder']){
+			print_r("<BR>second<BR>");
 			return 1;
-		elseif($position1['shelfSortOrder'] > $position1['shelfSortOrder'])
+		}
+
+		if($position1['shelfSortOrder'] < $position2['shelfSortOrder'])
+		{
+			print_r("<BR>third<BR>");
 			return -1;
-		if($position1['beltSortOrder'] < $position1['beltSortOrder'])
+		}
+		elseif($position1['shelfSortOrder'] > $position2['shelfSortOrder']){
+			print_r("<BR>fourth<BR>");
 			return 1;
+		}
+		if($position1['beltSortOrder'] < $position2['beltSortOrder'])
+		{
+			print_r("<BR>fifth<BR>");
+			return -1;
+		}
 		else
-			return -1;			
+		{
+			print_r("<BR>sixth<BR>");
+			return 1;
+		}			
 
 	}
 	public function index() {
@@ -98,7 +114,7 @@ class ControllerCheckoutSuccess extends Controller {
 			unset($this->session->data['voucher']);
 			unset($this->session->data['vouchers']);
 			unset($this->session->data['totals']);
-		}
+		}//days of the week in arabic
 		//die();
 		$this->document->setTitle($this->language->get('heading_title'));
 
