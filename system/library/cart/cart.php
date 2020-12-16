@@ -131,9 +131,7 @@ class Cart {
 			AND customer_id = '" . (int)$this->customer->getId() . "' 
 			AND session_id = '" . $this->db->escape($this->session->getId()) 
 		. "'");
-		print_r("<BR>Before anything Cart Query<BR>");
-		print_r($cart_query);
-		print_r("<BR>END<BR>");
+
 		foreach ($cart_query->rows as $cart) {
 
 			$stock = true;
@@ -191,9 +189,7 @@ class Cart {
 				$option_price = 0;
 				$recurring = false;	
 				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
-				print_r("<BR>UNIT INFO");
-				print_r($unitInformation);
-				print_r("<BR>ENDS<BR>");
+
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'bent_count'      => $product_query->row['bent_count'],
@@ -290,29 +286,37 @@ class Cart {
 
 	}
 
-	public function getActiveBelt($beltCount,$previousActiveBelt){
-
-		return $previousActiveBelt;
+	public function getActiveBelt($beltCount,$beltsFilledInRow){
+		$movingShelfBeltCount =5;
+		if(($beltCount + $beltsFilledInRow) <= $movingShelfBeltCount)
+			return [$beltsFilledInRow+1,0,0];
+		else {
+			return [1,1,$beltsFilledInRow];
+		}
 	}
-	public function fillMovingShelf($products){
+	public function fillMovingShelf(&$products){
 		$previousActiveBelt = 0;
 		$beltsFilledInRow = 0;
-		foreach($products as $product){
+		foreach($products as &$product){
 			if($previousActiveBelt == 0){
 				$product['activeBelt'] = 1;
-				$product['step'] = 0;
-				$product['stepBeltCount'] = 0;
 				$beltsFilledInRow += $product['bentCount'];
+				$product['rollOver'] = 0;
+				$product['moveBeltCount'] = 0;
+				$previousActiveBelt = 1;
 			}
 			else {
-				$product['activeBelt'] = $this->getActiveBelt($product['bentCount'], $previousActiveBelt);
+				$nextMoveInfo = $this->getActiveBelt($product['bentCount'], $beltsFilledInRow);
+				$product['activeBelt'] = $nextMoveInfo[0];
 				$previousActiveBelt = $product['activeBelt'];
 				$beltsFilledInRow += $product['bentCount'];
-
-
-
+				$product['rollOver'] = $nextMoveInfo[1];
+				$product['moveBeltCount'] = $nextMoveInfo[2];
 			}
 		}
+		print_r("<br>FINAL SORT<BR>");
+		print_r($products);
+		print_r("<br>FINAL SORT<BR>");
 		return $products;
 	}
 
