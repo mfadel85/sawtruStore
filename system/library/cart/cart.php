@@ -276,16 +276,22 @@ class Cart {
 			}
 		}
 		usort($jsonProducts, array($this, "position_compare"));
+		$products = $this->getActiveBelts($jsonProducts);
+
 		$order = array(
 			'OrderID' => $this->session->data['order_id'],
 			'ProductsCount' => $productsCount,
-			'Products' => $jsonProducts,
+			'Products' => $products,
 			'OrderStatus' => 'waiting',
 		);
 		// to add activeBelt, 
 
 		return $order;
 
+	}
+
+	public function getActiveBelts($products){
+		return $products;
 	}
 
 	public function getProducts() {

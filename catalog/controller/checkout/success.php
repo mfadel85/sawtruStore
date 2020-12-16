@@ -38,63 +38,6 @@ class ControllerCheckoutSuccess extends Controller {
 		if (isset($this->session->data['order_id'])) {
 			$order = $this->cart->getOrderForPLC();
 			$order['total'] = $total;
-		   /* $jsonProducts = [];
-		    $productsCount = 0;
-		    foreach ($products as $product) {
-
-				$productsCount += $product['quantity'];
-				if($product['quantity']>1){
-
-					for($i=0;$i<(int)$product['quantity'];$i++){
-
-						$currentArary = array();
-						$currentArary['name'] = $product['name'];
-						$currentArary['quantity'] = 1;
-						$currentArary['xPos'] = $product['xPos'][$i];
-						$currentArary['yPos'] = $product['yPos'][$i];
-						$currentArary['unitID']       = $product['unit_id'][$i];/// check this
-						$currentArary['direction']     = $product['direction'][$i];/// check this
-						$currentArary['bentCount']     = $product['bent_count']; 
-						$currentArary['price']         = $product['price']; 
-						$currentArary['unitSortOrder']  = $product['unit_sort_order'][$i]; 
-						$currentArary[''] = $product['shelf_sort_order'][$i]; 
-						$currentArary['beltSortOrder']  = $product['belt_sort_order'][$i]; 
-
-						$jsonProducts[] = $currentArary;
-					}
-				}	
-				else {
-					$currentArary = array();
-					$currentArary['name'] = $product['name'];
-					$currentArary['quantity'] = $product['quantity'];
-					$currentArary['xPos'] = $product['xPos'];
-					$currentArary['yPos'] = $product['yPos'];
-					$currentArary['unitID'] = $product['unit_id'];/// check this
-					$currentArary['direction'] = $product['direction'];/// check this
-					$currentArary['bentCount'] = $product['bent_count']; 
-					$currentArary['price'] = $product['price']; 
-					$currentArary['unitSortOrder']  = $product['unit_sort_order']; 
-					$currentArary['shelfSortOrder'] = $product['shelf_sort_order']; 
-					$currentArary['beltSortOrder']  = $product['belt_sort_order'];
-					$jsonProducts[] = $currentArary;
-
-				}			
-			}
-			print_r("<BR>Before<BR>");
-			print_r($jsonProducts);
-			print_r("<BR>END<BR>");
-			usort($jsonProducts, array( $this, "position_compare")); 
-			print_r("<BR>After <BR>");
-			print_r($jsonProducts);
-			print_r("<BR>END<BR>");
-			$order = array(
-				'OrderID'       => $this->session->data['order_id'],
-				'ProductsCount' => $productsCount,
-				'Products'      => $jsonProducts,
-				'OrderStatus'   => 'waiting',
-				'total'         => $total
-			);
-			print_r($order);*/
 			
 			$json_data = json_encode($order);// path need to be changed
 			$this->cart->clear();
