@@ -307,6 +307,8 @@ class Cart {
 			else {
 				$product['activeBelt'] = $this->getActiveBelt($product['bentCount'], $previousActiveBelt);
 				$previousActiveBelt = $product['activeBelt'];
+				$beltsFilledInRow += $product['bentCount'];
+
 
 
 			}
