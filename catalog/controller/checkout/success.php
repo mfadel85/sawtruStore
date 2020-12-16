@@ -30,18 +30,15 @@ class ControllerCheckoutSuccess extends Controller {
 			print_r("<BR>sixth<BR>");
 			return 1;
 		}			
-
 	}
 	public function index() {
 
 		$this->load->language('checkout/success');
 		$total = $this->cart->getTotal();
 		if (isset($this->session->data['order_id'])) {
-			$products = $this->cart->getOrderForPLC();
-			print_r("<BR>Before anything Products<BR>");
-			print_r($products);
-			print_r("<BR>END<BR>");
-		    $jsonProducts = [];
+			$order = $this->cart->getOrderForPLC();
+			$order['total'] = $total;
+		   /* $jsonProducts = [];
 		    $productsCount = 0;
 		    foreach ($products as $product) {
 
@@ -97,7 +94,7 @@ class ControllerCheckoutSuccess extends Controller {
 				'OrderStatus'   => 'waiting',
 				'total'         => $total
 			);
-			print_r($order);
+			print_r($order);*/
 			
 			$json_data = json_encode($order);// path need to be changed
 			$this->cart->clear();

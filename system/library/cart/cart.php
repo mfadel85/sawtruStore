@@ -91,6 +91,38 @@ class Cart {
 		return [$xPos,$yPos,$direction,$unitID,$unitSortOrder,$shelfSortOrder,$beltSortOrder];
 	}
 
+	public static function position_compare($position1,$position2){
+		// compare by unit_sort_order, shelf_sort_order, belt_sort_order
+		if($position1['unitSortOrder']< $position2['unitSortOrder']){
+			print_r("<BR>first<BR>");
+			return -1;
+		}
+		elseif($position1['unitSortOrder'] > $position2['unitSortOrder']){
+			print_r("<BR>second<BR>");
+			return 1;
+		}
+
+		if($position1['shelfSortOrder'] < $position2['shelfSortOrder'])
+		{
+			print_r("<BR>third<BR>");
+			return -1;
+		}
+		elseif($position1['shelfSortOrder'] > $position2['shelfSortOrder']){
+			print_r("<BR>fourth<BR>");
+			return 1;
+		}
+		if($position1['beltSortOrder'] < $position2['beltSortOrder'])
+		{
+			print_r("<BR>fifth<BR>");
+			return -1;
+		}
+		else
+		{
+			print_r("<BR>sixth<BR>");
+			return 1;
+		}			
+	}
+	
 	public function getOrderForPLC(){
 		$product_data = array();
 		$cart_query = $this->db->query("
@@ -200,11 +232,59 @@ class Cart {
 			}					
 					
 		}
-		// sort before return
-		/*echo "<pre>";
-		echo $product_data;
-		echo "</pre>";*/
-		return $product_data;
+		// we can sort and add three additional 
+		//
+		$jsonProducts = [];
+		$productsCount = 0;
+		foreach ($product_data as $product) {
+
+			$productsCount += $product['quantity'];
+			if ($product['quantity'] > 1) {
+
+				for ($i = 0; $i < (int) $product['quantity']; $i++) {
+
+					$currentArary = array();
+					$currentArary['name'] = $product['name'];
+					$currentArary['quantity'] = 1;
+					$currentArary['xPos'] = $product['xPos'][$i];
+					$currentArary['yPos'] = $product['yPos'][$i];
+					$currentArary['unitID'] = $product['unit_id'][$i]; /// check this
+					$currentArary['direction'] = $product['direction'][$i]; /// check this
+					$currentArary['bentCount'] = $product['bent_count'];
+					$currentArary['price'] = $product['price'];
+					$currentArary['unitSortOrder'] = $product['unit_sort_order'][$i];
+					$currentArary['shelfSortOrder'] = $product['shelf_sort_order'][$i];
+					$currentArary['beltSortOrder'] = $product['belt_sort_order'][$i];
+
+					$jsonProducts[] = $currentArary;
+				}
+			} else {
+				$currentArary = array();
+				$currentArary['name'] = $product['name'];
+				$currentArary['quantity'] = $product['quantity'];
+				$currentArary['xPos'] = $product['xPos'];
+				$currentArary['yPos'] = $product['yPos'];
+				$currentArary['unitID'] = $product['unit_id']; /// check this
+				$currentArary['direction'] = $product['direction']; /// check this
+				$currentArary['bentCount'] = $product['bent_count'];
+				$currentArary['price'] = $product['price'];
+				$currentArary['unitSortOrder'] = $product['unit_sort_order'];
+				$currentArary['shelfSortOrder'] = $product['shelf_sort_order'];
+				$currentArary['beltSortOrder'] = $product['belt_sort_order'];
+				$jsonProducts[] = $currentArary;
+
+			}
+		}
+		usort($jsonProducts, array($this, "position_compare"));
+		$order = array(
+			'OrderID' => $this->session->data['order_id'],
+			'ProductsCount' => $productsCount,
+			'Products' => $jsonProducts,
+			'OrderStatus' => 'waiting',
+		);
+		// to add activeBelt, 
+
+		return $order;
 
 	}
 
