@@ -276,7 +276,7 @@ class Cart {
 			}
 		}
 		usort($jsonProducts, array($this, "position_compare"));
-		$products = $this->getActiveBelts($jsonProducts);
+		$products = $this->fillMovingShelf($jsonProducts);
 
 		$order = array(
 			'OrderID' => $this->session->data['order_id'],
@@ -290,7 +290,27 @@ class Cart {
 
 	}
 
-	public function getActiveBelts($products){
+	public function getActiveBelt($beltCount,$previousActiveBelt){
+
+		return $previousActiveBelt;
+	}
+	public function fillMovingShelf($products){
+		$previousActiveBelt = 0;
+		$beltsFilledInRow = 0;
+		foreach($products as $product){
+			if($previousActiveBelt == 0){
+				$product['activeBelt'] = 1;
+				$product['step'] = 0;
+				$product['stepBeltCount'] = 0;
+				$beltsFilledInRow += $product['bentCount'];
+			}
+			else {
+				$product['activeBelt'] = $this->getActiveBelt($product['bentCount'], $previousActiveBelt);
+				$previousActiveBelt = $product['activeBelt'];
+
+
+			}
+		}
 		return $products;
 	}
 
