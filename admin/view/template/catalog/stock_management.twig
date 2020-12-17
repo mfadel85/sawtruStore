@@ -351,18 +351,15 @@
 	$("#productBarcode").on("change", function () {
     	$('.activeCell').removeClass('activeCell');
 
-		//don't activate this if the input is not 13 digit
 		var barCode = $("#productBarcode").val();	
-		//if(barCode.length > 12){
-			var test1 = isValidBarcode(barCode);
-			if(!test1){
-				alert('not valid barcode');
-				event.preventDefault();
-			}
-			productID = getProductID(barCode);	
-		//}
+		var test1 = isValidBarcode(barCode);
+		test1 = true;
+		if(!test1){
+			alert('not valid barcode');
+			event.preventDefault();
+		}
+		productID = getProductID(barCode);	
 		
-		// if true get the product and its details and prepare the map
 		$("#palletBarcode").focus();
 	}); 
 
