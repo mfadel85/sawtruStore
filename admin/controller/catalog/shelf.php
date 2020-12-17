@@ -174,7 +174,6 @@ class ControllerCatalogShelf extends Controller {
         $data['beltCount'] = 10;// to be defined automatically
         $data['belts'][] = array();
         $results = $this->model_catalog_shelf->getBelts($this->request->get['shelf_id']);
-
         foreach($results as $result){
 
             $data['belts'][] = array(
@@ -252,6 +251,7 @@ class ControllerCatalogShelf extends Controller {
 		} else {
 			$data['action'] = $this->url->link('catalog/shelf/edit', 'user_token=' . $this->session->data['user_token'] . '&shelf_id=' . $this->request->get['shelf_id'] . $url, true);
 		}
+        $data['unitWidht'] = 600; //maybe changed later taken from the database
 
 		$data['cancel'] = $this->url->link('catalog/shelf', 'user_token=' . $this->session->data['user_token'] . $url, true);
         if (isset($this->request->get['shelf_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
