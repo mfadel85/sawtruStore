@@ -85,8 +85,12 @@ class ModelCatalogShelf extends Model {
 
     public function getShelves($unit_id,$data=array()){
         $shelves = array();
-        $sql = "SELECT shelf_id,os.barcode,height,width,os.unit_id,name as unit_name,shelf_physical_row as physical_row FROM `oc_shelf` 
-        os join oc_unit ou on os.unit_id = ou.unit_id where active = 1 ORDER BY `shelf_id` ASC";
+        $sql = " SELECT shelf_id,os.barcode,height,os.width,os.unit_id,
+                name as unit_name,shelf_physical_row as physical_row 
+                FROM `oc_shelf` os 
+                join oc_unit ou 
+                on os.unit_id = ou.unit_id 
+                where active = 1 ORDER BY `shelf_id` ASC";
         $query = $this->db->query($sql);
         foreach($query->rows as $shelf){
             $shelf_id= $shelf['shelf_id'];
