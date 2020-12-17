@@ -94,7 +94,7 @@ class ModelCatalogUnit extends Model {
     public function getUnitDetails($unitID){
         $unit = array();
         // get all rows in that unit
-        $shelves = $this->db->query("SELECT shelf_id,shelf_physical_row from oc_shelf where unit_id = $unitID");
+        $shelves = $this->db->query("SELECT shelf_id,shelf_physical_row from oc_shelf where unit_id = $unitID order by shelf_physical_row desc");
         foreach($shelves->rows  as $shelf)
         {
             $shelfID     = $shelf['shelf_id'];
