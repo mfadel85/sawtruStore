@@ -109,7 +109,64 @@ class ControllerCatalogUnit extends Controller {
         $this->load->model('catalog/unit');
         $result = $this->model_catalog_unit->checkStatus($unitID);
         return $result;
+    }    
+    public function displayUnitProduct(){
+        $this->document->addScript('view/javascript/jquery-ui.js');
+        $this->document->addStyle('view/stylesheet/jquery-ui.css');
+
+        $this->document->addStyle('view/vendor/animate/animate.css');
+        $this->document->addStyle('view/vendor/select2/select2.min.css');
+        $this->document->addStyle('view/vendor/perfect-scrollbar/perfect-scrollbar.css');
+        $this->document->addStyle('view/css/util.css');
+        $this->document->addStyle('view/css/main.css');
+
+        $this->document->addScript('view/vendor/bootstrap/js/popper.js');
+        $this->document->addScript('view/vendor/select2/select2.min.js');
+        $this->document->addScript('view/js/main.js');
+        $this->load->language('catalog/unit');
+        $this->load->model('catalog/unit');
+        $this->load->model('catalog/product');
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $data['products'] = array();
+        $data['products'] = $this->model_catalog_product->getProducts();
+        $data['error_warning'] = false;
+        $data['breadcrumbs'] = array();
+
+        $data['breadcumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
+        );
+        $url = '';
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true),
+        );
+        $unitID = $this->request->get['id'];
+        $unit = $this->model_catalog_unit->getUnitDetails($unitID);
+        $unitDetail = array();
+        $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
+        $unitData = array();
+        // get the count of belts in a shelf
+        foreach ($unit as $shelf) {
+            $shelfID = $shelf['id'];
+            $physicalRow = $shelf['physicalRow'];
+
+            $shelfContent = $shelf['contents'];
+            $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
+        }
+        $data['beltCount'] = $beltCount;
+        $data['unit'] = $unitDetail;
+        //print_r($unitDetail);
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->load->view('catalog/unit_assign_product', $data));
+       
     }
+
+
     public function displayUnit(){
         $this->document->addScript('view/javascript/jquery-ui.js');
         $this->document->addStyle('view/stylesheet/jquery-ui.css');
