@@ -23,7 +23,7 @@ class ControllerCatalogProduct extends Controller {
 			$this->model_catalog_product->addProduct($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
-
+            // we need product_id here
 			$url = '';
 
 			if (isset($this->request->get['filter_name'])) {
@@ -61,8 +61,10 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
-			
-			$this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
+			$productID = 82;// will be changed later
+			$unitID = 15; // to be decided later
+			$url .="&product_id=$productID&id=$unitID";
+			$this->response->redirect($this->url->link('catalog/unit/displayUnitProduct', 'user_token=' . $this->session->data['user_token'] . $url, true));
 		}
 
 		$this->getForm();

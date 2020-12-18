@@ -23,8 +23,8 @@ $_['column_model']           = 'Model';
 $_['column_image']           = 'Image';
 $_['column_price']           = 'Price';
 $_['column_quantity']        = 'Quantity';
-$_['column_warningQuantity']        = 'Min Quantity';
-$_['column_bent_count']        = 'Belt Count';
+$_['column_warningQuantity'] = 'Min Quantity';
+$_['column_bent_count']      = 'Belt Count';
 $_['column_status']          = 'Status';
 $_['column_action']          = 'Action';
 
