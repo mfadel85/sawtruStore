@@ -151,7 +151,7 @@ a:hover, a:focus {
 	width: 235px;
 	height: 100%;
 	overflow: auto;
-	background-color: #222d32;
+	background-color: #522d32;
 	position: absolute;
 	top: 0px;
 	left: -235px;
@@ -257,7 +257,7 @@ a:hover, a:focus {
 	background-color: #171b21;
 }
 #menu > li > ul {
-	background-color: #293141;
+	background-color: #422030;
 }
 /* 2nd lvl */
 #menu li li a {
