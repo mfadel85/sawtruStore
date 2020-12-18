@@ -143,9 +143,12 @@ class ControllerCatalogUnit extends Controller {
             'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true),
         );
         $unitID = $this->request->get['id'];
+        $productID = $this->request->get['product_id'];
         $unit = $this->model_catalog_unit->getUnitDetails($unitID);
         $unitDetail = array();
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
+        $productBeltCount = $this->request->get['beltCount'];
+
         $unitData = array();
         // get the count of belts in a shelf
         foreach ($unit as $shelf) {
@@ -155,8 +158,11 @@ class ControllerCatalogUnit extends Controller {
             $shelfContent = $shelf['contents'];
             $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
         }
+        $data['productBeltCount'] = $productBeltCount;
+
         $data['beltCount'] = $beltCount;
         $data['unit'] = $unitDetail;
+        $data['productID']= $productID;
         //print_r($unitDetail);
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

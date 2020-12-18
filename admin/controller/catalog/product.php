@@ -61,9 +61,14 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
-			$productID = 82;// will be changed later
+			$productID = 86;// will be changed later
 			$unitID = 15; // to be decided later
-			$url .="&product_id=$productID&id=$unitID";
+			error_log($this->request->post['bent_count']);
+			//$beltCount = ceil(floatval($this->request->post['bent_count'])/7);	
+			$beltCount = $this->request->post['bent_count'];
+        /*widthVal = parseFloat(width);
+        var bentCount = Math.ceil(widthVal / 7) ;*/
+			$url .="&product_id=$productID&id=$unitID&beltCount=$beltCount";
 			$this->response->redirect($this->url->link('catalog/unit/displayUnitProduct', 'user_token=' . $this->session->data['user_token'] . $url, true));
 		}
 
