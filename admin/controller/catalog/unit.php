@@ -127,6 +127,7 @@ class ControllerCatalogUnit extends Controller {
         $this->load->language('catalog/unit');
         $this->load->model('catalog/unit');
         $this->load->model('catalog/product');
+        $this->document->setTitle($this->language->get('heading_title'));
 
 		$data['products'] = array();
 		$data['products'] = $this->model_catalog_product->getProducts();
