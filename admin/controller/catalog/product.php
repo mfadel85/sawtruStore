@@ -20,7 +20,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->load->model('catalog/product');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_catalog_product->addProduct($this->request->post);
+			$prodcutID = $this->model_catalog_product->addProduct($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
             // we need product_id here
@@ -61,7 +61,6 @@ class ControllerCatalogProduct extends Controller {
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
-			$productID = 86;// will be changed later
 			$unitID = 15; // to be decided later
 			error_log($this->request->post['bent_count']);
 			//$beltCount = ceil(floatval($this->request->post['bent_count'])/7);	
