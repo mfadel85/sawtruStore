@@ -159,6 +159,8 @@ class ControllerCatalogUnit extends Controller {
             $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
         }
         $data['productBeltCount'] = $productBeltCount;
+        $url="&productID=$productID";
+        $data['delete'] = $this->url->link('catalog/product/deleteProduct', 'user_token=' . $this->session->data['user_token'] . $url, true);
 
         $data['beltCount'] = $beltCount;
         $data['unit'] = $unitDetail;
