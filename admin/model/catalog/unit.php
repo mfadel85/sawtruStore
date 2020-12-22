@@ -148,11 +148,24 @@ class ModelCatalogUnit extends Model {
             $unit[]=$shelf;
         }
         //before returning fill n belt available stuff
-        $unit = $this->getAvailableCells($unit);
+        $beltCount = 4;
+        //$unit = $this->getAvailableCells($unit,$beltCount);
         return $unit;
     }
-    public function getAvailableCells(&$unit){
-
+    public function getAvailableCells(&$unit,$beltCount){
+        foreach($unit as $shelf){
+            for($i=0;$i<10;$i++){
+                if($i+$beltCount < 10){
+                    /// scan $belctCount cells
+                    for($j=$i;$j<$i+$beltCount;$j++){
+                        if($shelf[$j][3]>0) {
+                            $shelf[$j][9]= false;
+                            continue;
+                        }
+                    }
+                }
+            }
+        }        
         return $unit;
     }
     public function getUnit($unit_id){
