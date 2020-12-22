@@ -26,7 +26,7 @@
     </div>
     {% endif %}
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-10 table-responsive">
         <table class="table table-bordered unitTableD"> 
         <tr>
         <th>ShelfNo</th>
@@ -35,8 +35,12 @@
         {% endfor %}
         </tr>
         {% for shelf in unit %}
+		{% if shelf.shelfID == '' %}
+		<tr><td>{{ 10-loop.index+1 }}</td></tr>
+		{% else %}
         <tr id=" {{ shelf.shelfID }} ">
         <td>{{ shelf.physicalRow }}</td>
+	{#	{% if shelf.physicalRow == unit|length - loop.index+1 %}  #}
           {% for belt in shelf.contents %}
           <td 
             data-column="column{{ loop.index }}"
@@ -57,11 +61,13 @@
           {% else  %}
              No Product
           {% endif %}
-		    <span class="CellComment">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} - {{ belt[7] }} </span>
+		    <span class="CellComment rotate">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} - {{ belt[7] }} </span>
 
            </td>
           {% endfor %}
+     {#      {% endif %}	  #}	  
         </tr>
+		{% endif %}
         {% endfor %}
         </table>
       </div>

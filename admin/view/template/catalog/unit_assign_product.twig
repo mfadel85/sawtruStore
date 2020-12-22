@@ -26,7 +26,7 @@
     </div>
     {% endif %}
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-10 table-responsive">
         <table class="table table-bordered unitTableD"> 
         <tr>
         <th>ShelfNo</th>
@@ -35,7 +35,7 @@
         {% endfor %}
         </tr>
         {% for shelf in unit %}
-        <tr id=" {{ shelf.shelfID }} ">
+        <tr id=" {{ shelf.shelfID }}">
         <td>{{ shelf.physicalRow }}</td>
           {% for belt in shelf.contents %}
           <td 

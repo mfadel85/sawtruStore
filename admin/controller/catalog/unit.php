@@ -148,15 +148,21 @@ class ControllerCatalogUnit extends Controller {
         $unitDetail = array();
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
         $productBeltCount = $this->request->get['beltCount'];
+        $maxShelfCount = 10; // for now later we will change it
+        $data['maxShelfCount'] = $maxShelfCount;
 
         $unitData = array();
-        // get the count of belts in a shelf
+        // get the count of belts i a shelf
+        $j = 10;
         foreach ($unit as $shelf) {
+            
             $shelfID = $shelf['id'];
             $physicalRow = $shelf['physicalRow'];
 
             $shelfContent = $shelf['contents'];
+            // add empty row if 
             $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
+            
         }
         $data['productBeltCount'] = $productBeltCount;
         $url="&productID=$productID";
@@ -214,7 +220,20 @@ class ControllerCatalogUnit extends Controller {
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
         $unitData = array();
         // get the count of belts in a shelf
+        $j = 10;
         foreach($unit as $shelf){
+            $diff = $j - $shelf['physicalRow'];
+            for ($i = 1; $i <= $diff; $i++) {
+                $j--;
+                $unitDetail[] = [
+                    'shelfID' => '',
+                    'physicalRow' => '',
+                    'contents' => '',
+                ];
+
+            }
+            if($j == $shelf['physicalRow'])
+                $j--;
             $shelfID      = $shelf['id'];
             $physicalRow  = $shelf['physicalRow'];
 

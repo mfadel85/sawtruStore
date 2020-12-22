@@ -873,3 +873,27 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
   .CellWithComment:hover span.CellComment{
 	display:block;
   }
+  .rotate {
+
+    -webkit-transform: rotate(-90deg);
+    -webkit-transform-origin: left top;
+    -moz-transform: rotate(-90deg);
+    -moz-transform-origin: left top;
+    -ms-transform: rotate(-90deg);
+    -ms-transform-origin: left top;
+    -o-transform: rotate(-90deg);
+    -o-transform-origin: left top;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+	background-color: #02afe9;
+	position: absolute;
+	white-space:normal;
+	width:150px;
+	word-wrap: break-word;
+
+	height: 90px;
+    top: 0;
+    left: 100%;
+    white-space: nowrap;    
+    font-size: 20px;
+}

@@ -45,7 +45,29 @@
             <div class="form-group required">
                 <label class="col-sm-2 control-label" for="input-physical-row"><span data-toggle="tooltip" title="{{ help_physical_row }}">{{ entry_physical_row }}</span></label>
                 <div class="col-sm-10">
-                  <input type="text" name="physical_row" value="{{ physical_row }}" placeholder="{{ entry_physical_row }}" id="input-physical_row" class="form-control"/>
+                  <select name="physical_row" id="physical_row" class="form-control">
+                    <option value="0">{{ text_none }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+
+
+                    {#{% for unit_name in units %}
+                      {% if unit_name.unit_id == unit_id %}
+                        <option value="{{ unit_name.unit_id }}" selected="selected">{{ unit_name.name }}</option>
+                      {% else %}
+                        <option value="{{ unit_name.unit_id }}">{{ unit_name.name }}</option>
+                      {% endif %}
+                    {% endfor %}#}
+                  </select>
+                  {#<input type="text" name="physical_row" value="{{ physical_row }}" placeholder="{{ entry_physical_row }}" id="input-physical_row" class="form-control"/>#}
                 </div>
             </div>
 
