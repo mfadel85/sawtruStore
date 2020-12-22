@@ -70,8 +70,8 @@
 
   </div>
 <script type="text/javascript">
-    const productID = {{ productID }};
-    const productBeltCount = {{ productBeltCount }};
+  const productID = {{ productID }};
+  const productBeltCount = {{ productBeltCount }};
 
 	var IP = '192.168.1.51';
 	const beltWidth= 70;
@@ -83,36 +83,40 @@
 		return element;
 	}
     $(".cell").click(function(){
-        const cell = $(this);
-        const barcode = cell[0].getAttribute("data-barcode");
-        const assignedProductID = cell[0].getAttribute("data-product-id");
-		const filled = cell[0].getAttribute("data-filled");
-        const id = $(this).attr("id");        
-        if(filled != "0"){
+      const cell = $(this);
+      const barcode = cell[0].getAttribute("data-barcode");
+      const assignedProductID = cell[0].getAttribute("data-product-id");
+		  const filled = cell[0].getAttribute("data-filled");
+      const id = $(this).attr("id");        
+      if(filled != "0"){
 		    alert("you can't do this, this bent has already assigned to another product!!");
-			return;
-		}	
-        const rIndex = id.indexOf('r');
-		const cIndex = id.indexOf('c');
-		const row = id.substring(id.indexOf('r')+1,id.indexOf('c'));
-		const col = id.substring(id.indexOf('c')+1,id.length);
-		console.log("col",col,"row",row);
-        let nextCells = [];
-        if(productBeltCount > 1 )
-        {
-            for(let j=1;j<productBeltCount;j++){
-                let k = parseInt(col)+j;
-                const cellID = "\"#r"+row+"c"+k+"\"";
-                const adjacentCell = $("#r"+row+"c"+k);
-                const filled = adjacentCell[0].getAttribute("data-filled");
-                if (parseInt(filled) >0){
-                        alert("you can't do this bent, this product needs more than one bent,the next bent is assigned to another product!!");
-                        return;
-                }
-                nextCells.push(k);
+			  return;
+		  }	
+      const rIndex = id.indexOf('r');
+		  const cIndex = id.indexOf('c');
+		  const row = id.substring(id.indexOf('r')+1,id.indexOf('c'));
+		  const col = id.substring(id.indexOf('c')+1,id.length);
+		  console.log("col",col,"row",row);
+      let nextCells = [];
+      if(productBeltCount > 1 && productBeltCount < 10)
+      {
+        for(let j=1;j<productBeltCount;j++){
+            let k = parseInt(col)+j;
+            const cellID = "\"#r"+row+"c"+k+"\"";
+            const adjacentCell = $("#r"+row+"c"+k);
+            const filled = adjacentCell[0].getAttribute("data-filled");
+            if (parseInt(filled) >0){
+              alert("you can't do this bent, this product needs more than one bent,the next bent is assigned to another product!!");
+              return;
             }
-        }    
-		cell.css({background:'yellow'}); 
+            nextCells.push(k);
+        }
+      }  
+      else {
+        alert("This product is more than 10 belts can't be fit in this unit!!!!");
+        return;
+      }  
+		    cell.css({background:'yellow'}); 
         nextCells.forEach(function(item){
             $("#r"+row+"c"+item).css({background:'yellow'});
         });

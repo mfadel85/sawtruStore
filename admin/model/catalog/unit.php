@@ -92,6 +92,7 @@ class ModelCatalogUnit extends Model {
         return $count;
     }
     public function getUnitDetails($unitID){
+        // refactor this function
         $unit = array();
         // get all rows in that unit
         $shelves = $this->db->query("SELECT shelf_id,shelf_physical_row from oc_shelf where unit_id = $unitID order by shelf_physical_row desc");
@@ -106,7 +107,12 @@ class ModelCatalogUnit extends Model {
             foreach($results->rows as $belt){
                 $productID   = $belt['product_id'];
                 $productName = '';
+                if($belt['quantity'] > 0)
+                    $available = false;
+                else 
+                    $available = true;
                 if(isset($productID) && $belt['status']){
+                    // get n consecutive belt 
 		            $count =  $belt['quantity'];
                     $productInfo = $this->db->query("
                     SELECT name,width from oc_product_description opd 
@@ -128,19 +134,25 @@ class ModelCatalogUnit extends Model {
                         $countAvailable,
                         $belt['barcode'],
                         1, /* active or inactive*/
-                        ''
+                        '',
+                        $available
                     );                
                 }
                 else {
                     if(!$belt['status'])
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt');                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt',$available);                
                     else
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'');                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'',$available);                
                 }
             }
             $unit[]=$shelf;
         }
-        //print_r($unit);
+        //before returning fill n belt available stuff
+        $unit = $this->getAvailableCells($unit);
+        return $unit;
+    }
+    public function getAvailableCells(&$unit){
+
         return $unit;
     }
     public function getUnit($unit_id){
