@@ -36,9 +36,21 @@
         </tr>
         {% for shelf in unit %}
 		{% if shelf.shelfID == '' %}
-		<tr><td>{{ 10-loop.index+1 }}</td></tr>
+		<tr class="emptyRow">
+			<td>{{ 10-loop.index+1 }}</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
 		{% else %}
-        <tr id=" {{ shelf.shelfID }} ">
+        <tr id="{{ shelf.shelfID }}" >
         <td>{{ shelf.physicalRow }}</td>
 	{#	{% if shelf.physicalRow == unit|length - loop.index+1 %}  #}
           {% for belt in shelf.contents %}

@@ -105,7 +105,7 @@ class ControllerExtensionDashboardComplaint extends Controller {
 		foreach ($results as $result) {
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
-				'name'   => $result['firstname'].$result['lastname'],
+				'name'   => $result['firstname']." ".$result['lastname'],
 				'status'     => $result['return_status'],
 				'product'    => $result['product'],
 				'date_ordered' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
