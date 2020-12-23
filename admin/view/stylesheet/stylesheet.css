@@ -816,7 +816,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
  }
 .unitTableD {
 	border-collapse: separate;
-	border-spacing: 0 70px;
+	border-spacing: 0 50px;
 	border-right: 15px solid #cdd0d4 !important;
 	border-left:  15px solid #cdd0d4 !important;
 	
@@ -914,6 +914,10 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 
 .farkli {
 	background-color: yellowgreen;
+}
+
+.unavailable {
+	background-color:rgb(206, 134, 134);
 }
 
 .emptyRowCell {
