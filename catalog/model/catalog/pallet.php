@@ -176,6 +176,13 @@ class ModelCatalogPallet extends Model {
 			$unitID = $unitIDQuery->rows[0]['unit_id'];
 			$shelfID = $unitIDQuery->rows[0]['shelf_id'];
 			$update = $this->db->query("UPDATE `oc_pallet` SET `quantity` = quantity+1 WHERE `oc_pallet`.`pallet_id` = $beltID;");
+			//  get beltCount for this product ,
+			// get next pallet and also updates its stock
+			$beltCount = $this->db->query("SELECT bent_count from oc_product where product_id = $productID")->row['bent_count'];
+			for($i = 1;$i <$beltCount;$i++){
+				$nextBeltID = $this->getNextPalletID($beltID,$i);
+				$update = $this->db->query("UPDATE `oc_pallet` SET `quantity` = quantity+1 WHERE `oc_pallet`.`pallet_id` = $nextBeltID;");
+			}
 			$update = $this->db->query("INSERT INTO `oc_product_to_position` (`position_id`, `product_id`, `shelf_id`, `unit_id`, `start_pallet`, `expiry_date`, `date_added`) 
 				VALUES (NULL, '$productID', '$shelfID', '$unitID', '$beltID', '2022-04-30', CURRENT_TIMESTAMP);");
 			if($update)
@@ -198,7 +205,7 @@ class ModelCatalogPallet extends Model {
 		return $status;
 
 	}
-	public function getNextPalletID($beltID,$i){
+	public function getNextPalletID($beltID,$i=1){
 		// maxCol is the max column we can choose
 		$maxCol = 10;
 		error_log("Belt id is $beltID, the value of is $i");
