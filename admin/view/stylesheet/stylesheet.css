@@ -813,7 +813,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 
 .unitTableD {
 	border-collapse: separate;
-	border-spacing: 0 10px;
+	border-spacing: 0 70px;
 	border-right: 15px solid #cdd0d4 !important;
 	border-left:  15px solid #cdd0d4 !important;
 	
@@ -880,8 +880,8 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
   .CellWithComment:hover span.CellComment{
 	display:block;
   }
-  .rotate {
 
+  .rotate {
     -webkit-transform: rotate(90deg);
     -webkit-transform-origin: left top;
     -moz-transform: rotate(90deg);
@@ -911,4 +911,35 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 
 .farkli {
 	background-color: yellowgreen;
+}
+
+.emptyRowCell {
+	background-color: whitesmoke;
+}
+
+.longCell {
+	height: 100px;
+}
+
+.startCell {
+  border-left-style: groove !important;
+  border-left-color: coral !important;
+  border-left-width: 3px !important;	
+}
+
+.shortCell {
+	height: 30px;
+
+	border-bottom-style: groove;
+  	border-bottom-color: coral;
+	border-bottom-width: 4px;
+
+	border-top-style: groove;
+  	border-top-color: coral;
+  	border-top-width: 4px;	  
+}
+.robot {
+	background-color : #222;
+	border-radius: 3px;
+  	border: 3px solid black;
 }

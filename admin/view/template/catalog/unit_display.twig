@@ -15,7 +15,7 @@
       </ul>
     </div>
   </div>
-  <div class="container-fluid">{% if error_warning %}
+  <div class="container-fluid panel panel-default">{% if error_warning %}
       <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
@@ -38,16 +38,16 @@
 		{% if shelf.shelfID == '' %}
 		<tr class="emptyRow">
 			<td>{{ 10-loop.index+1 }}</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
+			<td class="emptyRowCell"></td>
 		</tr>
 		{% else %}
         <tr id="{{ shelf.shelfID }}" >

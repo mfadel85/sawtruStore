@@ -294,7 +294,6 @@ class ControllerCatalogUnit extends Controller {
                 $this->model_catalog_unit->deleteUnit($unitID);
             }
             $this->response->redirect($this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true));
-
         }
     }
     protected function getForm(){

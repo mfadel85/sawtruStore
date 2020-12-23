@@ -36,13 +36,10 @@
         </div>
         <div class="panel-body">
           <a href="index.php?route=catalog/unit/displayUnit&user_token={{user_token}}&id={{item.id}}">
-          <table class="table table-bordered unitTable  {{ item.status }} " data-unitID="item.id" > 
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <table class="table table-bordered unitTable  {{ item.status }} longCell" data-unitID="item.id" > 
+            <tr>
+              <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
           </table>
           </a>
           </div>
@@ -50,6 +47,15 @@
         </div>
       {% endfor %}
     {% endif %}
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-6">
+      <table class="table table-bordered unitTable   shortCell" data-unitID="item.id" > 
+        <tr>
+          <td class="startCell"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="robot"></td>
+        </tr>
+      </table>
+      </div>
     </div>
     <div class="row">
     {% if right %}
@@ -61,13 +67,10 @@
           </div>
          <div class="panel-body">
           <a href="index.php?route=catalog/unit/displayUnit&user_token={{user_token}}&id={{item.id}}">
-          <table class="table table-bordered unitTable    {{   item.status  }} " data-unitID="item.id">
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <table class="table table-bordered unitTable    {{   item.status  }} longCell" data-unitID="item.id">
+            <tr>
+              <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
           </table>
           </a>
           </div>
