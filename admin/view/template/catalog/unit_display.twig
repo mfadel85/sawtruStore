@@ -25,15 +25,23 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     {% endif %}
+	<div class="row">
+		<div class="col-md-10 table-responsive">
+
+		<table class="table table-bordered unitTable"> 
+			<tr>
+			<td class="emptyRowCell">ShelfNo</td>
+			{% for i in range(1, beltCount) %}
+			<td class="emptyRowCell">  {{ i }}</td>
+			{% endfor %}
+			</tr>
+		</table>
+		</div>
+	</div>
     <div class="row">
       <div class="col-md-10 table-responsive">
         <table class="table table-bordered unitTableD"> 
-        <tr>
-        <th>ShelfNo</th>
-        {% for i in range(1, beltCount) %}
-          <th>  {{ i }}</th>
-        {% endfor %}
-        </tr>
+
         {% for shelf in unit %}
 		{% if shelf.shelfID == '' %}
 		<tr class="emptyRow">

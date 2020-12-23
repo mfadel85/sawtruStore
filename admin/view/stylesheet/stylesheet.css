@@ -461,7 +461,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 .panel-default .panel-heading {
 	color: #4c4d5a;
 	border-color: #dcdcdc;
-	background: #f6f6f6;
+	background: rgb(190, 199, 207);
 	text-shadow: 0 -1px 0 rgba(50,50,50,0);
 }
 .img-thumbnail i {
@@ -810,7 +810,10 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 .unitTable {
 
 }
+.unitTable tr td{
+	 width: 9%;
 
+ }
 .unitTableD {
 	border-collapse: separate;
 	border-spacing: 0 70px;
