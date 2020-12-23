@@ -144,10 +144,13 @@ class ControllerCatalogUnit extends Controller {
         );
         $unitID = $this->request->get['id'];
         $productID = $this->request->get['product_id'];
-        $unit = $this->model_catalog_unit->getUnitDetails($unitID);
+        $productBeltCount = $this->request->get['beltCount'];
+
+        $unit = $this->model_catalog_unit->getUnitDetails($unitID,$productBeltCount);
+        //$unit);
         $unitDetail = array();
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
-        $productBeltCount = $this->request->get['beltCount'];
+
         $maxShelfCount = 10; // for now later we will change it
         $data['maxShelfCount'] = $maxShelfCount;
 
@@ -162,7 +165,6 @@ class ControllerCatalogUnit extends Controller {
             $shelfContent = $shelf['contents'];
             // add empty row if 
             $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
-            
         }
         $data['productBeltCount'] = $productBeltCount;
         $url="&productID=$productID";

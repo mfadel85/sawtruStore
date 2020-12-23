@@ -91,7 +91,7 @@ class ModelCatalogUnit extends Model {
         $count = $this->db->query($query)->row['count'];
         return $count;
     }
-    public function getUnitDetails($unitID){
+    public function getUnitDetails($unitID,$beltCount = 1){
         // refactor this function
         $unit = array();
         // get all rows in that unit
@@ -135,38 +135,54 @@ class ModelCatalogUnit extends Model {
                         $belt['barcode'],
                         1, /* active or inactive*/
                         '',
-                        $available
+                        0// to indicate available or not
                     );                
                 }
                 else {
                     if(!$belt['status'])
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt',$available);                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt',0);                
                     else
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'',$available);                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'',0);                
                 }
             }
             $unit[]=$shelf;
         }
         //before returning fill n belt available stuff
-        $beltCount = 4;
-        //$unit = $this->getAvailableCells($unit,$beltCount);
+        $unit = $this->getAvailableCells($unit,$beltCount);
         return $unit;
     }
     public function getAvailableCells(&$unit,$beltCount){
-        foreach($unit as $shelf){
-            for($i=0;$i<10;$i++){
-                if($i+$beltCount < 10){
-                    /// scan $belctCount cells
-                    for($j=$i;$j<$i+$beltCount;$j++){
-                        if($shelf[$j][3]>0) {
-                            $shelf[$j][9]= false;
-                            continue;
-                        }
+        $line = 0;
+        $modifiedUnit = array();
+        foreach ($unit as $shelf) {
+            $currentLine = $shelf;
+            $line++;
+            for ($k = 0; $k < 10-$beltCount+1; $k++) {
+                $counter = 0;
+               // print_r("<BR>");
+                for ($j = $k; $j < $k + $beltCount; $j++) {
+                    //print_r(" K is $k J is : $j<BR>");
+                    if ($shelf['contents'][$j][3] == 0) {
+                        //print_r("<BR>Line: line $line Cell : $j  $k <BR>");
+                        $counter++;
+                        $index = $j;
+                    } else {
+                        $counter = 0;
+                        continue;
                     }
                 }
+                if ($counter == $beltCount) {
+                    //print_r("<BR>Belt Count is $beltCount, Counter is $counter : Availables: Line $line  K is $k <BR>");
+                    for ($i = 0; $i < $beltCount; $i++) {
+                        //print_r(" changes :D ");
+                        $currentLine['contents'][$k+$i][10] = 1;
+                    }
+                    $counter = 0;
+                }
             }
-        }        
-        return $unit;
+            $modifiedUnit[] = $currentLine;
+        }
+        return $modifiedUnit;
     }
     public function getUnit($unit_id){
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "unit p  WHERE p.unit_id = '" . (int)$unit_id . "' ");

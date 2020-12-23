@@ -44,13 +44,17 @@
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
              data-product-id="{{ belt[2] }}"
+             class="cell CellWithComment 
             {% if belt[8] == 0 %}
-              class="cell CellWithComment Empty inactive"
+              Empty inactive
             {% elseif belt[3] == 0 %}
-              class="cell CellWithComment Empty"
+              Empty
             {% elseif  belt[3] %}
-              class="cell CellWithComment Full"
+              Full
             {% endif %}
+            {% if belt[10] == 1 %}
+              farkli
+            {% endif %}"
           >
           {% if belt[1] > 0 %}
            {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} 
@@ -82,7 +86,7 @@
 		console.log('element',element,x,y);
 		return element;
 	}
-    $(".cell").click(function(){
+    $(".farkli").click(function(){
       const cell = $(this);
       const barcode = cell[0].getAttribute("data-barcode");
       const assignedProductID = cell[0].getAttribute("data-product-id");

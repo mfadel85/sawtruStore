@@ -908,3 +908,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 .emptyRow{
 	height:20px;
 }
+
+.farkli {
+	background-color: yellowgreen;
+}
