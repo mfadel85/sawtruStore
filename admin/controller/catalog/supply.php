@@ -26,6 +26,9 @@ class ControllerCatalogSupply extends Controller {
         $product_id = $_REQUEST['product_id'];
         $quantity   = $_REQUEST['quantity'];
         $this->model_catalog_supply->addSupply($product_id,$quantity);
+        if($_REQUEST['dir']=='products'){
+            $this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
+        }
         $this->response->redirect($this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'] . $url, true));
 
     }

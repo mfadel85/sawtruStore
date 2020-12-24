@@ -158,6 +158,8 @@
 
                       <td class="text-left">{% if sort == 'p.status' %} <a href="{{ sort_status }}" class="{{ order|lower }}">{{ column_status }}</a> {% else %} <a href="{{ sort_status }}">{{ column_status }}</a> {% endif %}</td>
                       <td class="text-right">{{ column_action }}</td>
+                      <td class="text-right"><a href="{{ product.supply }}" data-toggle="tooltip" title="Supply" class="btn btn-info">Supply</a></td>
+
                     </tr>
                   </thead>
                   <tbody>
@@ -184,6 +186,8 @@
 
                     <td class="text-left">{{ product.status }}</td>
                     <td class="text-right"><a href="{{ product.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                    <td class="text-right"><a href="{{ product.supply }}" data-toggle="tooltip" title="{{ button_supply }}" class="btn btn-info"><i class="fa fa-plus"></i></a></td>
+
                   </tr>
                   {% endfor %}
                   {% else %}

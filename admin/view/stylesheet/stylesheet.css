@@ -408,6 +408,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 }
 .cell {
 	border-bottom: 3px !important;
+	border: 1px solid #ddd;
 }
 .table a.asc:after {
 	content: " \f106";
@@ -962,3 +963,8 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	border-radius: 3px;
 	border: 2px dotted black !important;
 }*/
+
+.start {
+	/*border-right:none !important;	*/
+	border-right: double;
+}

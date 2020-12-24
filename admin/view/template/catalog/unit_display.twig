@@ -40,7 +40,8 @@
 	</div>
     <div class="row">
       <div class="col-md-9 table-responsive">
-        <table class="table table-bordered unitTableD"> 
+	  <!-- table-bordered maybe -->
+        <table class="table table-bordered  unitTableD"> 
 
         {% for shelf in unit %}
 		{% if shelf.shelfID == '' %}
@@ -68,13 +69,32 @@
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
              data-product-id="{{ belt[2] }}"
+			 class="cell 
+			 
+			 CellWithComment
             {% if belt[8] == 0 %}
-              class="cell CellWithComment Empty inactive"
+               Empty inactive
             {% elseif belt[3] == 0 %}
-              class="cell CellWithComment Empty"
+               Empty
             {% elseif  belt[3] %}
-              class="cell CellWithComment Full"
+               Full
             {% endif %}
+			
+			"
+			style ="
+			{% if belt[11] == 'Single' %}
+				single
+			{% elseif  belt[11]== 'Start'  %} 
+			border-right:none !important;
+			border-left:2px solid #ddd !important;
+			{% elseif  belt[11]== 'Middle'  %}
+            border-left:none !important;
+			border-right:none !important;
+			{% elseif  belt[11]== 'End'  %}
+               border-left:none !important;
+			   border-right:2px solid #ddd !important;
+            {% endif %}
+			"
           >
           {% if belt[1] > 0 %}
            {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} 

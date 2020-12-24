@@ -734,7 +734,8 @@ class ControllerCatalogProduct extends Controller {
 				'warningQuantity' => $result['warningQuantity'],
 				'bent_count'      => $result['bent_count'],
 				'status'          => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'edit'            => $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'] . $url, true)
+				'edit'            => $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $result['product_id'] . $url, true),
+				'supply'          => $this->url->link('catalog/supply/addSupply', 'user_token=' . $this->session->data['user_token'] . '&dir=products&quantity=20&product_id=' . $result['product_id'] . $url, true)
 			);
 		}
 

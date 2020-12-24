@@ -136,14 +136,15 @@ class ModelCatalogUnit extends Model {
                         $belt['barcode'],
                         1, /* active or inactive*/
                         '',
-                        0// to indicate available or not
+                        0,// to indicate available or not,
+                        $belt['position'] //single,start,middle,end
                     );                
                 }
                 else {
                     if(!$belt['status'])
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt',0);                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],0,'Disabled Belt',0,'Single');                
                     else
-                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'',0);                
+                        $shelf['contents'][] = array('',0,'',0,'','',0,$belt['barcode'],1,'',0,'Single');                
                 }
             }
             $unit[]=$shelf;
