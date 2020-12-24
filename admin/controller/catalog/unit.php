@@ -146,7 +146,7 @@ class ControllerCatalogUnit extends Controller {
         $productID = $this->request->get['product_id'];
         $productBeltCount = $this->request->get['beltCount'];
 
-        $unit = $this->model_catalog_unit->getUnitDetails($unitID,$productBeltCount);
+        $unit = $this->model_catalog_unit->getUnitDetails($unitID,$productBeltCount,$productID);
         //$unit);
         $unitDetail = array();
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);

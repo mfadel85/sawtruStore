@@ -91,7 +91,12 @@ class ModelCatalogUnit extends Model {
         $count = $this->db->query($query)->row['count'];
         return $count;
     }
-    public function getUnitDetails($unitID,$beltCount = 1){
+    public function getUnitDetails($unitID,$beltCount = 1,$unitProductID = 0){
+        if($unitProductID > 0){
+            $productHeight = $this->db->query("SELECT height from oc_product where product_id=$unitProductID")->row['height'];
+        }
+        else 
+            $productHeight = 0;
         // refactor this function
         $unit = array();
         // get all rows in that unit
@@ -115,7 +120,7 @@ class ModelCatalogUnit extends Model {
                     // get n consecutive belt 
 		            $count =  $belt['quantity'];
                     $productInfo = $this->db->query("
-                        SELECT name,width from oc_product_description opd 
+                        SELECT name,width,height from oc_product_description opd 
                         join oc_product  op on opd.product_id = op.product_id
                         where opd.product_id =$productID
                     ");
@@ -124,7 +129,8 @@ class ModelCatalogUnit extends Model {
                     $full = false;
                     $max       = floor(57 / $width);
                     $availableSpace = 57 - $count*$width;
-                    $countAvailable = floor($availableSpace / $width);    
+                    $countAvailable = floor($availableSpace / $width);   
+                    
                     $shelf['contents'][] = array(
                         $belt['pallet_id'],
                         $belt['product_id'],
@@ -150,22 +156,28 @@ class ModelCatalogUnit extends Model {
             $unit[]=$shelf;
         }
         //before returning fill n belt available stuff
-        $unit = $this->getAvailableCells($unit,$beltCount);
+        $unit = $this->getAvailableCells($unit,$beltCount,$productHeight);
         return $unit;
     }
-    public function getAvailableCells(&$unit,$beltCount){
+    public function getAvailableCells(&$unit,$beltCount,$productHeight){
         $line = 0;
         $modifiedUnit = array();
         foreach ($unit as $shelf) {
             $currentLine = $shelf;
+
+            // get shelfHeight
+            $shelfID = $shelf['id'];
+            $shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` WHERE shelf_id = $shelfID")->row['height'];
+            if($productHeight > $shelfHeight){
+                $modifiedUnit[] = $currentLine;
+                continue;
+            }
+
             $line++;
             for ($k = 0; $k < 10-$beltCount+1; $k++) {
                 $counter = 0;
-               // print_r("<BR>");
                 for ($j = $k; $j < $k + $beltCount; $j++) {
-                    //print_r(" K is $k J is : $j<BR>");
                     if ($shelf['contents'][$j][3] == 0) {
-                        //print_r("<BR>Line: line $line Cell : $j  $k <BR>");
                         $counter++;
                         $index = $j;
                     } else {
@@ -174,9 +186,8 @@ class ModelCatalogUnit extends Model {
                     }
                 }
                 if ($counter == $beltCount) {
-                    //print_r("<BR>Belt Count is $beltCount, Counter is $counter : Availables: Line $line  K is $k <BR>");
                     for ($i = 0; $i < $beltCount; $i++) {
-                        //print_r(" changes :D ");
+
                         $currentLine['contents'][$k+$i][10] = 1;
                     }
                     $counter = 0;

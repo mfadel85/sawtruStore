@@ -219,24 +219,21 @@ class ModelCatalogPallet extends Model {
 		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextBeltID;
 	}
-	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
-		error_log("$beltBarcode,Product id is $productID,$beltCount,$update", 3, "mylog.log");
-		$beltID = $this->getBeltID($beltBarcode);
-		error_log(" Belt ID is $beltID", 3, "mylog.log");
 
-		// check before inserting
+	
+	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
+		// check all  cells if they are not empty then we can update otherwise not
+		// if one of the cells is not empty then return false
+		$beltID = $this->getBeltID($beltBarcode);
 		$assignable = false;
 		if($beltCount > 1 ){
 			error_log("Here we passed");
 			for($i=0;$i<$beltCount-1;$i++){
-				/// get next bent id
 				$nextBeltID = $this->getNextPalletID($beltID,$i);
 				error_log("Belt ID is $beltID, i is $i, next belt id is $nextBeltID");
 				$beltStatus = $this->getBeltAssigned($nextBeltID);
 				if($beltStatus == "Empty" || $beltStatus == "Assigned Empty")
 				{
-					// if assigned empty and the cells before it is also assigned empty
-					// to delete the record of $nextPalletID
 					if($beltStatus == "Assigned Empty") {
 						$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
 						$this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
@@ -248,16 +245,13 @@ class ModelCatalogPallet extends Model {
 					$assignable = false;
 					break;
 				}
-					
 			}
 			$assignable = true;
 		}
 		else {
 			$assignable = true;
 		}
-
 		if($update == "false" && $assignable){
-			// all the cells to be written
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
 					$beltID = $this->getNextPalletID($beltID,1); 
@@ -266,26 +260,17 @@ class ModelCatalogPallet extends Model {
 					INSERT INTO `oc_pallet_product` (`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`, `position`, `time_created`, `time_modified`, `expiration_date`) 
 					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);");
 				$assigned = $this->db->query("Update `oc_pallet` set product_id = $productID where pallet_id = $beltID");
-
-			}
-				
+			}	
 		}	
 		else {
-			// get the prev position
 			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
 			$prevPosition  = $prevInfo->rows[0]['position'];
 			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
-			/* fix the prev position by deleteing them */
 			$updated = $this->db->query("
 				UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1 
 				where start_pallet_id = $beltID
 			");
 			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 1 where pallet_id = $beltID");
-
-			/// based on prev position and belt count if prev position is the first,
-			/// if it is the last, 
-			///if it is in the middle
-			/// we have to two type of cells: to be deleted(before updated cells and after updated cells) and to be updated
 			$tobeDeletedPrevCount = $prevPosition - 1;
 
 			for($j=1;$j<=$tobeDeletedPrevCount;$j++){
