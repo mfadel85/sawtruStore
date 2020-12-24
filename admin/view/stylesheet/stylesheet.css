@@ -950,3 +950,15 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	border-radius: 3px;
   	border: 3px solid black;
 }
+
+/*.firstCell {
+	border-radius: 3px;
+	border: 3px dotted black !important;
+	border-left: 2px dotted black !important;
+
+}
+
+.lastCell {
+	border-radius: 3px;
+	border: 2px dotted black !important;
+}*/

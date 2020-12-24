@@ -115,9 +115,10 @@ class ModelCatalogUnit extends Model {
                     // get n consecutive belt 
 		            $count =  $belt['quantity'];
                     $productInfo = $this->db->query("
-                    SELECT name,width from oc_product_description opd 
-                    join oc_product  op on opd.product_id = op.product_id
-                    where opd.product_id =$productID");
+                        SELECT name,width from oc_product_description opd 
+                        join oc_product  op on opd.product_id = op.product_id
+                        where opd.product_id =$productID
+                    ");
                     $productName = $productInfo->row['name'];
                     $width = $productInfo->row['width'];
                     $full = false;
