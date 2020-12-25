@@ -143,6 +143,8 @@ class ControllerCatalogUnit extends Controller {
             'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true),
         );
         $unitID = $this->request->get['id'];
+        // get product name
+        $data['productName'] = "Pepsi 2.5 Liter";
         $productID = $this->request->get['product_id'];
         $productBeltCount = $this->request->get['beltCount'];
 
