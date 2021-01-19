@@ -32,7 +32,11 @@ class ControllerCatalogRefill  extends Controller {
 		$this->response->setOutput($this->load->view('catalog/refill', $data));               
     }
     public function getBelts($productID){
-
+        /*
+        $json['error'] = 1;
+$this->response->addHeader('Content-Type: application/json');
+$this->response->setOutput(json_encode($json));
+*/
 
         // return as json data
     }
