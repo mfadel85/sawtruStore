@@ -121,7 +121,7 @@ class ModelCatalogPallet extends Model {
 		error_log("ZZZ $beltID  is belt id,Belt Barcode is $beltBarcode ");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
-		error_log(" shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
+		error_log("xyzzxy shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
 		if((int)$shelfHeight >= (int)$productHeight){
 			return true;
 		}
