@@ -31,4 +31,9 @@ class ControllerCatalogRefill  extends Controller {
 
 		$this->response->setOutput($this->load->view('catalog/refill', $data));               
     }
+    public function getBelts($productID){
+
+
+        // return as json data
+    }
 }

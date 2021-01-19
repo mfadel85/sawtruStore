@@ -42,6 +42,8 @@
 
 </div>
 <script type="text/javascript">
+// when product barcode changes then get the list of belts that belongs to that product
+// and show them : to do that call an a page 
 	$("#productBarcode").focus();
 	var IP = '192.168.1.51';
 
@@ -62,25 +64,24 @@ function getProductID(barcode){
 		}).done(function(json){
 	    productId = json['product_id'];
       	// get product model to name it to use it in selecting cells
-      	var model = json['model'];
-      	allCells = $("."+model);
+      var model = json['model'];
+      allCells = $("."+model);
       	//$("."+model).effect( "shake", { direction: "left", times: 4, distance: 101}, 2000 );
-      	$("."+model).animate({
-        	opacity: 0.70,
-        	color:"red"
-      	}).addClass( "activeCell" );
-      		console.log(json);
-      		console.log(json['name']);
+      $("."+model).animate({
+        opacity: 0.70,
+        color:"red"
+      }).addClass( "activeCell" );
+      console.log(json);
+      console.log(json['name']);
 			$("#productID").val(productId);
 			$("#bentCount").html(json['bent_count']);
 			$("#length").html(parseFloat(json['length']).toFixed(2));
-			$("#width").html(parseFloat(json['width']).toFixed(2));
+			$"#width").html(parseFloat(json['width']).toFixed(2));
 			$("#depth").html(parseFloat(json['height']).toFixed(2));
 			$("#weight").html(parseFloat(json['weight']).toFixed(2));
 			$("#productName").val(json['name']);
-
 			return productId;
-	    });
+	  });
 		return productId;
 	}
 
@@ -96,8 +97,7 @@ function getProductID(barcode){
 	  return true;
 	}
 	$("#productBarcode").on("change", function () {
-    	$('.activeCell').removeClass('activeCell');
-
+    $('.activeCell').removeClass('activeCell');
 		var barCode = $("#productBarcode").val();	
 		var test1 = isValidBarcode(barCode);
 		test1 = true;
@@ -106,7 +106,6 @@ function getProductID(barcode){
 			event.preventDefault();
 		}
 		productID = getProductID(barCode);	
-		
 		$("#palletBarcode").focus();
 	}); 
 </script>
