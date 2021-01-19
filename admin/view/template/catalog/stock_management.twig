@@ -68,31 +68,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-sm-2">
-    		<h3>Out of stock soon!!</h3>
-
-			<ul>
-			{% for product in decreasedProducts %}
-				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}} - {{ product['quantity'] }} pcs</li>
-			{% endfor %}
-			</ul>
-
-	
-		</div>
-		<div class="col-sm-2" style="background-color:grey;">
-			<h2>Products List</h2>
-			<input type="text" placeholder="type some product" />
-			<ul>
-			{% for product in products %}
-				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}}</li>
-			{% endfor %}
-			</ul>		
-		</div>
-	</div>
-  <br><BR><BR>
-
-	<div class="row container-fluid" id ="units" >
+			<div class="row container-fluid" id ="units" >
 	    {% for unit in map  %}
 			<div class="col-sm-6">
 				<h3>Unit {{ loop.index }}</h3>
@@ -136,8 +112,31 @@
   		{% endfor %}
 	  
 	</div>
+		</div>
+		<div class="col-sm-2">
+    		<h3>Out of stock soon!!</h3>
 
+			<ul>
+			{% for product in decreasedProducts %}
+				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}} - {{ product['quantity'] }} pcs</li>
+			{% endfor %}
+			</ul>
 
+	
+		</div>
+		<div class="col-sm-2" style="background-color:grey;">
+			<h2>Products List</h2>
+			<input type="text" placeholder="type some product" />
+			<ul>
+			{% for product in products %}
+				<li class='draggable' id="{{ product['product_id']}}" data-pallet-count="{{ product['bent_count'] }}" >{{ product['name']}}</li>
+			{% endfor %}
+			</ul>		
+		</div>
+	</div>
+  <br><BR><BR>
+
+	
 </div>
 <script type="text/javascript">
 	$("#productBarcode").focus();

@@ -327,7 +327,12 @@ class ModelCheckoutOrder extends Model {
 
 					$quantity = (int)$order_product['quantity'];
 					for($j=0;$j<$quantity;$j++)
-						$position_query = $this->db->query("delete from oc_product_to_position where status='Sold' and product_id = ".(int)$order_product['product_id']." limit 1");
+						$position_query = $this->db->query("
+						DELETE from oc_product_to_position 
+						where status='Sold' 
+						and product_id = ".(int)$order_product['product_id']." 
+						limit 1
+						");
 						error_log("I did it now check the database pleaes!!");
 				}
 			}
@@ -368,8 +373,20 @@ class ModelCheckoutOrder extends Model {
 					error_log("Product ID:".$order_product['product_id'].PHP_EOL);
 
 					$quantity = (int)$order_product['quantity'];
-					for($j=0;$j<$quantity;$j++)
-						$position_query = $this->db->query("UPDATE oc_product_to_position set status='Sold' where status='Ready' and product_id = ".(int)$order_product['product_id']." limit 1");
+					/// how to decrease the amount of the oc_pallet table
+					for($j=0;$j<$quantity;$j++){
+						// to be fixed here 
+						$beltID = $this->db->query("select start_pallet from oc_product_to_position where  product_id = " . (int) $order_product['product_id'] . " limit 1")->row['start_pallet'];
+
+						$position_query = $this->db->query("
+							UPDATE oc_product_to_position 
+							set status='Sold' 
+							where status='Ready' 
+							and product_id = " . (int) $order_product['product_id'] . " limit 1");
+							// how to know which pallet????
+
+					}
+						
 
 
 					// what is the next task I have to review the projects to see

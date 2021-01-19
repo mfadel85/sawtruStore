@@ -26,12 +26,12 @@ $api_token = $response->api_token;
 $curl = curl_init();
 
 
-$url = "http://192.168.1.51/store/index.php?route=api/order/sendOrders&api_token=" . $api_token;
+//$url = "http://192.168.1.51/store/index.php?route=api/order/sendOrders&api_token=" . $api_token;
 
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-error_log("Sending Started");
-$raw_response = curl_exec($curl);
-error_log("ends");
+//$curl = curl_init($url);
+//curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+//error_log("Sending Started");
+//$raw_response = curl_exec($curl);
+//error_log("ends");
 
 
