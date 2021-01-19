@@ -11,7 +11,7 @@ class ControllerCatalogRefill  extends Controller {
 
         $this->getForm();
     }
-    public function getForm(){
+    private function getForm(){
 
         $data['breadcrumbs'] = array();
 
@@ -24,14 +24,21 @@ class ControllerCatalogRefill  extends Controller {
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true)
         );
- 
+        $data['user_token'] = $this->session->data['user_token'];
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('catalog/refill', $data));               
     }
-    public function getBelts($productID){
+    public function getBelts(){
+        print_r($this->request->post);
+
+        $barcode = $this->request->post['barcode'];
+        // should we get productBarcode from get Requres? $this->request->get['barcode']
+        $this->load->model('catalog/refill');
+        $output= $this->model_catalog_refill->getBelts($barcode);
+        print_r($output);
         /*
         $json['error'] = 1;
 $this->response->addHeader('Content-Type: application/json');

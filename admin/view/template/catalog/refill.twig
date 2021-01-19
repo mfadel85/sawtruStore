@@ -50,11 +50,13 @@
 	var IP = '192.168.1.51';
 
 function getProductID(barcode){
+	//
+		//let barcode = $("#productBarcode").html();
 		$.ajax({
-			url: 'http://'+IP+'/store/index.php?route=api/product/get',
+			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/getBelts&user_token={{user_token}}',
 			async: false,
 		  	type: 'post',
-		  	data: {sku: barcode},
+		  	data: {barcode: barcode},
 		    crossDomain: true,
 			  success: function(json) {
 			  	  
@@ -75,13 +77,13 @@ function getProductID(barcode){
       }).addClass( "activeCell" );
       console.log(json);
       console.log(json['name']);
-			$("#productID").val(productId);
+			/*$("#productID").val(productId);
 			$("#bentCount").html(json['bent_count']);
 			$("#length").html(parseFloat(json['length']).toFixed(2));
 			$"#width").html(parseFloat(json['width']).toFixed(2));
 			$("#depth").html(parseFloat(json['height']).toFixed(2));
 			$("#weight").html(parseFloat(json['weight']).toFixed(2));
-			$("#productName").val(json['name']);
+			$("#productName").val(json['name']);*/
 			return productId;
 	  });
 		return productId;
