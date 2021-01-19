@@ -219,14 +219,178 @@ class ModelCatalogPallet extends Model {
 		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextBeltID;
 	}
+	public function getPrevBeltID($beltID){
+		// maxCol is the max column we can choose
+		$maxCol = 10;
+		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
+		$row    = $beltInfo->row["shelf_id"];
+		if((int)$beltInfo->row["x_position"]<2)
+			return -1;
+		$xPos   = (int)$beltInfo->row["x_position"]-1;
+		$unitID = $beltInfo->row["unit_id"];
+		$prevBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
+		return $prevBeltID;
+	}	
+	private function updateTillEnd($beltID){
+		$nextBeltID = $this->getNextPalletID($beltID, 1);
+		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
+		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
 
-	
-	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
-		// check all  cells if they are not empty then we can update otherwise not
-		// if one of the cells is not empty then return false
+		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
+		return $beltStatus;
+	}
+	private function updateTillFirst($beltID){
+		$nextBeltID = $this->getPrevBeltID($beltID, 1);
+		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
+		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
+		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
+		return $beltStatus;
+	}	
+	private function updateAdjacentCells($beltID){
+		// get the state of the belt if it is single or start or middle or end
+		$status = $this->db->query("SELECT position from oc_pallet where pallet_id=$beltID")->row['position'];
+		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $beltID");
+		$beltStatus = $status;
+
+		switch($status){
+			case "Single":
+			break;
+			case "Start": /// update till the end
+				while($beltStatus != "End")
+					$beltStatus = $this->updateTillEnd($beltID);
+			break;
+			case "Middle":/// update the ones before till first and the ones after till the end
+				while ($beltStatus != "End") {
+				    $beltStatus = $this->updateTillEnd($beltID);
+				}
+				$beltStatus = $status;
+				while ($beltStatus != "Start") {
+					$beltStatus = $this->updateTillFirst($beltID);
+				}
+			break;
+			case "End":   // update the ones before till first
+				while ($beltStatus != "Start") {
+				    $beltStatus = $this->updateTillFirst($beltID);
+				}
+			break;
+		}
+	}
+	public function assignBeltProduct($beltBarcode,$productID,$beltCount,$update){
 		$beltID = $this->getBeltID($beltBarcode);
-		$assignable = false;
+		if(!$update){
+			for ($i = 0; $i < $beltCount; $i++) {
+				// handle the case if the cell is a part of a different product in the belt then update all of that product
+
+				$cellPosition = "Single"; // single or Start or middle or End
+				if ($beltCount > 0) {
+					$cellPosition = "Start";
+				}
+
+				if ($i > 0) {
+					$beltID = $this->getNextPalletID($beltID, 1);
+					$cellPosition = "Middle";
+					if ($i == $beltCount - 1) {
+						$cellPosition = "End";
+					}
+
+				}
+
+				// what about the prev state of the belt/cell in the next line we handle it
+				$this->updateAdjacentCells($beltID);
+				$assigned = $this->db->query(
+					"INSERT INTO `oc_pallet_product`
+					(`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`,
+					`position`, `time_created`, `time_modified`, `expiration_date`)
+					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);"
+				);
+				$assigned = $this->db->query("Update `oc_pallet` set product_id = $productID,position='$cellPosition' where pallet_id = $beltID");
+			}
+		}
+		else {
+			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
+			$prevPosition = $prevInfo->rows[0]['position'];
+			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
+			$updated = $this->db->query("
+							UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1
+							where start_pallet_id = $beltID
+						");
+			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 1 where pallet_id = $beltID");
+			$tobeDeletedPrevCount = $prevPosition - 1;
+
+			for ($j = 1; $j <= $tobeDeletedPrevCount; $j++) {
+				$prevBeltID = $this->getNextPalletID($beltID, $j * -1);
+
+				$deleted = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $prevBeltID");
+			}
+			$tobeDeletedNextCount = $prevBeltCount - $prevPosition;
+			for ($j = 1; $j <= $tobeDeletedNextCount; $j++) {
+				$nextBeltID = $this->getNextPalletID($beltID, $j);
+
+				$deleted = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $nextBeltID");
+			}
+			/// updated cells here
+			for ($i = 1; $i < $beltCount; $i++) {
+				$cellPosition = "Single"; // single or Start or middle or End
+				if ($beltCount > 0) {
+					$cellPosition = "Start";
+				}
+
+				if ($i > 0) {
+					$beltID = $this->getNextPalletID($beltID, 1);
+					$cellPosition = "Middle";
+					if ($i == $beltCount - 1) {
+						$cellPosition = "End";
+					}
+
+				}
+
+				$updated = $this->db->query("
+							UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i
+							where start_pallet_id = $beltID");
+				$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 0 ,position='$cellPosition' where pallet_id = $beltID");
+			}
+
+		}
+
+	}
+	public function assignPalletProduct($beltBarcode,$productID,$beltCount,$update){
+
+		$beltID = $this->getBeltID($beltBarcode);
+		$assignable = true;
+		if(!$update){
+
+			for ($i = 0; $i < $beltCount; $i++) {
+				// handle the case if the cell is a part of a different product in the belt then update all of that product
+
+				$cellPosition = "Single"; // single or Start or middle or End
+				if($beltCount>0)
+					$cellPosition = "Start";
+				if ($i > 0){
+					$beltID = $this->getNextPalletID($beltID, 1);
+					$cellPosition = "Middle";
+					if($i == $beltCount-1)
+						$cellPosition = "End";
+				} 
+
+				// what about the prev state of the belt/cell in the next line we handle it
+				//$this->updateAdjacentCells($beltID);
+				$assigned = $this->db->query(
+					"INSERT INTO `oc_pallet_product` 
+					(`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`,
+					`position`, `time_created`, `time_modified`, `expiration_date`)
+					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);"
+				);
+				$assigned = $this->db->query("Update `oc_pallet` set product_id = $productID,position='$cellPosition' where pallet_id = $beltID");
+			}
+		}
+		else {
+
+		}
+
+
+
 		if($beltCount > 1 ){
+			$assignable = false;
 			error_log("Here we passed");
 			for($i=0;$i<$beltCount-1;$i++){
 				$nextBeltID = $this->getNextPalletID($beltID,$i);
@@ -248,10 +412,9 @@ class ModelCatalogPallet extends Model {
 			}
 			$assignable = true;
 		}
-		else {
-			$assignable = true;
-		}
 		if($update == "false" && $assignable){
+			////// single\ start  middle \\\ end how to define???
+
 			for($i=0;$i< $beltCount;$i++){
 				if($i>0){ // comment
 					$beltID = $this->getNextPalletID($beltID,1); 

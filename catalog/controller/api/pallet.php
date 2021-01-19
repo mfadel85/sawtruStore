@@ -74,7 +74,7 @@ class ControllerApiPallet extends Controller
 		else {
 			$barcode  = $_POST['barcode'];
 			$productID = $_POST['productID'];
-			$bentCount = $_POST['bentCount'];
+			$beltCount = $_POST['bentCount'];
 			$update    = $_POST['update'];
 			error_log("$barcode $productID  $bentCount $update");
 			/// check if it can't be assigned, or updated???
