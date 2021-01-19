@@ -4,5 +4,13 @@ class ControllerCatalogRefill  extends Controller {
 
     public function index(){
         print_r("Hello!!");
+        $this->load->language('catalog/refill');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('catalog/refill');
+
+        $this->getList();
+        
     }
 }
