@@ -98,30 +98,19 @@ class ModelCatalogPallet extends Model {
 		return $height;
 	}
 	public function getShelfHeight($beltID){
-		error_log("Shelf Height: Belt ID is : $beltID");
-		error_log("Query is : select shelf_id from oc_pallet where pallet_id=$beltID");
 		$shelfIDResult = $this->db->query("select shelf_id from oc_pallet where pallet_id=$beltID");
-
 		$shelfID = $shelfIDResult->rows[0]['shelf_id'];
-		error_log("Shelf ID : $shelfID");
-
 		$shelfHeight = $this->db->query("SELECT height FROM `oc_shelf` where shelf_id =$shelfID")->rows[0]['height'];
-		error_log("SELECT height FROM `oc_shelf` where shelf_id =$shelfID");
-		error_log("Shelf height : $shelfHeight");
-
 		return $shelfHeight;
 	}
 	private function getBeltID($barcode){
 		$barcodeResult = $this->db->query("SELECT pallet_id from oc_pallet where barcode = '$barcode'");
-		error_log("SELECT pallet_id from oc_pallet where barcode = $barcode");
 		return $barcodeResult->row['pallet_id'];
 	}
 	public function verifyShelfProduct($beltBarcode,$productID){
 		$beltID = $this->getBeltID("$beltBarcode");
-		error_log("ZZZ $beltID  is belt id,Belt Barcode is $beltBarcode ");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
-		error_log("xyzzxy shelfheigt $shelfHeight Product height $productHeight, $beltID  is belt id ");
 		if((int)$shelfHeight >= (int)$productHeight){
 			return true;
 		}
@@ -281,7 +270,7 @@ class ModelCatalogPallet extends Model {
 		error_log("Task 1: started here0 $beltCount");
 		$beltID = $this->getBeltID($beltBarcode);
 		if(!$update){
-			error_log("Task 1: started here 1");
+			error_log("Task 1 not update: started here 1");
 
 			for ($i = 0; $i < $beltCount; $i++) {
 				error_log("Task 1: started here 3");
@@ -295,10 +284,11 @@ class ModelCatalogPallet extends Model {
 
 				if ($i > 0) {
 					$beltID = $this->getNextPalletID($beltID, 1);
-					$cellPosition = "Middle";
+					$cellPosition = 1 == $beltCount - $i ? "End" : "Middle";
+					/*$cellPosition = "Middle";
 					if ($i == $beltCount - 1) {
 						$cellPosition = "End";
-					}
+					}*/
 				}
 
 				// what about the prev state of the belt/cell in the next line we handle it
@@ -313,6 +303,8 @@ class ModelCatalogPallet extends Model {
 			}
 		}
 		else {
+			error_log("Task 1 update status: started here 2");
+
 			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
 			$prevPosition = $prevInfo->rows[0]['position'];
 			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
@@ -343,11 +335,10 @@ class ModelCatalogPallet extends Model {
 
 				if ($i > 0) {
 					$beltID = $this->getNextPalletID($beltID, 1);
-					$cellPosition = "Middle";
-					if ($i == $beltCount - 1) {
-						$cellPosition = "End";
-					}
-
+					$cellPosition = 1 == $beltCount - $i ? "End" : "Middle";
+					/*$cellPosition = "Middle";
+					if ($i == $beltCount - 1) 
+						$cellPosition = "End";*/
 				}
 
 				$updated = $this->db->query("
