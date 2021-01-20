@@ -241,6 +241,8 @@ class ModelCatalogPallet extends Model {
 	}
 	private function updateTillFirst($beltID){
 		$nextBeltID = $this->getPrevBeltID($beltID, 1);
+		error_log("Task 1: started here0 $nextBeltID");
+
 		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
 		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
 		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
@@ -276,9 +278,14 @@ class ModelCatalogPallet extends Model {
 		}
 	}
 	public function assignBeltProduct($beltBarcode,$productID,$beltCount,$update){
+		error_log("Task 1: started here0 $beltCount");
 		$beltID = $this->getBeltID($beltBarcode);
 		if(!$update){
+			error_log("Task 1: started here 1");
+
 			for ($i = 0; $i < $beltCount; $i++) {
+				error_log("Task 1: started here 3");
+
 				// handle the case if the cell is a part of a different product in the belt then update all of that product
 
 				$cellPosition = "Single"; // single or Start or middle or End
@@ -292,7 +299,6 @@ class ModelCatalogPallet extends Model {
 					if ($i == $beltCount - 1) {
 						$cellPosition = "End";
 					}
-
 				}
 
 				// what about the prev state of the belt/cell in the next line we handle it

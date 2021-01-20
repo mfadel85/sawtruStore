@@ -76,11 +76,11 @@ class ControllerApiPallet extends Controller
 			$productID = $_POST['productID'];
 			$beltCount = $_POST['bentCount'];
 			$update    = $_POST['update'];
-			error_log("$barcode $productID  $bentCount $update");
+			error_log("Operation is like this: $barcode $productID  $beltCount $update");
 			/// check if it can't be assigned, or updated???
 			//$this->model_catalog_pallet->getPalletStatus($barcode,$productID,$bentCount,$update);
 
-			$this->model_catalog_pallet->assignPalletProduct($barcode,$productID,$bentCount,$update);
+			$this->model_catalog_pallet->assignBeltProduct($barcode,$productID,$beltCount,$update);
 		}
 
 	}
