@@ -38,8 +38,9 @@ class ModelCatalogPallet extends Model {
 		}
 		else 
 			return 0;
-
-
+		/*print_r("<BR>ProductData:<BR>");
+		print_R($productData);
+		print_r("<BR><BR>ProductID:".$productID."<BR>");*/
 		$productInfo = $this->db->query("
 		select op.*,unit,name from " . DB_PREFIX . "product op
 			join " . DB_PREFIX . "length_class_description olcd 
@@ -100,6 +101,7 @@ class ModelCatalogPallet extends Model {
 			$information = array();
 			$availableSpace = -1;
 			if($productID != null && isset($pallet['position']) && $pallet['position']==1){
+				//print_r("<BR>get the details of $productID<BR>");
 				$information    = $this->getProductPositionInfo($palletID,$productID);
 
 				if($information != "0"){

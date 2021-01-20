@@ -222,20 +222,18 @@ class ModelCatalogPallet extends Model {
 	}	
 	private function updateTillEnd($beltID){
 		$nextBeltID = $this->getNextPalletID($beltID, 1);
+		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
 		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
 		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
-
-		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
 		error_log("Belt Status is : $beltStatus");
 		return $beltStatus;
 	}
 	private function updateTillFirst($beltID){
 		$nextBeltID = $this->getPrevBeltID($beltID, 1);
 		error_log("Task 1: started here0 current Belt ID is $beltID while the next is  $nextBeltID");
-
+		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
 		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
 		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
-		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
 		return $beltStatus;
 	}	
 	private function updateAdjacentCells($beltID){
@@ -245,31 +243,39 @@ class ModelCatalogPallet extends Model {
 
 		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $beltID");
 		$beltStatus = $status;
-
+		
 		switch($status){
 			case "Single":
 			break;
 			case "Start": /// update till the end
 				while($beltStatus != "End"){
-					error_log("am I here 0");
+					error_log("am I here 0 BeltStatus before: $beltStatus");
 					$beltStatus = $this->updateTillEnd($beltID);
+					error_log("am I here 0 BeltStatus after: $beltStatus<BR><BR>");
 				}
 			break;
 			case "Middle":/// update the ones before till first and the ones after till the end
 				while ($beltStatus != "End") {
-					error_log("am I here 1");
-				    $beltStatus = $this->updateTillEnd($beltID);
+					error_log("am I here 1 BeltStatus before: $beltStatus");
+					$beltStatus = $this->updateTillEnd($beltID);
+					error_log("am I here 1 BeltStatus after: $beltStatus<BR><BR>");
+
 				}
 				$beltStatus = $status;
+				die();
 				while ($beltStatus != "Start") {
-					error_log("am I here 2");
+					error_log("am I here 2 BeltStatus before : $beltStatus");
 					$beltStatus = $this->updateTillFirst($beltID);
+					error_log("am I here 2 BeltStatus after: $beltStatus<BR><BR>");
+
 				}
 			break;
 			case "End":   // update the ones before till first
 				while ($beltStatus != "Start") {
-					error_log("am I here 3  $beltStatus");
-				    $beltStatus = $this->updateTillFirst($beltID);
+					error_log("am I here 3  before : $beltStatus");
+					$beltStatus = $this->updateTillFirst($beltID);
+					error_log("am I here 3 BeltStatus after: $beltStatus<BR><BR>");
+
 				}
 			break;
 		}
@@ -282,9 +288,7 @@ class ModelCatalogPallet extends Model {
 			for ($i = 0; $i < $beltCount; $i++) {
 				error_log("Task 1: started here 3");
 
-				// handle the case if the cell is a part of a different product in the belt then update all of that product
-
-				$cellPosition = "Single"; // single or Start or middle or End
+				$cellPosition = "Single"; 
 				if ($beltCount > 0) {
 					$cellPosition = "Start";
 				}
@@ -292,13 +296,7 @@ class ModelCatalogPallet extends Model {
 				if ($i > 0) {
 					$beltID = $this->getNextPalletID($beltID, 1);
 					$cellPosition = 1 == $beltCount - $i ? "End" : "Middle";
-					/*$cellPosition = "Middle";
-					if ($i == $beltCount - 1) {
-						$cellPosition = "End";
-					}*/
 				}
-
-				// what about the prev state of the belt/cell in the next line we handle it
 				$this->updateAdjacentCells($beltID);
 				$assigned = $this->db->query(
 					"INSERT INTO `oc_pallet_product`
@@ -312,7 +310,6 @@ class ModelCatalogPallet extends Model {
 		else {
 
 			error_log("Task 1 update status: started here 2 update is $update");
-			die();
 
 			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
 			$prevPosition = $prevInfo->rows[0]['position'];
@@ -336,12 +333,12 @@ class ModelCatalogPallet extends Model {
 				$deleted = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $nextBeltID");
 			}
 			error_log("Reached Here Safely");
+			$this->updateAdjacentCells($beltID);
 
 			/// updated cells here
 			for ($i = 1; $i < $beltCount; $i++) {
 				error_log("Şerefsizlik başladı mı?");
 
-				$this->updateAdjacentCells($beltID);
 				error_log("Şerefsizlik bitti mi? Bitmez");
 
 				$cellPosition = "Single"; // single or Start or middle or End
@@ -352,9 +349,6 @@ class ModelCatalogPallet extends Model {
 				if ($i > 0) {
 					$beltID = $this->getNextPalletID($beltID, 1);
 					$cellPosition = 1 == $beltCount - $i ? "End" : "Middle";
-					/*$cellPosition = "Middle";
-					if ($i == $beltCount - 1) 
-						$cellPosition = "End";*/
 				}
 
 				$updated = $this->db->query("
