@@ -232,7 +232,7 @@ class ModelCatalogPallet extends Model {
 		$nextBeltID = $this->getPrevBeltID($beltID, 1);
 		error_log("Task 1: started here0 current Belt ID is $beltID while the next is  $nextBeltID");
 		$beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
-		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
+		$this->db->query("UPDATE `oc_pallet` set product_id = NULL,position='Single' WHERE pallet_id = $nextBeltID");
 		$this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
 		return $beltStatus;
 	}	
@@ -241,9 +241,10 @@ class ModelCatalogPallet extends Model {
 		$status = $this->db->query("SELECT position from oc_pallet where pallet_id=$beltID")->row['position'];
 		error_log("Task 1: started here --  belt status is : $status");
 
-		$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $beltID");
+		//$this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $beltID");
 		$beltStatus = $status;
-		
+		//die();
+
 		switch($status){
 			case "Single":
 			break;
@@ -283,6 +284,9 @@ class ModelCatalogPallet extends Model {
 	public function assignBeltProduct($beltBarcode,$productID,$beltCount,$update){
 		error_log("Task 1: started here0 $beltCount update is $update");
 		$beltID = $this->getBeltID($beltBarcode);
+		//die();
+		$this->updateAdjacentCells($beltID);
+
 		if($update=='false'){
 			error_log("Task 1 not update: started here 1");
 			for ($i = 0; $i < $beltCount; $i++) {
@@ -297,14 +301,21 @@ class ModelCatalogPallet extends Model {
 					$beltID = $this->getNextPalletID($beltID, 1);
 					$cellPosition = 1 == $beltCount - $i ? "End" : "Middle";
 				}
-				$this->updateAdjacentCells($beltID);
+				error_log("Task 1: started here 4");
+
+				error_log("Task 1: started here 5");
+
 				$assigned = $this->db->query(
 					"INSERT INTO `oc_pallet_product`
 					(`pallet_product_id`, `start_pallet_id`, `product_id`, `bent_count`,
 					`position`, `time_created`, `time_modified`, `expiration_date`)
 					VALUES (NULL,$beltID, $productID, $beltCount,$i+1, current_timestamp(), current_timestamp(), NULL);"
 				);
+				error_log("Task 1: started here 6");
+
 				$assigned = $this->db->query("Update `oc_pallet` set product_id = $productID,position='$cellPosition' where pallet_id = $beltID");
+				error_log("Task 1: started here 7 PID $productID CELLPOS: $cellPosition BELT: $beltID");
+
 			}
 		}
 		else {
@@ -314,11 +325,15 @@ class ModelCatalogPallet extends Model {
 			$prevInfo = $this->db->query("SELECT position,bent_count from oc_pallet_product where start_pallet_id =$beltID");
 			$prevPosition = $prevInfo->rows[0]['position'];
 			$prevBeltCount = $prevInfo->rows[0]['bent_count'];
+			$cellPosition = "Single"; // single or Start or middle or End
+
+			$cellPosition = $beltCount > 0 ? "Start" : "Single";
+
 			$updated = $this->db->query("
 							UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=1
 							where start_pallet_id = $beltID
 						");
-			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 1 where pallet_id = $beltID");
+			$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 0 ,position='$cellPosition' where pallet_id = $beltID");
 			$tobeDeletedPrevCount = $prevPosition - 1;
 
 			for ($j = 1; $j <= $tobeDeletedPrevCount; $j++) {
@@ -332,8 +347,11 @@ class ModelCatalogPallet extends Model {
 
 				$deleted = $this->db->query("DELETE FROM oc_pallet_product WHERE start_pallet_id = $nextBeltID");
 			}
+			
 			error_log("Reached Here Safely");
-			$this->updateAdjacentCells($beltID);
+			
+
+			
 
 			/// updated cells here
 			for ($i = 1; $i < $beltCount; $i++) {
@@ -355,6 +373,8 @@ class ModelCatalogPallet extends Model {
 							UPDATE `oc_pallet_product` set product_id = $productID,bent_count=$beltCount,position=$i
 							where start_pallet_id = $beltID");
 				$updated = $this->db->query("Update `oc_pallet` set product_id = $productID,start = 0 ,position='$cellPosition' where pallet_id = $beltID");
+				error_log("Task 1: started here 17 PID $productID CELLPOS: $cellPosition BELT: $beltID");
+
 			}
 
 		}
