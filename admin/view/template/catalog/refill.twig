@@ -78,16 +78,27 @@ function getProductID(barcode){
 			belts.forEach(belt => 
 			  { 
 				  console.log('belt is : ',belt); 
-					$("#positions").append("<div data-beltID='"+belt[0]+"' data-space='"+belt[6]+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
+					$("#positions").append("<div data-beltID='"+belt[0]
+					+"' data-space='"+belt[6]+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
 						+ belt[1]+"<BR> Direction:"+ belt[3]
 						+" <BR> Shelf "+belt[5]+
 						" <BR> Position "+belt[7]+
-						" <BR>space:"+belt[6]+"</div>");
+						" <BR>Space:"+belt[6]+"</div>");
 				} 
 			);
 	  });
 	}
+	$(document.body).on('click', '.position' ,function(){
+		var availableSpace = $(this).data("space");
+		var quantity = $("#quantity").val();
+		if(quantity > availableSpace){
+			alert("Quantity is more than the space");
+			return ;
+		}
+		
+		// get quantity, and get data-space and compare
 
+	});
 	function isValidBarcode(barcode) {
 	  // check length
 	  if (barcode.length < 8 || barcode.length > 18 ||
