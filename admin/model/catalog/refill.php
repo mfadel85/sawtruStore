@@ -66,8 +66,10 @@ class ModelCatalogRefill extends Model {
             $countAvailable = $this->getAvailablePositionsCount($beltID,$productID);
             $beltsProduct[] = [$beltID,$unitName,$barcode,$direction,$sortOrder,$shelfNo,$countAvailable,$position];
         }
-        /// get unit id, unit name,shelf no physical, available positions
         return $beltsProduct;
-
     }
+    public function refill($barcode,$quantity){
+        print_r("Iloveyou!!!");
+    }
+
 }

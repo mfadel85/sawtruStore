@@ -57,7 +57,7 @@
 	var IP = '192.168.1.51';
 
 function getProductID(barcode){
-	//
+	//8695077069436 barcode for now
 		//let barcode = $("#productBarcode").html();
 		$.ajax({
 			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/getBelts&user_token={{user_token}}',
@@ -90,11 +90,32 @@ function getProductID(barcode){
 	}
 	$(document.body).on('click', '.position' ,function(){
 		var availableSpace = $(this).data("space");
+		var beltID = $(this).data("beltid");
+
 		var quantity = $("#quantity").val();
-		if(quantity > availableSpace){
+		if(quantity > availableSpace && quantity > 0){
 			alert("Quantity is more than the space");
 			return ;
 		}
+		alert(beltID +' ' + quantity);
+		$.ajax({
+			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/fill&user_token={{user_token}}',
+			async: false,
+		  	type: 'post',
+		  	data: {
+					beltID: beltID,
+					quantity:quantity
+				},
+		    crossDomain: true,
+			  success: function(json) {
+
+			  },
+			  error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Get Product ID failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			    }
+		}).done();
+			
 		
 		// get quantity, and get data-space and compare
 
