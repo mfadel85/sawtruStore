@@ -46,8 +46,26 @@
 				<div class="col-sm-8" id="positions"></div>
 			</div>
 		</div>
-
+		<div class="row container-fluid" >
+			<div class="form-group">
+				<table class="table table-bordered  unitTableD">
+					<tr>
+						<td class="cell Empty" id="cell1"></td>
+						<td class="cell Empty" id="cell2"></td>
+						<td class="cell Empty" id="cell3"></td>
+						<td class="cell Empty" id="cell4"></td>
+						<td class="cell Empty" id="cell5"></td>
+						<td class="cell Empty" id="cell6"></td>
+						<td class="cell Empty" id="cell7"></td>
+						<td class="cell Empty" id="cell8"></td>
+						<td class="cell Empty" id="cell9"></td>
+						<td class="cell Empty" id="cell10"></td>
+					</tr>
+				</table>
+			</div>
+		</div>		
 	</div>
+
 </div>
 </div>
 <script type="text/javascript">
@@ -100,7 +118,8 @@ function getProductID(barcode){
 			belts.forEach(belt => 
 			  { 
 				  console.log('belt is : ',belt); 
-					$("#positions").append("<div data-beltID='"+belt[0]
+					$("#positions").append("<div data-pos="+belt[7]
+					+"' data-beltID='"+belt[0]
 					+"' data-space='"+belt[6]+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
 						+ belt[1]+"<BR> Direction:"+ belt[3]
 						+" <BR> Shelf "+belt[5]+
@@ -114,7 +133,9 @@ function getProductID(barcode){
 		$("#positions").text();
 		var availableSpace = $(this).data("space");
 		var beltID = $(this).data("beltid");
-
+		var position = $(this).data("pos");
+		var cell = "#cell"+position;
+		$("'"+cell+"'").css("background-color","red");
 		var quantity = $("#quantity").val();
 		if(quantity > availableSpace && parseInt(quantity) > 0){
 			alert("Please enter quantity more than 0 and less than "+availableSpace);
