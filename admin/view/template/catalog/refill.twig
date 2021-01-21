@@ -21,23 +21,27 @@
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			</div>
 		{% endif %}
-	<div class="row container-fluid">
-		<div class="col-sm-8">
-			<div class="container-fluid row">
-				<div class="form-group">
-					<label class="col-sm-1 control-label" for="">Product Barcode</label>
-					<div class="col-sm-5">
-						<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
-					</div>
-				
-					<label class="col-sm-1 control-label" for="">Product Name</label>
-					<div class="col-sm-5">
-						<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
+		<div class="row container-fluid">
+			<div class="col-sm-8">
+				<div class="container-fluid row">
+					<div class="form-group">
+						<label class="col-sm-1 control-label" for="">Product Barcode</label>
+						<div class="col-sm-5">
+							<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
+						</div>
+					
+						<label class="col-sm-1 control-label" for="">Product Name</label>
+						<div class="col-sm-5">
+							<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+		<div class="row container-fluid" id="positions">
+
+		</div>
+
 	</div>
 
 </div>
@@ -59,34 +63,21 @@ function getProductID(barcode){
 		  	data: {barcode: barcode},
 		    crossDomain: true,
 			  success: function(json) {
-			  	  
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
 		  		alert('Get Product ID failure');
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			    }
-		}).done(function(json){
-	    productId = json['product_id'];
-      	// get product model to name it to use it in selecting cells
-      var model = json['model'];
-      allCells = $("."+model);
-      	//$("."+model).effect( "shake", { direction: "left", times: 4, distance: 101}, 2000 );
-      $("."+model).animate({
-        opacity: 0.70,
-        color:"red"
-      }).addClass( "activeCell" );
-      console.log(json);
-      console.log(json['name']);
-			/*$("#productID").val(productId);
-			$("#bentCount").html(json['bent_count']);
-			$("#length").html(parseFloat(json['length']).toFixed(2));
-			$"#width").html(parseFloat(json['width']).toFixed(2));
-			$("#depth").html(parseFloat(json['height']).toFixed(2));
-			$("#weight").html(parseFloat(json['weight']).toFixed(2));
-			$("#productName").val(json['name']);*/
-			return productId;
+		}).done(function(belts){
+			console.log('Belts are : ',belts);
+			console.log('Length : ',belts.length);
+			belts.forEach(belt => 
+			  { 
+				  console.log('belt is : ',belt); 
+					$("#positions").append("<div class='col-sm-3 container-fluid'>Unit "+ belt[1]+" Direction:"+ belt[3]+"</div>");
+				} 
+			);
 	  });
-		return productId;
 	}
 
 	function isValidBarcode(barcode) {
