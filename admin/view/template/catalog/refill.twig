@@ -58,7 +58,27 @@
 	$("#productBarcode").focus();
 	var IP = '192.168.1.51';
 
+function getProductName(barcode){
+		$.ajax({
+			url: 'http://'+IP+'/store/index.php?route=api/product/get',
+			async: false,
+		  	type: 'post',
+		  	data: {sku: barcode},
+		    crossDomain: true,
+			  success: function(json) {
+			  	  
+			  },
+			  error: function(xhr, ajaxOptions, thrownError) {
+		  		alert('Get Product ID failure');
+		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			    }
+		}).done(function(json){
+			$("#productName").val(json['name']);
+
+		});	
+}
 function getProductID(barcode){
+	getProductName(barcode);
 	//8695077069436 barcode for now
 		//let barcode = $("#productBarcode").html();
 		$.ajax({
