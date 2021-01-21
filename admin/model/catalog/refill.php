@@ -68,8 +68,17 @@ class ModelCatalogRefill extends Model {
         }
         return $beltsProduct;
     }
-    public function refill($barcode,$quantity){
-        print_r("Iloveyou!!!");
+    public function refill($beltID,$quantity){
+        print_r("Belt ID is  $beltID");
+
+        // add to oc_pallet, oc_product_pallet we need the product _id
+        $beltInfo = $this->db->query("SELECT product_id,quantity from oc_pallet where pallet_id=$beltID");
+        $productID = $beltInfo->row['product_id'];
+        $origQuantity = $beltInfo->row['quantity'];
+        $newQuantity = intval($origQuantity) + intval($quantity);
+        $this->db->query("UPDATE OC_PALLET set quantity = $newQuantity where pallet_id = $beltID");
+
+        print_r("$productID, $beltID");
     }
 
 }

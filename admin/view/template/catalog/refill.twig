@@ -114,7 +114,11 @@ function getProductID(barcode){
 		  		alert('Get Product ID failure');
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			    }
-		}).done();
+		}).done(function(){
+			location.reload();
+
+		}
+		);
 			
 		
 		// get quantity, and get data-space and compare
