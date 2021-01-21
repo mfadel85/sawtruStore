@@ -77,7 +77,17 @@ class ModelCatalogRefill extends Model {
         $origQuantity = $beltInfo->row['quantity'];
         $newQuantity = intval($origQuantity) + intval($quantity);
         $this->db->query("UPDATE OC_PALLET set quantity = $newQuantity where pallet_id = $beltID");
+        $unitIDQuery = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $beltID");
+        $unitID = $unitIDQuery->rows[0]['unit_id'];
+        $shelfID = $unitIDQuery->rows[0]['shelf_id'];
 
+        for($i=0;$i<$quantity;$i++){
+            $update = $this->db->query("INSERT INTO `oc_product_to_position` (`position_id`, `product_id`, `shelf_id`, `unit_id`, `start_pallet`, `expiry_date`, `date_added`)
+				VALUES (NULL, '$productID', '$shelfID', '$unitID', '$beltID', '2022-04-30', CURRENT_TIMESTAMP);");
+
+        }
+        
+        /// product to position
         print_r("$productID, $beltID");
     }
 
