@@ -968,3 +968,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	/*border-right:none !important;	*/
 	border-right: double;
 }
+.position {
+	margin:4px;
+	/*background-color: green;*/
+}

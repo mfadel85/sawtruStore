@@ -64,7 +64,7 @@ class ModelCatalogRefill extends Model {
             $shelfNo   = $this->db->query("SELECT * FROM "  . DB_PREFIX . "shelf where shelf_id =$shelfID")->row['shelf_physical_row'];
             /// available positions in this belt
             $countAvailable = $this->getAvailablePositionsCount($beltID,$productID);
-            $beltsProduct[] = [$beltID,$unitName,$barcode,$direction,$sortOrder,$shelfNo,$countAvailable];
+            $beltsProduct[] = [$beltID,$unitName,$barcode,$direction,$sortOrder,$shelfNo,$countAvailable,$position];
         }
         /// get unit id, unit name,shelf no physical, available positions
         return $beltsProduct;

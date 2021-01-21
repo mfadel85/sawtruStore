@@ -22,28 +22,31 @@
 			</div>
 		{% endif %}
 		<div class="row container-fluid">
-			<div class="col-sm-8">
-				<div class="container-fluid row">
 					<div class="form-group">
 						<label class="col-sm-1 control-label" for="">Product Barcode</label>
-						<div class="col-sm-5">
+						<div class="col-sm-4">
 							<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
 						</div>
 					
 						<label class="col-sm-1 control-label" for="">Product Name</label>
-						<div class="col-sm-5">
+						<div class="col-sm-4">
 							<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
 						</div>
+						<div class="col-sm-2">
+							<input type="text"  name="quantity" value="" placeholder="quantity" id="quantity" class="form-control"/>
+						</div>						
 					</div>
 				</div>
+		
+		<div class="row container-fluid" >
+			<div class="form-group">
+				<label class="col-sm-1 control-label" for="">Choose Belt:</label>
+				<div class="col-sm-8" id="positions"></div>
 			</div>
-		</div>
-		<div class="row container-fluid" id="positions">
-
 		</div>
 
 	</div>
-
+</div>
 </div>
 <script type="text/javascript">
 // when product barcode changes then get the list of belts that belongs to that product
@@ -63,6 +66,7 @@ function getProductID(barcode){
 		  	data: {barcode: barcode},
 		    crossDomain: true,
 			  success: function(json) {
+
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
 		  		alert('Get Product ID failure');
@@ -74,7 +78,11 @@ function getProductID(barcode){
 			belts.forEach(belt => 
 			  { 
 				  console.log('belt is : ',belt); 
-					$("#positions").append("<div class='col-sm-3 container-fluid'>Unit "+ belt[1]+" Direction:"+ belt[3]+" ,space:"+belt[6]+"</div>");
+					$("#positions").append("<div data-beltID='"+belt[0]+"' data-space='"+belt[6]+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
+						+ belt[1]+"<BR> Direction:"+ belt[3]
+						+" <BR> Shelf "+belt[5]+
+						" <BR> Position "+belt[7]+
+						" <BR>space:"+belt[6]+"</div>");
 				} 
 			);
 	  });
