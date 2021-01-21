@@ -111,12 +111,8 @@ class ModelCatalogPallet extends Model {
 		$beltID = $this->getBeltID("$beltBarcode");
 		$shelfHeight = $this->getShelfHeight($beltID);
 		$productHeight = $this->getProductHeight($productID);
-		if((int)$shelfHeight >= (int)$productHeight){
-			return true;
-		}
-		else {
-			return false;
-		}
+		$result = (int)$shelfHeight >= (int)$productHeight ? true:false;	
+		return $result;
 	}
 	public function verifyProductPallet($beltBarcode,$productID){
 		// check if a pallet is assigned or not
