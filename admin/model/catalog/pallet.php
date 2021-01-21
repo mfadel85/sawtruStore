@@ -14,22 +14,7 @@ class ModelCatalogPallet extends Model {
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id,pallet FROM " . DB_PREFIX . "product_to_position WHERE product_id= $productID AND start_pallet= $palletID group by start_pallet");
 		return $query->row;
 	}
-	/*public function verifyProductPallet($palletID,$productID){
-		// check if a pallet is assigned or not
-		$countQuery = $this->getPalletProduct($palletID,$productID);
-		$count = $countQuery['count'];
-		error_log("Count $count");
-		if($count > 0){
-			return "Assigned";
-		}
-		else {
-			$isItAssigned = $this->db->query("SELECT count(start_pallet) as Count,pallet FROM " . DB_PREFIX . "product_to_position WHERE start_pallet= $palletID group by start_pallet");
-			if($isItAssigned->row['count']>0)
-				return "Assigned to another Product";
-			else 
-				return "Not Assigned";
-		}
-	}*/
+
 	public function getProductPositionInfo($palletID,$productID){
 		$productData = $this->getPalletProduct($palletID,$productID);
 		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
@@ -38,9 +23,7 @@ class ModelCatalogPallet extends Model {
 		}
 		else 
 			return 0;
-		/*print_r("<BR>ProductData:<BR>");
-		print_R($productData);
-		print_r("<BR><BR>ProductID:".$productID."<BR>");*/
+
 		$productInfo = $this->db->query("
 		select op.*,unit,name from " . DB_PREFIX . "product op
 			join " . DB_PREFIX . "length_class_description olcd 

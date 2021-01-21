@@ -5,18 +5,14 @@ class ModelCatalogPallet extends Model {
 
 
 
-	public function getPallet($palletID){
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "pallet  WHERE barcode = $palletID");
+	public function getPallet($beltID){
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "pallet  WHERE barcode = $beltID");
 		return $query->row;		
 	}
 
-	public function getBeltProduct($palletID,$productID){
-		error_log(" zzz $palletID,$productID" );
+	public function getBeltProduct($beltID,$productID){
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
-		WHERE product_id=$productID AND start_pallet= $palletID and status != 'Sold' group by start_pallet");
-		error_log(" SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
-		WHERE product_id=$productID AND start_pallet= $palletID and status != 'Sold' group by start_pallet" );
-
+		WHERE product_id=$productID AND start_pallet= $beltID and status != 'Sold' group by start_pallet");
 		return $query->row;
 	}
 
@@ -75,8 +71,6 @@ class ModelCatalogPallet extends Model {
 			return $countAvailable; // return max not zero
 		}
 			
-		// what is hapenning here? we have to explore
-		// now get product dimensions 
 		$productInfo = $this->db->query("select op.*,unit from " . DB_PREFIX . "product op
 			join " . DB_PREFIX . "length_class_description olcd 
 			on op.length_class_id = olcd.length_class_id
