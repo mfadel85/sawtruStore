@@ -29,11 +29,13 @@
 						</div>
 					
 						<label class="col-sm-1 control-label" for="">Product Name</label>
-						<div class="col-sm-4">
+						<div class="col-sm-3">
 							<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
 						</div>
+						<label class="col-sm-1 control-label" for="">Quantity</label>
+
 						<div class="col-sm-2">
-							<input type="text"  name="quantity" value="" placeholder="quantity" id="quantity" class="form-control"/>
+							<input type="text"  name="quantity" value="0" placeholder="0" id="quantity" class="form-control"/>
 						</div>						
 					</div>
 				</div>
@@ -94,8 +96,8 @@ function getProductID(barcode){
 		var beltID = $(this).data("beltid");
 
 		var quantity = $("#quantity").val();
-		if(quantity > availableSpace && quantity > 0){
-			alert("Quantity is more than the space");
+		if(quantity > availableSpace && parseInt(quantity) > 0){
+			alert("Please enter quantity more than 0 and less than "+availableSpace);
 			return ;
 		}
 		alert(beltID +' ' + quantity);
