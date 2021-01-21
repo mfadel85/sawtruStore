@@ -89,6 +89,7 @@ function getProductID(barcode){
 	  });
 	}
 	$(document.body).on('click', '.position' ,function(){
+		$("#positions").text();
 		var availableSpace = $(this).data("space");
 		var beltID = $(this).data("beltid");
 
@@ -136,7 +137,7 @@ function getProductID(barcode){
 	  return true;
 	}
 	$("#productBarcode").on("change", function () {
-    $('.activeCell').removeClass('activeCell');
+		$("#positions").text('');
 		var barCode = $("#productBarcode").val();	
 		var test1 = isValidBarcode(barCode);
 		test1 = true;
