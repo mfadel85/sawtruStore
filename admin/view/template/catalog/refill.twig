@@ -22,27 +22,36 @@
 			</div>
 		{% endif %}
 		<div class="row container-fluid">
-					<div class="form-group">
-						<label class="col-sm-1 control-label" for="">Product Barcode</label>
-						<div class="col-sm-4">
-							<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
-						</div>
-					
-						<label class="col-sm-1 control-label" for="">Product Name</label>
-						<div class="col-sm-3">
-							<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
-						</div>
-						<label class="col-sm-1 control-label" for="">Quantity</label>
-
-						<div class="col-sm-2">
-							<input type="text"  name="quantity" value="0" placeholder="0" id="quantity" class="form-control"/>
-						</div>						
-					</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label" for="">Product Barcode</label>
+				<div class="col-sm-4">
+					<input type="text" name="productBarcode" value="{{ productBarcode }}" placeholder="{{ productBarcode }}" id="productBarcode" class="form-control"/>
 				</div>
-		
+			
+				<label class="col-sm-1 control-label" for="">Product Name</label>
+				<div class="col-sm-3">
+					<input type="text"  name="produtName" value="" placeholder="{{ productName }}" id="productName" class="form-control"/>
+				</div>
+				<label class="col-sm-1 control-label" for="">Quantity</label>
+
+				<div class="col-sm-2">
+					<input type="text"  name="quantity" value="0" placeholder="0" id="quantity" class="form-control"/>
+				</div>						
+			</div>
+		</div>
+		<div class="row container-fluid">
+			<div class="form-group">
+				<div class="col-sm-2">
+					<h4>Belt Count : <span id="beltCount"></span></h4>
+				</div>
+				<div class="col-sm-3">
+					<h4>Product Length : <span id="productLength"></span></h4>
+				</div>			
+			</div>
+		</div>		
 		<div class="row container-fluid" >
 			<div class="form-group">
-				<label class="col-sm-1 control-label" for="">Choose Belt:</label>
+				<label class="col-sm-2 control-label" for="">Choose Belt:</label>
 				<div class="col-sm-8" id="positions"></div>
 			</div>
 		</div>
@@ -50,16 +59,16 @@
 			<div class="form-group">
 				<table class="table table-bordered  unitTableD">
 					<tr>
-						<td class="cell Empty" id="cell1"></td>
-						<td class="cell Empty" id="cell2"></td>
-						<td class="cell Empty" id="cell3"></td>
-						<td class="cell Empty" id="cell4"></td>
-						<td class="cell Empty" id="cell5"></td>
-						<td class="cell Empty" id="cell6"></td>
-						<td class="cell Empty" id="cell7"></td>
-						<td class="cell Empty" id="cell8"></td>
-						<td class="cell Empty" id="cell9"></td>
-						<td class="cell Empty" id="cell10"></td>
+						<td class="cell Empty" id="cell1">1</td>
+						<td class="cell Empty" id="cell2">2</td>
+						<td class="cell Empty" id="cell3">3</td>
+						<td class="cell Empty" id="cell4">4</td>
+						<td class="cell Empty" id="cell5">5</td>
+						<td class="cell Empty" id="cell6">6</td>
+						<td class="cell Empty" id="cell7">7</td>
+						<td class="cell Empty" id="cell8">8</td>
+						<td class="cell Empty" id="cell9">9</td>
+						<td class="cell Empty" id="cell10">10</td>
 					</tr>
 				</table>
 			</div>
@@ -111,20 +120,23 @@ function getProductID(barcode){
 			  error: function(xhr, ajaxOptions, thrownError) {
 		  		alert('Get Product ID failure');
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			    }
+			  }
 		}).done(function(belts){
 			console.log('Belts are : ',belts);
 			console.log('Length : ',belts.length);
 			belts.forEach(belt => 
 			  { 
+					$("#beltCount").text(belt.beltCount);
+					$("#productLength").text(belt.length+"cm");
+
 				  console.log('belt is : ',belt); 
-					$("#positions").append("<div data-pos="+belt[7]
-					+"' data-beltID='"+belt[0]
-					+"' data-space='"+belt[6]+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
-						+ belt[1]+"<BR> Direction:"+ belt[3]
-						+" <BR> Shelf "+belt[5]+
-						" <BR> Position "+belt[7]+
-						" <BR>Space:"+belt[6]+"</div>");
+					$("#positions").append("<div data-pos='"+belt.position
+					+"' data-beltID='"+belt.beltID
+					+"' data-space='"+belt.countAvailable+"' data-beltcount='"+belt.beltCount+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
+						+ belt.unitName+"<BR> Direction:"+ belt.direction
+						+" <BR> Shelf "+belt.shelfNo+
+						" <BR> Position "+belt.position+
+						" <BR>Space:"+belt.countAvailable+"</div>");
 				} 
 			);
 	  });
@@ -134,14 +146,18 @@ function getProductID(barcode){
 		var availableSpace = $(this).data("space");
 		var beltID = $(this).data("beltid");
 		var position = $(this).data("pos");
-		var cell = "#cell"+position;
-		$("'"+cell+"'").css("background-color","red");
+		var beltCount = $(this).data("beltcount");
+		for(let i=0;i<beltCount;i++){
+			let cellPos = parseInt(position) + i;
+			var cell = "#cell"+cellPos;
+			$(cell).css("background-color","red");
+		}
+		
 		var quantity = $("#quantity").val();
 		if(quantity > availableSpace && parseInt(quantity) > 0){
 			alert("Please enter quantity more than 0 and less than "+availableSpace);
 			return ;
 		}
-		alert(beltID +' ' + quantity);
 		$.ajax({
 			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/fill&user_token={{user_token}}',
 			async: false,
@@ -159,7 +175,7 @@ function getProductID(barcode){
 		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 			    }
 		}).done(function(){
-			location.reload();
+			//location.reload();
 
 		}
 		);

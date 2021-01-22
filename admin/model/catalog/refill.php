@@ -47,7 +47,11 @@ class ModelCatalogRefill extends Model {
 	}
     public function getBelts($barcode){
         /// get produc id based on barcode
-        $productID = $this->db->query("select product_id from " . DB_PREFIX . "product where sku=$barcode" )->row['product_id'];
+        $productInfo   = $this->db->query("select * from " . DB_PREFIX . "product where sku=$barcode" );
+        $productID = $productInfo->row['product_id'];
+        $beltCount = $productInfo->row['bent_count'];
+        $length = $productInfo->row['length'];
+
 
         // get all belts that contain 
         $belts = $this->db->query("SELECT * from " . DB_PREFIX . "pallet WHERE product_id = $productID and position='Start' ");
@@ -64,7 +68,19 @@ class ModelCatalogRefill extends Model {
             $shelfNo   = $this->db->query("SELECT * FROM "  . DB_PREFIX . "shelf where shelf_id =$shelfID")->row['shelf_physical_row'];
             /// available positions in this belt
             $countAvailable = $this->getAvailablePositionsCount($beltID,$productID);
-            $beltsProduct[] = [$beltID,$unitName,$barcode,$direction,$sortOrder,$shelfNo,$countAvailable,$position];
+            $beltsProduct[] = array(
+                "beltID"         => $beltID,
+                "unitName"       => $unitName,
+                "barcode"        => $barcode,
+                "direction"      => $direction,
+                "sortOrder"      => $sortOrder,
+                "shelfNo"        => $shelfNo,
+                "countAvailable" => $countAvailable,
+                "position"       => $position,
+                "beltCount"      => $beltCount,
+                "length"         => $length
+            );
+
         }
         return $beltsProduct;
     }
