@@ -972,3 +972,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 	margin:4px;
 	/*background-color: green;*/
 }
+
+.info {
+	font-size: 17px;
+}

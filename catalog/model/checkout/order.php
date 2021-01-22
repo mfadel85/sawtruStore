@@ -374,6 +374,8 @@ class ModelCheckoutOrder extends Model {
 
 					$quantity = (int)$order_product['quantity'];
 					/// how to decrease the amount of the oc_pallet table
+					// get current quantity of the pallet along with it adjacent cells
+					// the new quantity = old quantity - $quantity
 					for($j=0;$j<$quantity;$j++){
 						// to be fixed here 
 						$beltID = $this->db->query("select start_pallet from oc_product_to_position where  product_id = " . (int) $order_product['product_id'] . " limit 1")->row['start_pallet'];

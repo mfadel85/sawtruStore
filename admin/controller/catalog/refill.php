@@ -24,12 +24,18 @@ class ControllerCatalogRefill  extends Controller {
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true)
         );
-        $data['user_token'] = $this->session->data['user_token'];
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+			$data['user_token'] = $this->session->data['user_token'];
+			$this->load->model('catalog/product');
+			
 
-		$this->response->setOutput($this->load->view('catalog/refill', $data));               
+			$data['outOfStock'] = array(
+				['name' => "test1", "quantity" => 3]
+			);
+			$data['header'] = $this->load->controller('common/header');
+			$data['column_left'] = $this->load->controller('common/column_left');
+			$data['footer'] = $this->load->controller('common/footer');
+
+			$this->response->setOutput($this->load->view('catalog/refill', $data));               
     }
     public function getBelts(){
 
