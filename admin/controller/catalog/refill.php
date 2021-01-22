@@ -12,7 +12,7 @@ class ControllerCatalogRefill  extends Controller {
         $this->getForm();
     }
     private function getForm(){
-
+			$data['outOfStock']= array();
     	$data['breadcrumbs'] = array();
 
       $data['breadcumbs'][] =array(
@@ -26,11 +26,21 @@ class ControllerCatalogRefill  extends Controller {
         );
 			$data['user_token'] = $this->session->data['user_token'];
 			$this->load->model('catalog/product');
-			
 
-			$data['outOfStock'] = array(
-				['name' => "test1", "quantity" => 3]
-			);
+
+			$this->load->model('catalog/product');
+			$results = $this->model_catalog_product->getOutOfStock();
+
+			foreach ($results as $result) {
+					$data['outOfStock'][] = array(
+							'product_id'   => $result['product_id'],
+							'product_code' => $result['product_code'],
+							'name'         => $result['product_name'],
+							'quantity'     => $result['quantity']
+					);
+
+			}
+
 			$data['header'] = $this->load->controller('common/header');
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['footer'] = $this->load->controller('common/footer');

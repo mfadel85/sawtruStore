@@ -746,7 +746,7 @@ class ModelCatalogProduct extends Model {
 		return $count;
 	}
 	public function getOutOfStock(){
-		$query = $this->db->query("SELECT op.product_id as product_id,op.model as product_code,name as product_name FROM `oc_product` op 
+		$query = $this->db->query("SELECT op.product_id as product_id, quantity,op.model as product_code,name as product_name FROM `oc_product` op 
 		join oc_product_description opd on opd.product_id = op.product_id 
 		WHERE status = 1 and quantity = 0 limit 0,5");
 
