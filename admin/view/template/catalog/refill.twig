@@ -57,6 +57,19 @@
 		</div>
 		<div class="row container-fluid" >
 			<div class="form-group">
+					<label class="col-sm-2 control-label" for="">Unit:
+							<span id="unitName" class="info unitName"></span>
+					</label>
+					<label class="col-sm-2 control-label" for="">Shelf Number:
+							<span id="shelfNo" class=" infos helfNo"></span>
+					</label>
+					<label class="col-sm-2 control-label" for="">Direction:
+							<span id="direction" class="info direction"></span>
+					</label>					
+			</div>
+		</div>
+		<div class="row container-fluid" >
+			<div class="form-group">
 				<table class="table table-bordered  unitTableD">
 					<tr>
 						<td class="cell Empty" id="cell1">1</td>
@@ -127,16 +140,23 @@ function getProductID(barcode){
 			belts.forEach(belt => 
 			  { 
 					$("#beltCount").text(belt.beltCount);
-					$("#productLength").text(belt.length+"cm");
+					$("#productLength").text(Math.ceil(belt.length)+" cm");
 
 				  console.log('belt is : ',belt); 
-					$("#positions").append("<div data-pos='"+belt.position
-					+"' data-beltID='"+belt.beltID
-					+"' data-space='"+belt.countAvailable+"' data-beltcount='"+belt.beltCount+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
-						+ belt.unitName+"<BR> Direction:"+ belt.direction
-						+" <BR> Shelf "+belt.shelfNo+
-						" <BR> Position "+belt.position+
-						" <BR>Space:"+belt.countAvailable+"</div>");
+					$("#positions").append(
+						"<div data-pos='"+ belt.position
+						+"' data-unit='"+ belt.unitName
+						+"' data-shelf='"+ belt.shelfNo
+						+"' data-direction='"+ belt.direction						
+						+"' data-beltID='"+belt.beltID
+						+"' data-space='"+belt.countAvailable
+						+"' data-beltcount='"+belt.beltCount
+						+"' class='col-sm-2 container-fluid position btn btn-success p-4 '>"
+						+ belt.unitName+"<BR> Direction:"
+						+ belt.direction
+						+" <BR> Shelf "+belt.shelfNo 
+						+" <BR> Position "+belt.position
+						+" <BR>Space:"+belt.countAvailable+"</div>");
 				} 
 			);
 	  });
@@ -147,6 +167,10 @@ function getProductID(barcode){
 		var beltID = $(this).data("beltid");
 		var position = $(this).data("pos");
 		var beltCount = $(this).data("beltcount");
+		$("#direction").text($(this).data("direction"));
+		$("#unitName").text($(this).data("unit"));
+		$("#shelfNo").text($(this).data("shelf"));
+
 		for(let i=0;i<beltCount;i++){
 			let cellPos = parseInt(position) + i;
 			var cell = "#cell"+cellPos;
