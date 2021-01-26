@@ -31,8 +31,9 @@ class Cart {
 	}
 	
 	public function getUnitInformation($productID,$quantity){
-		$positionQueryString = "
-		SELECT 
+		$positionQueryString = 
+		"SELECT
+			pallet_id,
 			shelf_physical_row,
 			optp.product_id,
 			optp.shelf_id,
@@ -44,19 +45,28 @@ class Cart {
 			os.sort_order as shelf_sort_order,
 			ocu.sort_order as unit_sort_order,
 			op.sort_order as belt_sort_order
-			FROM `oc_product_to_position` optp 
-			join oc_pallet op on optp.start_pallet = op.pallet_id 
-			join oc_shelf os on os.shelf_id = op.shelf_id 
-			join oc_unit ocu on ocu.unit_id = os.unit_id
-			WHERE op.status=1 
-			and  optp.product_id = " . (int)$productID . " 
-			and optp.status='Ready' ORDER BY ocu.sort_order,os.sort_order,op.x_position  limit 0,".$quantity  ;
-			//error_log($positionQueryString);
-			//die();
+		FROM
+            `oc_product_to_position` optp  join
+            oc_pallet op on optp.start_pallet = op.pallet_id  join
+            oc_shelf
+            os on os.shelf_id = op.shelf_id join
+            oc_unit ocu on ocu.unit_id = os.unit_id
+		WHERE
+            op.status=1 and
+             optp.product_id = " . (int) $productID . " and
+             optp.status='Ready'
+        ORDER BY
+            ocu.sort_order,
+            os.sort_order,
+            op.x_position
+			limit 0," . $quantity;
+		//print_r($this);
+		//$orderID = $_SESSION['order_id'];
 		$position_query = $this->db->query($positionQueryString);
-		/*print_r("<BR>Before anything Position Query<BR>");
-		print_r($position_query);
-		print_r("<BR>END<BR>");*/
+		/*$query = $this->db->query("UPDATE oc_order_product 
+					SET betlID =". (int)$position_query->row['pallet_id']
+					." where product_id=" . (int) $productID . " and order_id=".(int)$orderID);*/
+		// add pallet_id for oc_product_order update set pallet_id
 
 		if($quantity == 1){
 			$xPos = $position_query->row['xPos'];
@@ -66,10 +76,9 @@ class Cart {
 			$unitSortOrder  = $position_query->row['unit_sort_order'];
 			$shelfSortOrder = $position_query->row['shelf_sort_order'];
 			$beltSortOrder  = $position_query->row['belt_sort_order'];
+			$beltID = $position_query->row['pallet_id'];
 		}
-
 		else if($quantity > 1){
-
 			$xPos = array();
 			$yPos = array();
 			$direction = array();
@@ -77,6 +86,7 @@ class Cart {
 			$unitSortOrder = array();
 			$shelfSortOrder = array();
 			$beltSortOrder = array();
+			$beltID = array();
 			foreach($position_query->rows as $product){
 				$xPos[] = $product['xPos'];/// Null ??
 				$yPos[] = $product['yPos'];/// Null ??
@@ -85,240 +95,15 @@ class Cart {
 				$unitSortOrder[]  = $position_query->row['unit_sort_order'];
 				$shelfSortOrder[] = $position_query->row['shelf_sort_order'];
 				$beltSortOrder [] = $position_query->row['belt_sort_order'];
-
+				$beltID[] = $position_query->row['pallet_id'];
 			}
 		}
-		return [$xPos,$yPos,$direction,$unitID,$unitSortOrder,$shelfSortOrder,$beltSortOrder];
+		return [$xPos,$yPos,$direction,$unitID,$unitSortOrder,$shelfSortOrder,$beltSortOrder,$beltID];
 	}
 
-	public static function position_compare($position1,$position2){
-		// compare by unit_sort_order, shelf_sort_order, belt_sort_order
-		if($position1['unitSortOrder']< $position2['unitSortOrder']){
-			print_r("<BR>first<BR>");
-			return -1;
-		}
-		elseif($position1['unitSortOrder'] > $position2['unitSortOrder']){
-			print_r("<BR>second<BR>");
-			return 1;
-		}
 
-		if($position1['shelfSortOrder'] < $position2['shelfSortOrder'])
-		{
-			print_r("<BR>third<BR>");
-			return -1;
-		}
-		elseif($position1['shelfSortOrder'] > $position2['shelfSortOrder']){
-			print_r("<BR>fourth<BR>");
-			return 1;
-		}
-		if($position1['beltSortOrder'] < $position2['beltSortOrder'])
-		{
-			print_r("<BR>fifth<BR>");
-			return -1;
-		}
-		else
-		{
-			print_r("<BR>sixth<BR>");
-			return 1;
-		}			
-	}
-	
-	public function getOrderForPLC(){
-		$product_data = array();
-		$cart_query = $this->db->query("
-			SELECT * FROM " . DB_PREFIX . "cart 
-			WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' 
-			AND customer_id = '" . (int)$this->customer->getId() . "' 
-			AND session_id = '" . $this->db->escape($this->session->getId()) 
-		. "'");
 
-		foreach ($cart_query->rows as $cart) {
 
-			$stock = true;
-
-			$product_query = $this->db->query("
-				SELECT * FROM " . DB_PREFIX . "product_to_store p2s 
-				LEFT JOIN " . DB_PREFIX . "product p 
-				ON (p2s.product_id = p.product_id) 
-				LEFT JOIN " . DB_PREFIX . "product_description pd 
-				ON (p.product_id = pd.product_id) 
-				WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-				AND p2s.product_id = '" . (int)$cart['product_id'] . "' 
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND p.date_available <= NOW() AND p.status = '1'
-			");	
-			if ($product_query->num_rows && ($cart['quantity'] > 0)) {
-				$price = $product_query->row['price'];
-
-				// Product Discounts
-				$discount_quantity = 0;
-
-				foreach ($cart_query->rows as $cart_2) {
-					if ($cart_2['product_id'] == $cart['product_id']) {
-						$discount_quantity += $cart_2['quantity'];
-					}
-				}
-
-				$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
-
-				if ($product_discount_query->num_rows) {
-					$price = $product_discount_query->row['price'];
-				}
-
-				// Product Specials
-				$product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
-
-				if ($product_special_query->num_rows) {
-					$price = $product_special_query->row['price'];
-				}
-
-				// Reward Points
-				$product_reward_query = $this->db->query("SELECT points FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'");
-
-				if ($product_reward_query->num_rows) {
-					$reward = $product_reward_query->row['points'];
-				} else {
-					$reward = 0;
-				}	
-				// Stock
-				if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $cart['quantity'])) {
-					$stock = false;
-				}	
-				$option_weight = 0;
-
-				$option_price = 0;
-				$recurring = false;	
-				$unitInformation = $this->getUnitInformation($cart['product_id'],$cart['quantity']);
-
-				$product_data[] = array(
-					'cart_id'         => $cart['cart_id'],
-					'bent_count'      => $product_query->row['bent_count'],
-					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
-					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
-					'direction'       => $unitInformation[2],
-					'unit_sort_order'  => $unitInformation[4],
-					'shelf_sort_order' => $unitInformation[5],
-					'belt_sort_order'  => $unitInformation[6],
-					'unit_id'         => $unitInformation[3],
-					'product_id'      => $product_query->row['product_id'],
-					'name'            => $product_query->row['name'],
-					'model'           => $product_query->row['model'],
-					'shipping'        => $product_query->row['shipping'],
-					'image'           => $product_query->row['image'],
-					'quantity'        => $cart['quantity'],
-					'minimum'         => $product_query->row['minimum'],
-					'subtract'        => $product_query->row['subtract'],
-					'stock'           => $stock,
-					'price'           => ($price + $option_price),
-					'total'           => ($price + $option_price) * $cart['quantity'],
-					'reward'          => $reward * $cart['quantity'],
-					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
-					'tax_class_id'    => $product_query->row['tax_class_id'],
-					'weight'          => ($product_query->row['weight'] + $option_weight) * $cart['quantity'],
-					'weight_class_id' => $product_query->row['weight_class_id'],
-					'length'          => $product_query->row['length'],
-					'width'           => $product_query->row['width'],
-					'height'          => $product_query->row['height'],
-					'length_class_id' => $product_query->row['length_class_id'],
-					'recurring'       => $recurring
-				);
-			} else {
-
-				$this->remove($cart['cart_id']);
-			}					
-					
-		}
-		// we can sort and add three additional 
-		//
-		$jsonProducts = [];
-		$productsCount = 0;
-		foreach ($product_data as $product) {
-
-			$productsCount += $product['quantity'];
-			if ($product['quantity'] > 1) {
-
-				for ($i = 0; $i < (int) $product['quantity']; $i++) {
-
-					$currentArary = array();
-					$currentArary['name'] = $product['name'];
-					$currentArary['quantity'] = 1;
-					$currentArary['xPos'] = $product['xPos'][$i];
-					$currentArary['yPos'] = $product['yPos'][$i];
-					$currentArary['unitID'] = $product['unit_id'][$i]; /// check this
-					$currentArary['direction'] = $product['direction'][$i]; /// check this
-					$currentArary['bentCount'] = $product['bent_count'];
-					$currentArary['price'] = $product['price'];
-					$currentArary['unitSortOrder'] = $product['unit_sort_order'][$i];
-					$currentArary['shelfSortOrder'] = $product['shelf_sort_order'][$i];
-					$currentArary['beltSortOrder'] = $product['belt_sort_order'][$i];
-
-					$jsonProducts[] = $currentArary;
-				}
-			} else {
-				$currentArary = array();
-				$currentArary['name'] = $product['name'];
-				$currentArary['quantity'] = $product['quantity'];
-				$currentArary['xPos'] = $product['xPos'];
-				$currentArary['yPos'] = $product['yPos'];
-				$currentArary['unitID'] = $product['unit_id']; /// check this
-				$currentArary['direction'] = $product['direction']; /// check this
-				$currentArary['bentCount'] = $product['bent_count'];
-				$currentArary['price'] = $product['price'];
-				$currentArary['unitSortOrder'] = $product['unit_sort_order'];
-				$currentArary['shelfSortOrder'] = $product['shelf_sort_order'];
-				$currentArary['beltSortOrder'] = $product['belt_sort_order'];
-				$jsonProducts[] = $currentArary;
-
-			}
-		}
-		usort($jsonProducts, array($this, "position_compare"));
-		$products = $this->fillMovingShelf($jsonProducts);
-
-		$order = array(
-			'OrderID' => $this->session->data['order_id'],
-			'ProductsCount' => $productsCount,
-			'Products' => $products,
-			'OrderStatus' => 'waiting',
-		);
-		// to add activeBelt, 
-
-		return $order;
-
-	}
-
-	public function getActiveBelt($beltCount,$beltsFilledInRow){
-		$movingShelfBeltCount =5;
-		if(($beltCount + $beltsFilledInRow) <= $movingShelfBeltCount)
-			return [$beltsFilledInRow+1,0,0];
-		else {
-			return [1,1,$beltsFilledInRow];
-		}
-	}
-	public function fillMovingShelf(&$products){
-		$previousActiveBelt = 0;
-		$beltsFilledInRow = 0;
-		foreach($products as &$product){
-			if($previousActiveBelt == 0){
-				$product['activeBelt'] = 1;
-				$beltsFilledInRow += $product['bentCount'];
-				$product['rollOver'] = 0;
-				$product['moveBeltCount'] = 0;
-				$previousActiveBelt = 1;
-			}
-			else {
-				$nextMoveInfo = $this->getActiveBelt($product['bentCount'], $beltsFilledInRow);
-				$product['activeBelt'] = $nextMoveInfo[0];
-				$previousActiveBelt = $product['activeBelt'];
-				$beltsFilledInRow += $product['bentCount'];
-				$product['rollOver'] = $nextMoveInfo[1];
-				$product['moveBeltCount'] = $nextMoveInfo[2];
-			}
-		}
-		print_r("<br>FINAL SORT<BR>");
-		print_r($products);
-		print_r("<br>FINAL SORT<BR>");
-		return $products;
-	}
 
 	public function getProducts() {
 

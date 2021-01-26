@@ -63,6 +63,7 @@ class ModelExtensionDQuickcheckoutOrder extends Model {
   }
 
   public function updateOrder(){
+
     $data = array();
 
     $totals = array();
@@ -167,8 +168,15 @@ class ModelExtensionDQuickcheckoutOrder extends Model {
 
 
     // Products
+    $this->load->model('checkout/order');
     foreach ($data['products'] as $product) {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int) $order_id . "', product_id = '" . (int) $product['product_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'");
+      $posQuerty = $this->model_checkout_order->getQueryPos((int) $product['product_id'], (int) $order_id);
+      //$product_info = $this->model_catalog_product->getProduct($product_id);
+
+      $beltID = $posQuerty->row['pallet_id'];
+      //print_r($posQuerty->row);
+
+      $this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET order_id = '" . (int) $order_id . "', product_id = '" . (int) $product['product_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "',beltID='"   . (int)$beltID."', reward = '" . (int) $product['reward'] . "'");
 
         $order_product_id = $this->db->getLastId();
 
