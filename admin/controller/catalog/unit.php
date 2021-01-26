@@ -144,8 +144,9 @@ class ControllerCatalogUnit extends Controller {
         );
         $unitID = $this->request->get['id'];
         // get product name
-        $data['productName'] = "Pepsi 2.5 Liter";
         $productID = $this->request->get['product_id'];
+        $data['productName'] = $this->model_catalog_product->getProductName($productID); /// get this from database get the name
+
         $productBeltCount = $this->request->get['beltCount'];
 
         $unit = $this->model_catalog_unit->getUnitDetails($unitID,$productBeltCount,$productID);

@@ -292,7 +292,10 @@ class ModelCatalogProduct extends Model {
 
 		$this->cache->delete('product');
 	}
-
+	public function getProductName($product_id){
+		$query = $this->db->query("SELECT name from ".DB_PREFIX."product_description where product_id=$product_id and language_id=1");
+		return $query->row['name'];
+	}
 	public function copyProduct($product_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p WHERE p.product_id = '" . (int)$product_id . "'");
 
