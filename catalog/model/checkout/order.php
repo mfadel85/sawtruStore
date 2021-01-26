@@ -383,12 +383,12 @@ class ModelCheckoutOrder extends Model {
 					error_log("Quantity:".$order_product['quantity'].PHP_EOL);
 					error_log("Product ID:".$order_product['product_id'].PHP_EOL);
 					error_log("Belt ID:" . $order_product['beltID'] . PHP_EOL);
-
+					$beltID = $order_product['beltID'];
 					$quantity = (int)$order_product['quantity'];
 					/// how to decrease the amount of the oc_pallet table
 					// get current quantity of the pallet along with it adjacent cells
 					// the new quantity = old quantity - $quantity
-					$this->db->query("UPDATE " . DB_PREFIX . "pallet set quantity = quantity-$quantity");
+					$this->db->query("UPDATE " . DB_PREFIX . "pallet set quantity = quantity-$quantity where beltID=$beltID");
 					for($j=0;$j<$quantity;$j++){
 						// to be fixed here 
 						$beltID = $this->db->query("select start_pallet from oc_product_to_position where  product_id = " . (int) $order_product['product_id'] . " limit 1")->row['start_pallet'];
