@@ -4,8 +4,9 @@
     <div class="container-fluid">
       <div class="pull-right">
         <button type="button" data-toggle="tooltip" title="{{ button_filter }}" onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');" class="btn btn-default hidden-md hidden-lg"><i class="fa fa-filter"></i></button>
-        <a href="{{ delete }}" type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? true : false;"><i class="fa fa-trash-o"></i></a>
-
+        <a href="{{ delete }}" type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? true : false;">
+          <i class="fa fa-trash-o"></i>
+        </a>
       </div>
       <h1>{{ heading_title }} </h1>
       <ul class="breadcrumb">
@@ -44,24 +45,37 @@
         <td>{{ shelf.physicalRow }}</td>
           {% for belt in shelf.contents %}
           <td 
-            data-column="column{{ loop.index }}"
+                      data-column="column{{ loop.index }}"
             id="r{{ loop.parent.loop.index }}c{{ loop.index}}"
             data-barcode="{{ belt[7]}}" 
             data-filled="{{ belt[3] }}"
              data-product-id="{{ belt[2] }}"
-             class="cell CellWithComment 
+			 class="cell 
+			 
+			 CellWithComment
             {% if belt[8] == 0 %}
-              Empty inactive
+               Empty inactive
             {% elseif belt[3] == 0 %}
-              Empty
+               Empty
             {% elseif  belt[3] %}
-              Full
+               Full
             {% endif %}
-            {% if belt[10] == 1 %}
-              farkli
-            {% else %}
-               unavailable
-            {% endif %}"
+			
+			"
+			style ="
+			{% if belt[11] == 'Single' %}
+				single
+			{% elseif  belt[11]== 'Start'  %} 
+			border-right:none !important;
+			border-left:2px solid #ddd !important;
+			{% elseif  belt[11]== 'Middle'  %}
+            border-left:none !important;
+			border-right:none !important;
+			{% elseif  belt[11]== 'End'  %}
+               border-left:none !important;
+			   border-right:2px solid #ddd !important;
+            {% endif %}
+			"
           >
           {% if belt[1] > 0 %}
            {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} 
