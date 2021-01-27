@@ -41,7 +41,7 @@
 						<label class="col-sm-1 control-label" for="">Quantity</label>
 
 						<div class="col-sm-2">
-							<input type="text"  name="quantity" value="0" placeholder="0" id="quantity" class="form-control"/>
+							<input type="text"  name="quantity" value="0" placeholder="0" id="quantity" class="form-control" onkeypress="return onlyNumberKey(event)" />
 						</div>						
 					</div>
 				</div>
@@ -115,6 +115,13 @@
 
 </div>
 <script type="text/javascript">
+  function onlyNumberKey(evt) { 
+        // Only ASCII charactar in that range allowed 
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode 
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57)) 
+            return false; 
+        return true; 
+    } 
 // when product barcode changes then get the list of belts that belongs to that product
 // and show them : to do that call an a page 
 // this line below should return json data and I can show them in some way in the page
@@ -122,7 +129,7 @@
 	$("#productBarcode").focus();
 	var IP = '192.168.1.51';
 
-function getProductName(barcode){
+	function getProductName(barcode){
 		$.ajax({
 			url: 'http://'+IP+'/store/index.php?route=api/product/get',
 			async: false,
@@ -140,22 +147,21 @@ function getProductName(barcode){
 			$("#productName").val(json['name']);
 
 		});	
-}
-function getProductID(barcode){
-	getProductName(barcode);
+	}
+	function getBelts(barcode,quantity=0){
+		getProductName(barcode);
 		$.ajax({
 			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/getBelts&user_token={{user_token}}',
 			async: false,
-		  	type: 'post',
-		  	data: {barcode: barcode},
-		    crossDomain: true,
-			  success: function(json) {
-
-			  },
-			  error: function(xhr, ajaxOptions, thrownError) {
-		  		alert('Get Product ID failure');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			  }
+			type: 'post',
+			data: {barcode: barcode,quantity:quantity},
+			crossDomain: true,
+				success: function(json) {
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert('Get Product ID failure');
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
 		}).done(function(belts){
 			console.log('Belts are : ',belts);
 			console.log('Length : ',belts.length);
@@ -179,9 +185,9 @@ function getProductID(barcode){
 					+" <BR> Shelf "+belt.shelfNo 
 					+" <BR> Position "+belt.position
 					+" <BR>Space:"+belt.countAvailable+"</div>");
-			} 
+				} 
 			);
-	  });
+		});
 	}
 	$(document.body).on('click', '.position' ,function(){
 		$("#positions").text();
@@ -241,16 +247,17 @@ function getProductID(barcode){
 
 	  return true;
 	}
-	$("#productBarcode").on("change", function () {
+	$("#productBarcode,#quantity").on("change", function () {
+		const quantity = $("#quantity").val();
 		$("#positions").text('');
-		var barCode = $("#productBarcode").val();	
+		const barCode = $("#productBarcode").val();	
 		var test1 = isValidBarcode(barCode);
 		test1 = true;
 		if(!test1){
 			alert('not valid barcode');
 			event.preventDefault();
 		}
-		productID = getProductID(barCode);	
+		productID = getBelts(barCode,quantity);	
 		$("#palletBarcode").focus();
 	}); 
 </script>

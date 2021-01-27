@@ -45,7 +45,7 @@ class ModelCatalogRefill extends Model {
 
 		return $countAvailable;
 	}
-    public function getBelts($barcode){
+    public function getBelts($barcode,$quantity){
         /// get produc id based on barcode
         $productInfo   = $this->db->query("select * from " . DB_PREFIX . "product where sku=$barcode" );
         $productID = $productInfo->row['product_id'];
@@ -68,31 +68,34 @@ class ModelCatalogRefill extends Model {
             $shelfNo   = $this->db->query("SELECT * FROM "  . DB_PREFIX . "shelf where shelf_id =$shelfID")->row['shelf_physical_row'];
             /// available positions in this belt
             $countAvailable = $this->getAvailablePositionsCount($beltID,$productID);
-            $beltsProduct[] = array(
-                "beltID"         => $beltID,
-                "unitName"       => $unitName,
-                "barcode"        => $barcode,
-                "direction"      => $direction,
-                "sortOrder"      => $sortOrder,
-                "shelfNo"        => $shelfNo,
-                "countAvailable" => $countAvailable,
-                "position"       => $position,
-                "beltCount"      => $beltCount,
-                "length"         => $length
-            );
+            if($countAvailable >= $quantity)
+                $beltsProduct[] = array(
+                    "beltID"         => $beltID,
+                    "unitName"       => $unitName,
+                    "barcode"        => $barcode,
+                    "direction"      => $direction,
+                    "sortOrder"      => $sortOrder,
+                    "shelfNo"        => $shelfNo,
+                    "countAvailable" => $countAvailable,
+                    "position"       => $position,
+                    "beltCount"      => $beltCount,
+                    "length"         => $length
+                );
 
         }
         return $beltsProduct;
     }
     public function refill($beltID,$quantity){
         print_r("Belt ID is  $beltID");
-
+        $this->load->model("catalog/pallet");
         // add to oc_pallet, oc_product_pallet we need the product _id
         $beltInfo = $this->db->query("SELECT product_id,quantity from oc_pallet where pallet_id=$beltID");
         $productID = $beltInfo->row['product_id'];
         $origQuantity = $beltInfo->row['quantity'];
         $newQuantity = intval($origQuantity) + intval($quantity);
         $this->db->query("UPDATE OC_PALLET set quantity = $newQuantity where pallet_id = $beltID");
+        // if multibelt product then all of the belts included in this update 
+        // till gets to the end?
         $unitIDQuery = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $beltID");
         $unitID = $unitIDQuery->rows[0]['unit_id'];
         $shelfID = $unitIDQuery->rows[0]['shelf_id'];
