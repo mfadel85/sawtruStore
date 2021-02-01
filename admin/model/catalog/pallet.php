@@ -1,18 +1,101 @@
 <?php
 
-define('PALLET_DEPTH', 57);
-define('COLUMN_COUNT', 11);
+define('COLUMN_COUNT', 10);
+define('Pallet_Detph', 57);
 
 class ModelCatalogPallet extends Model {
-	public function getPallet($palletID){
-		$query = $this->db->query("SELECT * FROM `oc_pallet`  WHERE pallet_id = $palletID");
+
+	public function getPallet($beltID){
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "pallet  WHERE barcode = $beltID");
 		return $query->row;		
+	}
+
+	public function getBeltProduct($beltID,$productID){
+		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position 
+		WHERE product_id=$productID AND start_pallet= $beltID and status != 'Sold' group by start_pallet");
+		return $query->row;
 	}
 
 	public function getPalletProduct($palletID,$productID){
 
 		$query = $this->db->query("SELECT count(start_pallet) as Count,product_id,pallet FROM " . DB_PREFIX . "product_to_position WHERE product_id= $productID AND start_pallet= $palletID group by start_pallet");
 		return $query->row;
+	}
+
+
+	public function productAssignedToPallet($palletID,$productID){
+		$count= $this->db->query("SELECT count(*) FROM `oc_pallet_product` where product_id = $productID and start_pallet_id = $palletID");
+		if(count($count->row)> 0)
+			return true;
+		else 
+			return false;
+	}
+
+	public function getBelts($shelfID){
+		$belts=$this->db->query("SELECT * from oc_pallet where shelf_id=$shelfID")->rows;
+		return $belts;
+	}	
+
+	public function getAvailablePositionsCount($beltBarcode,$productID){
+		$beltID = $this->getBeltID("$beltBarcode");
+		error_log("Belt Barcode is : $beltBarcode, Product ID is $productID");
+		$width = $this->db->query("SELECT width FROM " . DB_PREFIX . "product  WHERE product_id = $productID");
+		$width = $width->rows[0]["width"];
+		$productData = $this->getBeltProduct($beltID,$productID);
+
+
+		if(isset($productData) and isset($productData['product_id']) and $productID == $productData['product_id']){
+			$max = floor(Pallet_Detph / $width);
+            
+			$count = $productData['Count'];
+			// it has to be Max-$count
+			return $max-$count;
+		}
+		else {
+			$countAvailable = floor(Pallet_Detph / $width);
+			error_log("Count available: ".$countAvailable);
+			return $countAvailable; // return max not zero
+		}
+			
+		$productInfo = $this->db->query("select op.*,unit from " . DB_PREFIX . "product op
+			join " . DB_PREFIX . "length_class_description olcd 
+			on op.length_class_id = olcd.length_class_id
+			where product_id = $productID and language_id = 1");
+
+		$width  = $productInfo->row['width']; // this factor is for the available positions, we should get classID also, 
+		$length = $productInfo->row['length'];
+		$height = $productInfo->row['height'];
+		$lengthClassID = $productInfo->row['length_class_id'];
+		$weight = $productInfo->row['weight'];
+		$availableSpace = Pallet_Detph - $count*$width;
+		$countAvailable = floor($availableSpace / $width);
+
+		return $countAvailable;
+	}
+	
+
+	public function disableBelt($beltID){
+		$isItActive = "SELECT status,product_id,quantity  from oc_pallet where pallet_id=$beltID";
+		$active = $this->db->query($isItActive);
+		if($active->row['status']){
+			$productID = $active->row['product_id'];
+			$quantity  = $active->row['quantity'];
+			if($quantity > 0){
+				$this->db->query("UPDATE OC_PRODUCT set quantity = quantity-$quantity where product_id=$productID");
+			}
+			$query ="UPDATE oc_pallet set status = 0 where pallet_id=$beltID";
+			$this->db->query($query);
+
+		}
+	}	
+
+	public function getMap(){
+		$map = array();
+		$query = $this->db->query("SELECT * from oc_pallet order by unit_id,shelf_id,x_position");
+		foreach ($query->rows as $result) {
+			$map[] = $result;
+		}
+		return $map;
 	}
 
 	public function getProductPositionInfo($palletID,$productID){

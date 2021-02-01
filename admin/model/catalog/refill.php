@@ -85,6 +85,9 @@ class ModelCatalogRefill extends Model {
         }
         return $beltsProduct;
     }
+    private function updateTillEnd($beltID,$quantity){
+
+    }
     public function refill($beltID,$quantity){
         print_r("Belt ID is  $beltID");
         $this->load->model("catalog/pallet");
@@ -94,6 +97,7 @@ class ModelCatalogRefill extends Model {
         $origQuantity = $beltInfo->row['quantity'];
         $newQuantity = intval($origQuantity) + intval($quantity);
         $this->db->query("UPDATE OC_PALLET set quantity = $newQuantity where pallet_id = $beltID");
+        $this->updateTillEnd($beltID,$newQuantity);
         // if multibelt product then all of the belts included in this update 
         // till gets to the end?
         $unitIDQuery = $this->db->query("SELECT unit_id,shelf_id FROM `oc_pallet` WHERE pallet_id = $beltID");
@@ -103,11 +107,7 @@ class ModelCatalogRefill extends Model {
         for($i=0;$i<$quantity;$i++){
             $update = $this->db->query("INSERT INTO `oc_product_to_position` (`position_id`, `product_id`, `shelf_id`, `unit_id`, `start_pallet`, `expiry_date`, `date_added`)
 				VALUES (NULL, '$productID', '$shelfID', '$unitID', '$beltID', '2022-04-30', CURRENT_TIMESTAMP);");
-
         }
-        
-        /// product to position
-        print_r("$productID, $beltID");
     }
 
 }

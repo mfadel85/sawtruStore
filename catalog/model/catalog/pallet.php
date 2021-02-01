@@ -23,8 +23,8 @@ class ModelCatalogPallet extends Model {
 			$map[] = $result;
 		}
 		return $map;
-
 	}
+	
 	public function productAssignedToPallet($palletID,$productID){
 		$count= $this->db->query("SELECT count(*) FROM `oc_pallet_product` where product_id = $productID and start_pallet_id = $palletID");
 		if(count($count->row)> 0)
