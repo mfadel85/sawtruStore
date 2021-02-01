@@ -89,14 +89,14 @@ class ModelCatalogPallet extends Model {
 		}
 	}	
 
-	public function getMap(){
+	/*public function getMap(){
 		$map = array();
 		$query = $this->db->query("SELECT * from oc_pallet order by unit_id,shelf_id,x_position");
 		foreach ($query->rows as $result) {
 			$map[] = $result;
 		}
 		return $map;
-	}
+	}*/
 
 	public function getProductPositionInfo($palletID,$productID){
 		$productData = $this->getPalletProduct($palletID,$productID);

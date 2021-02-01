@@ -86,6 +86,20 @@ class ModelCatalogRefill extends Model {
         return $beltsProduct;
     }
     private function updateTillEnd($beltID,$quantity){
+        // get status of the beltif single nothing to be done, if start till the end
+        $this->load->model("catalog/pallet");
+
+        $position = $this->db->query("SELECT position FROM `oc_pallet` where pallet_id = $beltID")->row['position'];
+        if($position == "Single")
+            return 1;
+        else 
+            while ($position != "End"){
+                /// update next cell with the quantity
+                $nextBeltID = $this->model_catalog_pallet->getNextBeltID($beltID,1);
+                $beltID =$nextBeltID;
+                $this->db->query("UPDATE OC_PALLET set quantity = $quantity where pallet_id = $nextBeltID");
+                $position = $this->db->query("SELECT position FROM `oc_pallet` where pallet_id = $nextBeltID")->row['position'];
+            }
 
     }
     public function refill($beltID,$quantity){
@@ -97,6 +111,7 @@ class ModelCatalogRefill extends Model {
         $origQuantity = $beltInfo->row['quantity'];
         $newQuantity = intval($origQuantity) + intval($quantity);
         $this->db->query("UPDATE OC_PALLET set quantity = $newQuantity where pallet_id = $beltID");
+        // UPDATE OC_PRODUCT ALSO
         $this->updateTillEnd($beltID,$newQuantity);
         // if multibelt product then all of the belts included in this update 
         // till gets to the end?

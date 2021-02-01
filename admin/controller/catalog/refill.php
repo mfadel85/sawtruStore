@@ -56,12 +56,12 @@ class ControllerCatalogRefill  extends Controller {
       $output= $this->model_catalog_refill->getBelts($barcode,$quantity);
       $this->response->addHeader('Content-Type: application/json');
       $this->response->setOutput(json_encode($output));
-		}
-		public function fill(){
-      $beltID   = $this->request->post['beltID'];
-			$quantity  = $this->request->post['quantity'];
-			$this->load->model('catalog/refill');
-			$output = $this->model_catalog_refill->refill($beltID,$quantity);
+	}
+	public function fill(){
+		$this->load->model('catalog/refill');
+      	$beltID    = $this->request->post['beltID'];
+		$quantity  = $this->request->post['quantity'];
+		$output    = $this->model_catalog_refill->refill($beltID,$quantity);
 
     }
 }
