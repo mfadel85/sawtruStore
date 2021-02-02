@@ -127,17 +127,17 @@
 // this line below should return json data and I can show them in some way in the page
 ///http://192.168.1.51/store/admin/index.php?route=catalog/category/autocomplete&user_token=DaxdhWWTAzvrPPP2y3J7lJGI03Ut4zbG&filter_name=
 	$("#productBarcode").focus();
-		var IP = '192.168.1.51';
-
-		function getProductName(barcode){
+	var IP = '192.168.1.51';
+	function getProductName(barcode){
+		console.log('heee');
 		$.ajax({
-			url: 'http://'+IP+'/store/index.php?route=api/product/get',
+			url: 'index.php?route=catalog/product/getProductReq&user_token={{user_token}}',
 			async: false,
 		  	type: 'post',
 		  	data: {sku: barcode},
 		    crossDomain: true,
 			  success: function(json) {
-			  	  
+				console.log(json);
 			  },
 			  error: function(xhr, ajaxOptions, thrownError) {
 		  		alert('Get Product ID failure');
@@ -145,6 +145,7 @@
 			    }
 		}).done(function(json){
 			$("#productName").val(json['name']);
+			console.log(' o lan var ya',json);
 
 		});	
 	}

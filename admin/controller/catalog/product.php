@@ -125,13 +125,16 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->getForm();
 	}
-
+	public function getProductReq(){
+		$this->load->model('catalog/product');
+		$product_info = $this->model_catalog_product->getProductBySKU($this->request->post['sku']);
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($product_info));
+	}
 	public function getProduct($sku){
 		$this->load->model('catalog/product');
 		$product_info = $this->model_catalog_product->getProductBySKU($this->request->get['sku']);
-		print_r($product_info);
 		return $product_info;
-
 	}
 
 	public function deleteProduct(){
@@ -1726,4 +1729,5 @@ class ControllerCatalogProduct extends Controller {
 		$this->response->setOutput(json_encode($json));
 
 	}
+
 }
