@@ -1,11 +1,12 @@
 <?php
-class ContollerCatalogPallet extends Controller {
-
-	private $error = array();
+class ControllerCatalogBelt extends Controller {
 	public function stuff(){
-		print_r("hate us");
+		$json="Shelves";
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
 	}
-	/*public function index(){
+
+public function index(){
 		$this->load->language('catalog/pallet');
 		$this->document->setTitle($this->language->get('heading_title'));
 		$this->model('catalog/pallet');
@@ -28,8 +29,6 @@ class ContollerCatalogPallet extends Controller {
 	}	
 	
 	public function assignPalletProduct(){
-		print_r("tftf");
-		die();
 		$json = array();
 		if(!isset($_POST['barcode']) || !isset($_POST['productID']) || $_POST['bentCount']==''){
 			$json['error']=1;
@@ -57,6 +56,6 @@ class ContollerCatalogPallet extends Controller {
 			$this->model_catalog_pallet->assignBeltProduct($barcode,$productID,$beltCount,$update);
 		}
 
-	}*/
+	}	
+	
 }
-

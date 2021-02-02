@@ -216,15 +216,17 @@
 
 			console.log(assignedProductID,productID);
 			$.ajax({
-				url: 'http://'+IP+'/store/index.php?route=api/pallet/assignPalletProduct',
+				url: 'index.php?route=catalog/belt/assignPalletProduct&user_token={{user_token}}',
 				async: false,
 				type: 'post',
 				data: {  
 					barcode: barCode, productID:productID,bentCount:palletCount,update:update
 				},
 				crossDomain: true,
-				success:function(){
-					location.reload();
+				success:function(json){
+					console.log(json);
+					console.log('I am gonna kill all of you !!');
+					//location.reload();
 				}
 			}).done(function(json){
 				console.log(json);

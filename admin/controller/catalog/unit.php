@@ -26,6 +26,7 @@ class ControllerCatalogUnit extends Controller {
     
     protected function getList(){
         //filters
+
         $data['error_warning'] = false;
         $data['breadcrumbs'] = array();
 
@@ -101,6 +102,7 @@ class ControllerCatalogUnit extends Controller {
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
+        $data['user_token'] = $this->session->data['user_token'];
 
 		$this->response->setOutput($this->load->view('catalog/unit_list', $data));
     }
@@ -156,6 +158,7 @@ class ControllerCatalogUnit extends Controller {
 
         $maxShelfCount = 10; // for now later we will change it
         $data['maxShelfCount'] = $maxShelfCount;
+        $data['user_token'] = $this->session->data['user_token'];
 
         $unitData = array();
         // get the count of belts i a shelf
@@ -251,6 +254,7 @@ class ControllerCatalogUnit extends Controller {
         $data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
+        $data['user_token'] = $this->session->data['user_token'];
 
 		$this->response->setOutput($this->load->view('catalog/unit_display', $data));
     }
