@@ -127,9 +127,9 @@
 // this line below should return json data and I can show them in some way in the page
 ///http://192.168.1.51/store/admin/index.php?route=catalog/category/autocomplete&user_token=DaxdhWWTAzvrPPP2y3J7lJGI03Ut4zbG&filter_name=
 	$("#productBarcode").focus();
-	var IP = '192.168.1.51';
+		var IP = '192.168.1.51';
 
-	function getProductName(barcode){
+		function getProductName(barcode){
 		$.ajax({
 			url: 'http://'+IP+'/store/index.php?route=api/product/get',
 			async: false,
@@ -151,7 +151,7 @@
 	function getBelts(barcode,quantity=0){
 		getProductName(barcode);
 		$.ajax({
-			url: 'http://192.168.1.51/store/admin/index.php?route=catalog/refill/getBelts&user_token={{user_token}}',
+			url: 'index.php?route=catalog/refill/getBelts&user_token={{user_token}}',
 			async: false,
 			type: 'post',
 			data: {barcode: barcode,quantity:quantity},
