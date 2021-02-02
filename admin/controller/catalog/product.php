@@ -1715,5 +1715,15 @@ class ControllerCatalogProduct extends Controller {
 
 		return json_encode($count);
 	}
+	public function updateMinQ(){
+		$productID = $this->request->post['productID'];
+		$quantity = $this->request->post['quantity'];
 
+		$this->load->model('catalog/product');
+		$json = $this->model_catalog_product->updateMinQ($productID,$quantity);
+		
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+
+	}
 }

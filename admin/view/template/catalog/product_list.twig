@@ -217,8 +217,8 @@
     let newQuanity = $(this).val();
     let cellID = $(this).attr('id');
     let productID = cellID.substring(4);
-    		$.ajax({
-			url:'http://'+IP+'/store/index.php?route=api/product/updateMinQ',
+    $.ajax({
+			url:'http://'+IP+'/store/admin/index.php?route=catalog/product/updateMinQ&user_token={{user_token}}',
 			type:'post',
 			data:{
 				quantity: newQuanity,
@@ -233,8 +233,9 @@
 
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
+        	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+
 		  		alert('Failed to update product.');
-		    	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		    } 
 		}).done(function(json){
 			console.log(json);
@@ -242,7 +243,7 @@
 	    		console.log("Updated");
 			else 
 				alert("Failed to update");
-			location.reload();
+			//location.reload();
 		});
 
   })
