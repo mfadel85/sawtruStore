@@ -817,7 +817,7 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
  }
 .unitTableD {
 	border-collapse: separate;
-	border-spacing: 0 50px;
+	border-spacing: 0 35px;
 	border-right: 15px solid #cdd0d4 !important;
 	border-left:  15px solid #cdd0d4 !important;
 	
