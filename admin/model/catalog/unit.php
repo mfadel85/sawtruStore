@@ -159,6 +159,9 @@ class ModelCatalogUnit extends Model {
         $unit = $this->getAvailableCells($unit,$beltCount,$productHeight);
         return $unit;
     }
+    public function getUnitName($unitID){
+        return $name = $this->db->query("SELECT name  FROM `oc_unit` where unit_id = $unitID")->row['name'];
+    }
     public function getAvailableCells(&$unit,$beltCount,$productHeight){
         $line = 0;
         $modifiedUnit = array();

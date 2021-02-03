@@ -152,7 +152,8 @@ class ControllerCatalogUnit extends Controller {
         $productBeltCount = $this->request->get['beltCount'];
 
         $unit = $this->model_catalog_unit->getUnitDetails($unitID,$productBeltCount,$productID);
-        //$unit);
+        $data['unitName'] = $this->model_catalog_unit->getUnitName($unitID); /// get this from database get the name
+
         $unitDetail = array();
         $beltCount = $this->model_catalog_unit->getBeltCount($unitID);
 
@@ -163,12 +164,9 @@ class ControllerCatalogUnit extends Controller {
         // get the count of belts i a shelf
         $j = 10;
         foreach ($unit as $shelf) {
-            
             $shelfID = $shelf['id'];
             $physicalRow = $shelf['physicalRow'];
-
             $shelfContent = $shelf['contents'];
-            // add empty row if 
             $unitDetail[] = ['shelfID' => $shelfID, 'physicalRow' => $physicalRow, 'contents' => $shelfContent];
         }
         $data['productBeltCount'] = $productBeltCount;
