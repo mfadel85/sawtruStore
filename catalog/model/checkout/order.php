@@ -389,17 +389,28 @@ class ModelCheckoutOrder extends Model {
 					// get current quantity of the pallet along with it adjacent cells
 					// the new quantity = old quantity - $quantity
 					/// all the adjacent cells has to be updated
-					$this->db->query("UPDATE " . DB_PREFIX . "pallet set quantity = quantity-$quantity where pallet_id=$beltID");
-					for($j=0;$j<$quantity;$j++){
-						// to be fixed here 
-						$beltID = $this->db->query("select start_pallet from oc_product_to_position where  product_id = " . (int) $order_product['product_id'] . " limit 1")->row['start_pallet'];
+					$this->load->model('catalog/product');
+					$this->load->model('catalog/belt');
 
+					$beltCount = $this->model_catalog_product->getBeltCount((int) $order_product['product_id']);
+					for($i=0;$i<=$beltCount; $i++){
+						$this->db->query("UPDATE " . DB_PREFIX . "pallet set quantity = quantity-$quantity where pallet_id=$beltID");
+						$beltID = $this->model_catalog_belt->getNextBeltID($beltID);
+						error_log("ZTTSADFSSA current belt ID is $beltID");
+					}
+
+
+					for($j=0;$j<$quantity;$j++){
+						$beltID = $this->db->query("select start_pallet from oc_product_to_position 
+								where  product_id = " . (int) $order_product['product_id'] . " limit 1")->row['start_pallet'];
 						$position_query = $this->db->query("
 							UPDATE oc_product_to_position 
 							set status='Sold' 
 							where status='Ready' 
 							and product_id = " . (int) $order_product['product_id'] . " limit 1");
-							// how to know which pallet????
+							/// update till end
+							// how to know which belt????
+							// get nextbeltid 
 
 					}
 						

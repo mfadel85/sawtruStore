@@ -300,7 +300,10 @@ class ModelCatalogProduct extends Model {
 
 		return $product_data;
 	}
-
+	public function getBeltCount($productID){
+		error_log("s");
+		return $this->db->query("select bent_count from oc_product where product_id=$productID")->row['bent_count'];
+	}
 	public function getPopularProducts($limit) {
 		$product_data = $this->cache->get('product.popular.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->config->get('config_customer_group_id') . '.' . (int)$limit);
 	
