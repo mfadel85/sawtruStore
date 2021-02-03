@@ -82,7 +82,7 @@
           {% else  %}
              No Product
           {% endif %}
-		    <span class="CellComment">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} - {{ belt[7] }} </span>
+		    <!--<span class="CellComment">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} - {{ belt[7] }} </span>-->
 
            </td>
           {% endfor %}
@@ -107,7 +107,7 @@
 		console.log('element',element,x,y);
 		return element;
 	}
-    $(".farkli").click(function(){
+    $(".cell").click(function(){
       const cell = $(this);
       const barcode = cell[0].getAttribute("data-barcode");
       const assignedProductID = cell[0].getAttribute("data-product-id");
