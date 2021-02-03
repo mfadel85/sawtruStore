@@ -234,7 +234,7 @@
 
 			console.log(assignedProductID,productID);
 			$.ajax({
-				url: 'http://'+IP+'/store/index.php?route=api/pallet/assignPalletProduct',
+				url: 'index.php?route=catalog/belt/assignPalletProduct&user_token={{user_token}}',
 				async: false,
 				type: 'post',
 				data: {  
@@ -377,7 +377,8 @@
 			alert("Enter the barcode of the product, first");
 			event.preventDefault();
 			return;
-		}				
+		}			
+		/// here to be changed also	
 		$.ajax({
 			url:'http://'+IP+'/store/index.php?route=api/pallet/updateStock',
 			type:'post',

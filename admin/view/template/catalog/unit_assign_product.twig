@@ -157,7 +157,7 @@
 
         console.log(assignedProductID,productID);
         $.ajax({
-            url: 'http://'+IP+'/store/index.php?route=api/pallet/assignPalletProduct',
+				    url: 'index.php?route=catalog/belt/assignPalletProduct&user_token={{user_token}}',
             async: false,
             type: 'post',
             data: {  
