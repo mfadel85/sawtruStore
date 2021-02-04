@@ -813,15 +813,20 @@ input[type="checkbox"]:checked::after, .checkbox input[type="checkbox"]:checked:
 }
 .unitTable tr td{
 	 width: 9%;
+  background-color: white;
 
  }
 .unitTableD {
 	border-collapse: separate;
-	border-spacing: 0 35px;
+	border-spacing: 0 26px;
 	border-right: 15px solid #cdd0d4 !important;
 	border-left:  15px solid #cdd0d4 !important;
+	background-color:lightgray;
+
 	
 }
+
+
 
  .unitTableD tr td{
 	 width: 9%;
