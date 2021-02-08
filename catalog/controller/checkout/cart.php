@@ -4,13 +4,13 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->language('checkout/cart');
 		$this->pickup = new Cart\Pickup($this->registry);
 
-		$myOrder = $this->pickup->getOrder();
-		foreach($myOrder as $product){
+		$myOrder = $this->pickup->start();
+		/*foreach($myOrder as $product){
 			print_r("<br>");
 			print_r($product);
 			print_r("<br>");
 
-		}
+		}*/
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['breadcrumbs'] = array();

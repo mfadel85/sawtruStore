@@ -39,17 +39,45 @@ class Pickup {
 		}
 	}
     public function start(){
-        error_log("hello hello");
+        $order = $this->getOrder();
+        print_r("before<br>");
+
+        foreach ($order as $value) {
+            print_r("<br>");
+            print_r($value);
+            print_r("<br>");
+        }
+        print_r("after<br>");
+        usort($order,array($this,"sorterMain"));
+        foreach ($order as $value) {
+            print_r("<br>");
+            print_r($value);
+            print_r("<br>");
+        }
+
+
     }
 
     private function algorithm1(){
 
     }
 
-    private function sortOrder(){
+
+    
+    
+    function sorterMain($a,$b){
+        if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
+            return $a["unit_sort_order"] - $b["unit_sort_order"];
+        } else {
+                return $a["belt_count"]-$b["belt_count"];
+        }
+    }
+    private function sortOrderSec($order){
+
+    } 
+    private function calculatTime($order){
 
     }
-    
 	private function getUnitInformation($productID,$quantity){
 		$positionQueryString = 
 		"SELECT
