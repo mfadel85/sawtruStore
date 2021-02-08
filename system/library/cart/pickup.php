@@ -127,6 +127,8 @@ class Pickup {
 			AND customer_id = '" . (int)$this->customer->getId() . "' 
 			AND session_id = '" . $this->db->escape($this->session->getId()) 
         . "'");
+
+
         foreach($cartContent->rows as $product){
             $stock = true;
             $productQuery = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_store p2s 
@@ -139,6 +141,7 @@ class Pickup {
 				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				AND p.date_available <= NOW() AND p.status = '1'
             ");
+
 			if ($productQuery->num_rows && ($product['quantity'] > 0)) {
 
             }            
@@ -146,11 +149,13 @@ class Pickup {
             if (!$productQuery->row['quantity'] || ($productQuery->row['quantity'] < $product['quantity'])) {
                 $stock = false;
             }
+            $price = $productQuery->row['price'];
+
             // unit info
             $unitInformation = $this->getUnitInformation($product['product_id'], $product['quantity']);
-            print_r("Unit INfo<br>");
+            /*print_r("Unit INfo<br>");
             print_r($unitInformation);
-            print_r("<br>Unit INfo<br>");
+            print_r("<br>Unit INfo<br>");*/
 
             $positionQueryString = "
 				SELECT
@@ -195,9 +200,10 @@ class Pickup {
                     $shelfSortOrder[] = $aProduct['shelf_sort_order'];
                     $beltSortOrder[] = $aProduct['belt_sort_order'];
                 }
-				$products[] = array(
-					'cart_id'         => $cart['cart_id'],
-					'bent_count'      => $product_query->row['bent_count'],
+            }
+			$products[] = array(
+					'cart_id'         => $product['cart_id'],
+					'bent_count'      => $productQuery->row['bent_count'],
 					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
 					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
 					'direction'       => $unitInformation[2],
@@ -206,36 +212,27 @@ class Pickup {
 					'shelf_sort_order' => $unitInformation[5],
 					'belt_sort_order'  => $unitInformation[6],
 
-					'product_id'      => $product['product_id'],
-					'name'            => $product['name'],
-					'model'           => $product['model'],
-					'shipping'        => $product['shipping'],
-					'image'           => $product['image'],
-					'option'          => $option_data,
-					'download'        => $download_data,
-					'quantity'        => $porduct['quantity'],
-					'minimum'         => $product['minimum'],
-					'subtract'        => $product['subtract'],
+					'product_id'      => $productQuery->row['product_id'],
+					'name'            => $productQuery->row['name'],
+					'model'           => $productQuery->row['model'],
+					'shipping'        => $productQuery->row['shipping'],
+					'image'           => $productQuery->row['image'],
+					'quantity'        => $productQuery->row['quantity'],
+					'minimum'         => $productQuery->row['minimum'],
+					'subtract'        => $productQuery->row['subtract'],
 					'stock'           => $stock,
-					'price'           => ($price ),
-					'total'           => ($price ) * $porduct['quantity'],
-					'reward'          => $reward * $porduct['quantity'],
-					'points'          => ($product['points'] ? ($product['points']) * $porduct['quantity'] : 0),
-					'tax_class_id'    => $product['tax_class_id'],
-					'weight'          => ($product['weight'] ) * $porduct['quantity'],
-					'weight_class_id' => $product['weight_class_id'],
-					'length'          => $product['length'],
-					'width'           => $product['width'],
-					'height'          => $product['height'],
-					'length_class_id' => $product['length_class_id'],
-					'recurring'       => $recurring
-				);
-			} else {
-
-				$this->remove($product['cart_id']);
-			}
-		}
-
+					'total'           => ($price ) * $product['quantity'],
+					'points'          => ($productQuery->row['points'] ? ($productQuery->row['points']) * $productQuery->row['quantity'] : 0),
+					'tax_class_id'    => $productQuery->row['tax_class_id'],
+					'weight'          => ($productQuery->row['weight'] ) * $product['quantity'],
+					'weight_class_id' => $productQuery->row['weight_class_id'],
+					'length'          => $productQuery->row['length'],
+					'width'           => $productQuery->row['width'],
+					'height'          => $productQuery->row['height'],
+					'length_class_id' => $productQuery->row['length_class_id'],
+            );
+        }
+		 
 		return $products;
     }
     private function algorithm2(){

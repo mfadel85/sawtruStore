@@ -369,9 +369,7 @@ class Cart {
 					$unitSortOrder  = $position_query->row['unit_sort_order'];
 					$shelfSortOrder = $position_query->row['shelf_sort_order'];
 					$beltSortOrder  = $position_query->row['belt_sort_order'];
-				}
-
-				else if($cart['quantity']> 1){
+				} else if($cart['quantity']> 1){
 
 					$xPos = array();
 					$yPos = array();
