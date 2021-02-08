@@ -49,6 +49,7 @@ class Pickup {
     private function sortOrder(){
 
     }
+    
 	private function getUnitInformation($productID,$quantity){
 		$positionQueryString = 
 		"SELECT
@@ -203,7 +204,7 @@ class Pickup {
             }
 			$products[] = array(
 					'cart_id'         => $product['cart_id'],
-					'bent_count'      => $productQuery->row['bent_count'],
+					'belt_count'      => $productQuery->row['bent_count'],
 					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
 					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
 					'direction'       => $unitInformation[2],
@@ -215,21 +216,11 @@ class Pickup {
 					'product_id'      => $productQuery->row['product_id'],
 					'name'            => $productQuery->row['name'],
 					'model'           => $productQuery->row['model'],
-					'shipping'        => $productQuery->row['shipping'],
-					'image'           => $productQuery->row['image'],
 					'quantity'        => $productQuery->row['quantity'],
-					'minimum'         => $productQuery->row['minimum'],
-					'subtract'        => $productQuery->row['subtract'],
-					'stock'           => $stock,
 					'total'           => ($price ) * $product['quantity'],
-					'points'          => ($productQuery->row['points'] ? ($productQuery->row['points']) * $productQuery->row['quantity'] : 0),
-					'tax_class_id'    => $productQuery->row['tax_class_id'],
 					'weight'          => ($productQuery->row['weight'] ) * $product['quantity'],
-					'weight_class_id' => $productQuery->row['weight_class_id'],
 					'length'          => $productQuery->row['length'],
 					'width'           => $productQuery->row['width'],
-					'height'          => $productQuery->row['height'],
-					'length_class_id' => $productQuery->row['length_class_id'],
             );
         }
 		 

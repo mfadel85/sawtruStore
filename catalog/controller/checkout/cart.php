@@ -5,7 +5,12 @@ class ControllerCheckoutCart extends Controller {
 		$this->pickup = new Cart\Pickup($this->registry);
 
 		$myOrder = $this->pickup->getOrder();
-		print_r($myOrder);
+		foreach($myOrder as $product){
+			print_r("<br>");
+			print_r($product);
+			print_r("<br>");
+
+		}
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['breadcrumbs'] = array();
