@@ -6,6 +6,8 @@ class ControllerCheckoutCheckout extends Controller {
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
 			$this->response->redirect($this->url->link('checkout/cart'));
 		}
+		$this->pickup = new Cart\Pickup($this->registry);
+		$this->pickup->start();
 
 		// Validate minimum quantity requirements.
 		$products = $this->cart->getProducts();

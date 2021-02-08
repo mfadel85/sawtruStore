@@ -320,7 +320,7 @@ class ControllerExtensionModuleDQuickcheckout extends Controller {
                 $this->cart = new Cart\Cart($this->registry);
             }
         }
-
+        
         $cart = $this->cart->getProducts();
 
         if(!$cart){

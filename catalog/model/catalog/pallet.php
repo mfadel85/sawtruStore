@@ -193,6 +193,7 @@ class ModelCatalogPallet extends Model {
 		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextBeltID;
 	}
+	
 	public function getPrevBeltID($beltID){
 		// maxCol is the max column we can choose
 		$maxCol = 10;

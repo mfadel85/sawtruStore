@@ -2,7 +2,9 @@
 class ControllerCheckoutCart extends Controller {
 	public function index() {
 		$this->load->language('checkout/cart');
+		$this->pickup = new Cart\Pickup($this->registry);
 
+		$this->pickup->start();
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$data['breadcrumbs'] = array();
