@@ -28,7 +28,8 @@ public function index(){
 		$this->model_catalog_pallet->emptyShelf($shelfID);
 	}	
 	
-	public function assignPalletProduct(){
+	public function assignBeltProduct(){
+		print_r("serefsize bak ya");
 		$json = array();
 		if(!isset($_POST['barcode']) || !isset($_POST['productID']) || $_POST['bentCount']==''){
 			$json['error']=1;
