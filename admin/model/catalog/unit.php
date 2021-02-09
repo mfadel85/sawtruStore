@@ -163,9 +163,14 @@ class ModelCatalogUnit extends Model {
         return $name = $this->db->query("SELECT name  FROM `oc_unit` where unit_id = $unitID")->row['name'];
     }
     public function getAvailableCells(&$unit,$beltCount,$productHeight){
+       // print_r($unit);
         $line = 0;
         $modifiedUnit = array();
         foreach ($unit as $shelf) {
+            foreach($shelf['contents'] as $content){
+                
+            }
+            
             $currentLine = $shelf;
 
             // get shelfHeight
@@ -180,6 +185,7 @@ class ModelCatalogUnit extends Model {
             for ($k = 0; $k < 10-$beltCount+1; $k++) {
                 $counter = 0;
                 for ($j = $k; $j < $k + $beltCount; $j++) {
+                    
                     if ($shelf['contents'][$j][3] == 0) {
                         $counter++;
                         $index = $j;

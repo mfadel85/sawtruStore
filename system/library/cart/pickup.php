@@ -41,7 +41,6 @@ class Pickup {
     public function start(){
         $order = $this->getOrder();
         print_r("before<br>");
-
         foreach ($order as $value) {
             print_r("<br>");
             print_r($value);
@@ -54,8 +53,6 @@ class Pickup {
             print_r($value);
             print_r("<br>");
         }
-
-
     }
 
     private function algorithm1(){
@@ -215,7 +212,7 @@ class Pickup {
                 $unitSortOrder = $positions->row['unit_sort_order'];
                 $shelfSortOrder = $positions->row['shelf_sort_order'];
                 $beltSortOrder = $positions->row['belt_sort_order'];
-            } else if ($cart['quantity'] > 1) {
+            } else if ($product['quantity'] > 1) {
 
                 $xPos = array();
                 $yPos = array();

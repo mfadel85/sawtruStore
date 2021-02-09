@@ -17,11 +17,11 @@ define('HTTPS_CATALOG',  "http://".IP."/store/");
 
 //define('HTTPS_CATALOG', 'http://localhost/store/');
 // DIR
-define('DIR_APPLICATION', 'D:\WebServer\htdocs\store\admin/');
-define('DIR_SYSTEM', 'D:\WebServer\htdocs\store\system/');
-define('DIR_IMAGE', 'D:\WebServer\htdocs\store\image/');
-define('DIR_STORAGE', 'D:\WebServer\htdocs\store\storage/');
-define('DIR_CATALOG', 'D:\WebServer\htdocs\store\catalog/');
+define('DIR_APPLICATION', 'D:\xampp\htdocs\store\admin/');
+define('DIR_SYSTEM', 'D:\xampp\htdocs\store\system/');
+define('DIR_IMAGE', 'D:\xampp\htdocs\store\image/');
+define('DIR_STORAGE', 'D:\xampp\htdocs\store\storage/');
+define('DIR_CATALOG', 'D:\xampp\htdocs\store\catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -37,7 +37,7 @@ define('DB_DRIVER', 'mysqli');
 define('DB_HOSTNAME', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_DATABASE', 'storef');
+define('DB_DATABASE', 'storerestored');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
 // MFH
