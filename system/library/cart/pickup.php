@@ -40,19 +40,9 @@ class Pickup {
 	}
     public function start(){
         $order = $this->getOrder();
-        print_r("before<br>");
-        foreach ($order as $value) {
-            print_r("<br>");
-            print_r($value);
-            print_r("<br>");
-        }
-        print_r("after<br>");
-        usort($order,array($this,"sorterMain"));
-        foreach ($order as $value) {
-            print_r("<br>");
-            print_r($value);
-            print_r("<br>");
-        }
+		usort($order,array($this,"sorterMain"));
+		$time = $this->calculatTime($order);
+		print_r("Timing is $time.<br.");
     }
 
     private function algorithm1(){
@@ -73,7 +63,11 @@ class Pickup {
 
     } 
     private function calculatTime($order){
-
+		$time = 0;
+		foreach ($order as $product) {
+			$time += 2;
+		}
+		return $time;
     }
 	private function getUnitInformation($productID,$quantity){
 		$positionQueryString = 
@@ -108,10 +102,6 @@ class Pickup {
 		//print_r($this);
 		//$orderID = $_SESSION['order_id'];
 		$position_query = $this->db->query($positionQueryString);
-		/*$query = $this->db->query("UPDATE oc_order_product 
-					SET betlID =". (int)$position_query->row['pallet_id']
-					." where product_id=" . (int) $productID . " and order_id=".(int)$orderID);*/
-		// add pallet_id for oc_product_order update set pallet_id
 
 		if($quantity == 1){
 			$xPos = $position_query->row['xPos'];
