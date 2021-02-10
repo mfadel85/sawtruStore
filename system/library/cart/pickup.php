@@ -64,8 +64,12 @@ class Pickup {
     } 
     private function calculatTime($order){
 		$time = 0;
+		$prevUnit = 1;
 		foreach ($order as $product) {
-			$time += 2;
+			print_r("<br>".$product['unit_sort_order']."-". $prevUnit."<BR>");
+			$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
+			$time += 3 + $extra;
+			$prevUnit = $product['unit_sort_order'];
 		}
 		return $time;
     }
