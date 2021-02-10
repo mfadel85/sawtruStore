@@ -1,5 +1,5 @@
 <?php
-
+phpinfo();
 $test = [
     [0, 0, 1, 0, 0, 0, 1, 1, 0, 0],
     [0, 0, 1, 0, 0, 1, 1, 1, 0, 0],
@@ -38,6 +38,7 @@ $modifiedUnit = array();
                     print_r(" changes :D ");
                     $currentLine[$k+$i] = -1;
                 }
+                
                 
                 $counter = 0;
             }

@@ -54,7 +54,7 @@ class ModelCatalogRefill extends Model {
 
 
         // get all belts that contain 
-        $belts = $this->db->query("SELECT * from " . DB_PREFIX . "pallet WHERE product_id = $productID and position='Start' ");
+        $belts = $this->db->query("SELECT * from " . DB_PREFIX . "pallet WHERE product_id = $productID and position='Single' ");
         $beltsProduct = array();
         foreach ($belts->rows as $belt) {
             $beltID    = $belt['pallet_id'];
