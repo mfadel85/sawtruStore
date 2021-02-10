@@ -233,6 +233,7 @@ class ModelCatalogPallet extends Model
     }
     private function updateTillEnd($beltID)
     {
+        // to check this max execution time
         $nextBeltID = $this->getNextPalletID($beltID, 1);
         $beltStatus = $this->db->query("SELECT position from oc_pallet where pallet_id=$nextBeltID")->row['position'];
         $this->db->query("Update `oc_pallet` set product_id = NULL,position='Single' where pallet_id = $nextBeltID");
@@ -281,6 +282,22 @@ class ModelCatalogPallet extends Model
                 break;
         }
     }
+
+	public function getNextPalletID($beltID,$i=1){
+		// maxCol is the max column we can choose
+		$maxCol = 10;
+		error_log("Belt id is $beltID, the value of is $i");
+		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
+		$row    = $beltInfo->row["shelf_id"];
+		if((int)$beltInfo->row["x_position"]>$maxCol)
+			return -1;
+
+		$xPos   = (int)$beltInfo->row["x_position"]+$i;
+		$unitID = $beltInfo->row["unit_id"];
+		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
+		return $nextBeltID;
+	}
+
     public function assignBeltProduct($beltBarcode, $productID, $beltCount, $update)
     {
         error_log("Task 1: started here0 $beltCount update is $update");
@@ -293,7 +310,7 @@ class ModelCatalogPallet extends Model
                 error_log("Task 1: started here 3");
 
                 $cellPosition = "Single";
-                if ($beltCount > 0) {
+                if ($beltCount > 1) {
                     $cellPosition = "Start";
                 }
 
