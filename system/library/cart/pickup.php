@@ -86,10 +86,27 @@ class Pickup {
 			}
 		}
 	}
+	private function getStartIndex($index,$product){
+
+	}
+	private function checkSpace($index,$product){
+
+	}
+	private function shiftCells($index,$product){
+		
+	}
 	private function pickProduct($product,$index){
 		$index = 0;
 		$originalIndex = $index;
-
+		$index = $this->getStartIndex($index,$product);
+		$available = $this->checkSpace($index,$product);
+		if($available){
+			$index =  $this->shiftCells($index,$product);/// filledCount also
+		}
+		else {
+			// maybe play with timing
+			return -1;
+		}
 
 		return $index;
 	}
