@@ -14,6 +14,7 @@ class Pickup {
 	private $beltCount = 5;
 	private $rowCount  = 22;
 	private $cellDepth = 2.5;
+	private $order = array();
 
 	public function __construct($registry) {
 		$this->config = $registry->get('config');
@@ -56,6 +57,7 @@ class Pickup {
 			print_r("<br>");
 		}
 		usort($order,array($this,"sorterMain"));
+		$this->order = $order;
 		$time = $this->calculatTime($order);
 		$this->fillShelf($order);
 		print_r("Timing is $time.<br>.");
@@ -133,6 +135,16 @@ class Pickup {
 		return 0;
 	}
 	private function nBeltProductDepth($n){
+		$depth = 0;
+		foreach($this->order as $product){
+			if($product['belt_count'] == $n)
+			{
+				$depth += ceil($product['width']/$this->cellDepth);
+				print_r("<BR>Depthis : ".$depth."<BR>");
+
+			}
+				
+		}
 		/*
 	nBeltProductsDepth(n) {
 		let depth = 0;
@@ -143,7 +155,8 @@ class Pickup {
 		return depth;
 	}
 		*/
-		return 0;
+		print_r("<BR>n is $n:  Depth is $depth<br>");
+		return $depth;
 	}
 	private function getOneBeltIndex($cellCount){
 		$firstBeltIndex  =  $this->getBeltDepth(0);
