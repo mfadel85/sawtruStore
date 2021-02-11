@@ -120,19 +120,13 @@ class Pickup {
 
 	}
 	private function getBeltDepth($n){
-		/*
-			getBeltCurrentDepth(n) {
-		let currentBeltIndex = 0;
-		for (let j = 21; j >= 0; j--) {
-			if (this.state.cells[j * 5 + n] != null) {
-				currentBeltIndex = j + 1;
+		$index = 0;
+		for($i = 21;$i>=0;$--){
+			if($this->cells[$n] != "")
+				$index = $i +1;
 				break;
-			}
 		}
-		return currentBeltIndex;
-	}
-		*/
-		return 0;
+		return $index;
 	}
 	private function nBeltProductDepth($n){
 		$depth = 0;
@@ -171,7 +165,7 @@ class Pickup {
 		for($i=$startRow; $i< $this->rowCount; $i++){
 			for($j=0;$j< $this->beltCount;$j++){
 				$cellIndex = $i*5+$j;
-				if($this->cells[$i][$j+$index]!= '-')
+				if($this->cells[$i][$j+$index]!= '')
 					return false;
 			}
 		}
