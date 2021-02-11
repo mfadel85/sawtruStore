@@ -13,6 +13,7 @@ class Pickup {
 	private $nextPatch  = array();
 	private $beltCount = 5;
 	private $rowCount  = 22;
+	private $cellDepth = 2.5;
 
 	public function __construct($registry) {
 		$this->config = $registry->get('config');
@@ -56,7 +57,8 @@ class Pickup {
 		}
 		usort($order,array($this,"sorterMain"));
 		$time = $this->calculatTime($order);
-		print_r("Timing is $time.<br.");
+		$this->fillShelf($order);
+		print_r("Timing is $time.<br>.");
     }
 
     private function algorithm1(){
@@ -78,6 +80,9 @@ class Pickup {
 		$index = 0;
 		foreach ($order as $product) {
 			$index = $this->pickProduct($product,$index);
+			print_r("this<BR>");
+			print_r("this<BR>");
+
 			if($index == -1){
 				// update timing and 
 				// add this product to the not added products
@@ -87,18 +92,45 @@ class Pickup {
 		}
 	}
 	private function getStartIndex($index,$product){
+		$cellCount = ceil((float)$product['width']/2.5);
+		print_r("Cell Count is $cellCount<BR> ");
+		switch ($product['belt_count']) {
+			case '4':
+			case '5':
+				return 0;
+			break;
+			case '3':
+				return 2;
+			break;
+			case '2':
+				return $this->getOneBeltIndex($index,$cellCount);
+			break;
+			case '1':
+				return $this->getTwoBeltIndex($index,$cellCount);
+			break;
+			default:
+				print_r("O lan var ya");
+				break;
+		}
 
+	}
+	private function getOneBeltIndex($index,$cellCount){
+		return 1;
+	}
+	private function getTwoBeltIndex($index,$cellCount){
+		return 2;
 	}
 	private function checkSpace($index,$product){
 
 	}
 	private function shiftCells($index,$product){
-		
+
 	}
 	private function pickProduct($product,$index){
 		$index = 0;
 		$originalIndex = $index;
 		$index = $this->getStartIndex($index,$product);
+		print_r("Index now is $index");
 		$available = $this->checkSpace($index,$product);
 		if($available){
 			$index =  $this->shiftCells($index,$product);/// filledCount also
@@ -297,7 +329,5 @@ class Pickup {
     private function algorithm2(){
 
     }
-    private function shiftCells(){
 
-    }
 }
