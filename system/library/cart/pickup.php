@@ -10,7 +10,9 @@ class Pickup {
     private $cells = array();
     private $timing;
     private $fillingPercentage;
-    private $nextPatch  = array();
+	private $nextPatch  = array();
+	private $beltCount = 5;
+	private $rowCount  = 22;
 
 	public function __construct($registry) {
 		$this->config = $registry->get('config');
@@ -19,7 +21,7 @@ class Pickup {
 		$this->db = $registry->get('db');
 		$this->tax = $registry->get('tax');
 		$this->weight = $registry->get('weight');
-
+		$this->initCells();
 		// Remove all the expired carts with no customer ID
 		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE (api_id > '0' OR customer_id = '0') AND date_added < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
 
@@ -36,6 +38,13 @@ class Pickup {
 				// The advantage of using $this->add is that it will check if the products already exist and increaser the quantity if necessary.
 				$this->add($cart['product_id'], $cart['quantity'], json_decode($cart['option']), $cart['recurring_id']);
 			}
+		}
+	}
+	private function initCells(){
+		for($i=0; $i < $this->rowCount; $i++){
+			$this->cells[] = [];
+			for($j=0; $j< $this->beltCount; $j++)
+			   $this->cells[$i][] = '';
 		}
 	}
     public function start(){
@@ -64,26 +73,34 @@ class Pickup {
 	
     private function sortOrderSec($order){
 	} 
-	
+	private function fillShelf($order){
+		$unPickedProducts = [];
+		$index = 0;
+		foreach ($order as $product) {
+			$index = $this->pickProduct($product,$index);
+			if($index == -1){
+				// update timing and 
+				// add this product to the not added products
+				// 
+				$unPickedProducts[] = $product;
+			}
+		}
+	}
+	private function pickProduct($product,$index){
+		$index = 0;
+		$originalIndex = $index;
+
+
+		return $index;
+	}
     private function calculatTime($order){
 		$time = 0;
 		$prevUnit = 1;
 		foreach ($order as $product) {
-			if($product['quantity'] == 1){
 				$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
 				$time += 3 + $extra;
 				print_r("<BR> we will adddd $extra<br>");
-
 				$prevUnit = $product['unit_sort_order'];
-			}
-			else if($product['quantity']> 1){
-				for($i=0;$i<$product['quantity'];$i++){
-					$extra = $product['unit_sort_order'][$i] - $prevUnit > 0 ? ($product['unit_sort_order'][$i] - $prevUnit)*2 :1;
-					print_r("<BR> we will add $extra in $prevUnit<br>");
-					$time += 3 + $extra;
-					$prevUnit = $product['unit_sort_order'][$i];
-				}
-			}
 		}
 		return $time;
     }
@@ -212,7 +229,7 @@ class Pickup {
 					and  optp.product_id = " . (int) $product['product_id'] . "
                     and optp.status='Ready' limit 0," . $product['quantity'];
             $positions = $this->db->query($positionQueryString);
-            if ($product['quantity'] == 1) {
+           /* if ($product['quantity'] == 1) {
                 $xPos = $positions->row['xPos'];
                 $yPos = $positions->row['shelf_physical_row'];
                 $direction = $positions->row['direction'];
@@ -220,7 +237,7 @@ class Pickup {
                 $unitSortOrder = $positions->row['unit_sort_order'];
                 $shelfSortOrder = $positions->row['shelf_sort_order'];
                 $beltSortOrder = $positions->row['belt_sort_order'];
-            } else if ($product['quantity'] > 1) {
+            } else if ($product['quantity'] > 1) {*/
 
                 $xPos = array();
                 $yPos = array();
@@ -232,19 +249,17 @@ class Pickup {
                     $unitID[] = $aProduct['unitID']; /// what is hapenning here? let's debug
                     $unitSortOrder[] = $aProduct['unit_sort_order'];
                     $shelfSortOrder[] = $aProduct['shelf_sort_order'];
-                    $beltSortOrder[] = $aProduct['belt_sort_order'];
-                }
-            }
-			$products[] = array(
+					$beltSortOrder[] = $aProduct['belt_sort_order'];
+					$products[] = array(
 					'cart_id'         => $product['cart_id'],
 					'belt_count'      => $productQuery->row['bent_count'],
-					'xPos'            => $unitInformation[0],//// maybe we have multiple xPos
-					'yPos'            => $unitInformation[1],/// maybe we have multiple yPos
-					'direction'       => $unitInformation[2],
-					'unit_id'         => $unitInformation[3],
-					'unit_sort_order'  => $unitInformation[4],
-					'shelf_sort_order' => $unitInformation[5],
-					'belt_sort_order'  => $unitInformation[6],
+					'xPos'            => $aProduct['xPos'],//// maybe we have multiple xPos
+					'yPos'            => $aProduct['yPos'],/// maybe we have multiple yPos
+					'direction'       => $aProduct['direction'],
+					'unit_id'         => $aProduct['unitID'],
+					'unit_sort_order'  => $aProduct['unit_sort_order'],
+					'shelf_sort_order' => $aProduct['shelf_sort_order'],
+					'belt_sort_order'  => $aProduct['belt_sort_order'],
 
 					'product_id'      => $productQuery->row['product_id'],
 					'name'            => $productQuery->row['name'],
@@ -254,7 +269,10 @@ class Pickup {
 					'weight'          => ($productQuery->row['weight'] ) * $product['quantity'],
 					'length'          => $productQuery->row['length'],
 					'width'           => $productQuery->row['width'],
-            );
+            );					
+                }
+            //}
+			
         }
 		 
 		return $products;
