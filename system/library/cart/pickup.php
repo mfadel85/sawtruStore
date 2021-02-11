@@ -60,7 +60,8 @@ class Pickup {
         } else {
                 return $a["belt_count"]-$b["belt_count"];
         }
-    }
+	}
+	
     private function sortOrderSec($order){
 	} 
 	
@@ -71,11 +72,14 @@ class Pickup {
 			if($product['quantity'] == 1){
 				$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
 				$time += 3 + $extra;
+				print_r("<BR> we will adddd $extra<br>");
+
 				$prevUnit = $product['unit_sort_order'];
 			}
 			else if($product['quantity']> 1){
 				for($i=0;$i<$product['quantity'];$i++){
-					$extra = $product['unit_sort_order'][$i] - $prevUnit > 0 ? ($product['unit_sort_order'][$i] - $prevUnit)*3 :1;
+					$extra = $product['unit_sort_order'][$i] - $prevUnit > 0 ? ($product['unit_sort_order'][$i] - $prevUnit)*2 :1;
+					print_r("<BR> we will add $extra in $prevUnit<br>");
 					$time += 3 + $extra;
 					$prevUnit = $product['unit_sort_order'][$i];
 				}
