@@ -118,9 +118,31 @@ class Pickup {
 
 	}
 	private function getBeltDepth($n){
+		/*
+			getBeltCurrentDepth(n) {
+		let currentBeltIndex = 0;
+		for (let j = 21; j >= 0; j--) {
+			if (this.state.cells[j * 5 + n] != null) {
+				currentBeltIndex = j + 1;
+				break;
+			}
+		}
+		return currentBeltIndex;
+	}
+		*/
 		return 0;
 	}
 	private function nBeltProductDepth($n){
+		/*
+	nBeltProductsDepth(n) {
+		let depth = 0;
+		this.state.order.forEach(item => {
+			if (item.beltCount == n)
+				depth = depth + item.cellsDepth;
+		});
+		return depth;
+	}
+		*/
 		return 0;
 	}
 	private function getOneBeltIndex($cellCount){
@@ -148,6 +170,29 @@ class Pickup {
 		return 2;
 	}
 	private function checkSpace($index,$product){
+		$startRow = $this->rowCount-ceil((float)$product['width']/$this->cellDepth);
+		for($i=$startRow; $i< $this->rowCount; $i++){
+			for($j=0;$j< $this->beltCount;$j++){
+				$cellIndex = $i*5+$j;
+				if($this->cells[$i][$j+$index]!= '-')
+					return false;
+			}
+		}
+		return true;
+		
+		/*
+	checkSpace(startIndex, beltCount, cellsDepth) {
+		let startRow = this.state.cellsInBent - cellsDepth;
+		for (let i = startRow; i < this.state.cellsInBent; i++) {
+			for (let l = 0; l < beltCount; l++) {
+				const index = i * 5 + startIndex + l;
+				if (this.state.cells[index] !== null)
+					return false;
+			}
+		}
+		return true;
+	}
+		*/
 
 	}
 	private function shiftCells($index,$product){
