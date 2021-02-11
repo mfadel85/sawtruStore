@@ -90,6 +90,9 @@ class Pickup {
 				$unPickedProducts[] = $product;
 			}
 		}
+		print_r("<BR>UNPICKED PRODUCTS<BR>");
+		print_r($unPickedProducts);
+		print_r("<BR>UNPICKED PRODUCTS<BR>");
 	}
 	private function getStartIndex($index,$product){
 		$cellCount = ceil((float)$product['width']/2.5);
@@ -114,10 +117,34 @@ class Pickup {
 		}
 
 	}
-	private function getOneBeltIndex($index,$cellCount){
-		return 1;
+	private function getBeltDepth($n){
+		return 0;
+	}
+	private function nBeltProductDepth($n){
+		return 0;
+	}
+	private function getOneBeltIndex($cellCount){
+		$firstBeltIndex  =  $this->getBeltDepth(0);
+		$secondBeltIndex = $this->getBeltDepth(1);
+		$fifthBeltIndex   = $this->getBeltDepth(4);
+		$threeDepth = $this->nBeltProductDepth(3);
+		$fourDepth  = $this->nBeltProductDepth(4);
+		$arrayValues = array($firstBeltIndex, $secondBeltIndex, 1000, 1000, $fifthBeltIndex);
+		$index = array_search(min($arrayValues), $arrayValues);
+		if($fifthBeltIndex + $fourDepth + $threeDepth + $cellCount <= 22)
+			return 4;
+		return $index;
 	}
 	private function getTwoBeltIndex($index,$cellCount){
+		$firstBeltIndex  =  $this->getBeltDepth(0);
+		$thirdBeltIndex   = $this->getBeltDepth(2);
+		$threeDepth = $this->nBeltProductDepth(3);
+		$fourDepth  = $this->nBeltProductDepth(4);
+		/*if ($this->orderSize > 110) {
+			$fourDepth = 0;
+			$threeDepth = 0;
+		}*/
+		return $firstBeltIndex > $thirdBeltIndex + $threeDepth ? 2 : 0;
 		return 2;
 	}
 	private function checkSpace($index,$product){
