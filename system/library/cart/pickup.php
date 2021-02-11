@@ -138,24 +138,8 @@ class Pickup {
 		$depth = 0;
 		foreach($this->order as $product){
 			if($product['belt_count'] == $n)
-			{
 				$depth += ceil($product['width']/$this->cellDepth);
-				print_r("<BR>Depthis : ".$depth."<BR>");
-
-			}
-				
 		}
-		/*
-	nBeltProductsDepth(n) {
-		let depth = 0;
-		this.state.order.forEach(item => {
-			if (item.beltCount == n)
-				depth = depth + item.cellsDepth;
-		});
-		return depth;
-	}
-		*/
-		print_r("<BR>n is $n:  Depth is $depth<br>");
 		return $depth;
 	}
 	private function getOneBeltIndex($cellCount){
