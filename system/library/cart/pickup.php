@@ -39,7 +39,12 @@ class Pickup {
 		}
 	}
     public function start(){
-        $order = $this->getOrder();
+		$order = $this->getOrder();
+		foreach($order as $product){
+			print_r("<BR> PRODUCT<BR>");
+			print_r($product);
+			print_r("<br>");
+		}
 		usort($order,array($this,"sorterMain"));
 		$time = $this->calculatTime($order);
 		print_r("Timing is $time.<br.");
@@ -49,10 +54,7 @@ class Pickup {
 
     }
 
-
-    
-    
-    function sorterMain($a,$b){
+   private  function sorterMain($a,$b){
         if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
             return $a["unit_sort_order"] - $b["unit_sort_order"];
         } else {
@@ -60,16 +62,24 @@ class Pickup {
         }
     }
     private function sortOrderSec($order){
-
-    } 
+	} 
+	
     private function calculatTime($order){
 		$time = 0;
 		$prevUnit = 1;
 		foreach ($order as $product) {
-			print_r("<br>".$product['unit_sort_order']."-". $prevUnit."<BR>");
-			$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
-			$time += 3 + $extra;
-			$prevUnit = $product['unit_sort_order'];
+			if($product['quantity'] == 1){
+				$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
+				$time += 3 + $extra;
+				$prevUnit = $product['unit_sort_order'];
+			}
+			else if($product['quantity']> 1){
+				for($i=0;$i<$product['quantity'];$i++){
+					$extra = $product['unit_sort_order'][$i] - $prevUnit > 0 ? ($product['unit_sort_order'][$i] - $prevUnit)*3 :1;
+					$time += 3 + $extra;
+					$prevUnit = $product['unit_sort_order'][$i];
+				}
+			}
 		}
 		return $time;
     }
@@ -215,7 +225,7 @@ class Pickup {
                     $xPos[] = $aProduct['xPos']; /// Null ??
                     $yPos[] = $aProduct['yPos']; /// Null ??
                     $direction[] = $aProduct['direction']; /// Null ??
-                    $unitID[] = $product['unitID']; /// Null ??
+                    $unitID[] = $aProduct['unitID']; /// what is hapenning here? let's debug
                     $unitSortOrder[] = $aProduct['unit_sort_order'];
                     $shelfSortOrder[] = $aProduct['shelf_sort_order'];
                     $beltSortOrder[] = $aProduct['belt_sort_order'];
@@ -235,7 +245,7 @@ class Pickup {
 					'product_id'      => $productQuery->row['product_id'],
 					'name'            => $productQuery->row['name'],
 					'model'           => $productQuery->row['model'],
-					'quantity'        => $productQuery->row['quantity'],
+					'quantity'        => $product['quantity'],// not this the quantity in the order
 					'total'           => ($price ) * $product['quantity'],
 					'weight'          => ($productQuery->row['weight'] ) * $product['quantity'],
 					'length'          => $productQuery->row['length'],
