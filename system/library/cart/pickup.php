@@ -77,6 +77,7 @@ class Pickup {
 	
     private function sortOrderSec($order){
 	} 
+
 	private function fillShelf($order){
 		$unPickedProducts = [];
 		$index = 0;
@@ -96,6 +97,7 @@ class Pickup {
 		print_r($unPickedProducts);
 		print_r("<BR>UNPICKED PRODUCTS<BR>");
 	}
+
 	private function getStartIndex($index,$product){
 		$cellCount = ceil((float)$product['width']/2.5);
 		print_r("Cell Count is $cellCount<BR> ");
@@ -119,6 +121,7 @@ class Pickup {
 		}
 
 	}
+
 	private function getBeltDepth($n){
 		$index = 0;
 		for($i = 21;$i>=0;$--){
@@ -128,6 +131,7 @@ class Pickup {
 		}
 		return $index;
 	}
+
 	private function nBeltProductDepth($n){
 		$depth = 0;
 		foreach($this->order as $product){
@@ -136,6 +140,7 @@ class Pickup {
 		}
 		return $depth;
 	}
+
 	private function getOneBeltIndex($cellCount){
 		$firstBeltIndex  =  $this->getBeltDepth(0);
 		$secondBeltIndex = $this->getBeltDepth(1);
@@ -187,7 +192,20 @@ class Pickup {
 
 	}
 	private function shiftCells($index,$product){
-
+		$cells = $this->cells;
+		$count = 0;
+		$beltCount = $product['belt_count'];
+		if($beltCount > 3)
+			$beltCount = 5;
+		$cellsDepth = ceil((float)$product['widht']/$this->cellDepth);
+		if($product['directoin'] == "Left"){
+			for($i=0; $i< $cellDepth; $i++)
+				for($j=$this->rowCount-1;$j> ; $j--)
+					for($k=0;$k< $beltCount;$k++)
+					{
+						$index = $index+$k;// to be completed not completed yet
+					}
+		}
 	}
 	private function pickProduct($product,$index){
 		$index = 0;
