@@ -67,6 +67,10 @@ class Pickup {
 
     }
 
+    private function algorithm2(){
+
+    }
+
    private  function sorterMain($a,$b){
         if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
             return $a["unit_sort_order"] - $b["unit_sort_order"];
@@ -110,10 +114,10 @@ class Pickup {
 				return 2;
 			break;
 			case '2':
-				return $this->getOneBeltIndex($index,$cellCount);
+				return $this->getTwoBeltIndex($index,$cellCount);
 			break;
 			case '1':
-				return $this->getTwoBeltIndex($index,$cellCount);
+				return $this->getOneBeltIndex($index,$cellCount);
 			break;
 			default:
 				print_r("O lan var ya");
@@ -124,7 +128,7 @@ class Pickup {
 
 	private function getBeltDepth($n){
 		$index = 0;
-		for($i = 21;$i>=0;$--){
+		for($i = 21;$i>=0;$i--){
 			if($this->cells[$n] != "")
 				$index = $i +1;
 				break;
@@ -170,6 +174,7 @@ class Pickup {
 		for($i=$startRow; $i< $this->rowCount; $i++){
 			for($j=0;$j< $this->beltCount;$j++){
 				$cellIndex = $i*5+$j;
+				print_r("<BR>I is $i, J is $j, Index is $index<BR>");
 				if($this->cells[$i][$j+$index]!= '')
 					return false;
 			}
@@ -200,10 +205,10 @@ class Pickup {
 		$cellsDepth = ceil((float)$product['widht']/$this->cellDepth);
 		if($product['directoin'] == "Left"){
 			for($i=0; $i< $cellDepth; $i++)
-				for($j=$this->rowCount-1;$j> ; $j--)
+				for($j=$this->rowCount-1;$j>0 ; $j--)
 					for($k=0;$k< $beltCount;$k++)
 					{
-						$index = $index+$k;// to be completed not completed yet
+						$index = $index+$k;// to be completed and tested not completed yet
 					}
 		}
 	}
@@ -407,8 +412,6 @@ class Pickup {
 		 
 		return $products;
     }
-    private function algorithm2(){
 
-    }
 
 }
