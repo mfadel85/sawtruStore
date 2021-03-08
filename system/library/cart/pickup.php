@@ -57,6 +57,11 @@ class Pickup {
 			print_r("<br>");
 		}
 		usort($order,array($this,"sorterMain"));
+		foreach($order as $product){
+			print_r("<BR> PRODUCT<BR>");
+			print_r($product);
+			print_r("<br>");
+		}
 		$this->order = $order;
 		$time = $this->calculatTime($order);
 		$this->fillShelf($order);
@@ -75,7 +80,7 @@ class Pickup {
         if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
             return $a["unit_sort_order"] - $b["unit_sort_order"];
         } else {
-                return $a["belt_count"]-$b["belt_count"];
+            return $a["belt_count"]-$b["belt_count"];
         }
 	}
 	
@@ -87,8 +92,7 @@ class Pickup {
 		$index = 0;
 		foreach ($order as $product) {
 			$index = $this->pickProduct($product,$index);
-			print_r("this<BR>");
-			print_r("this<BR>");
+			print_r("this $index<BR>");
 
 			if($index == -1){
 				// update timing and 
@@ -121,7 +125,7 @@ class Pickup {
 			break;
 			default:
 				print_r("O lan var ya");
-				break;
+			break;
 		}
 
 	}
@@ -131,7 +135,7 @@ class Pickup {
 		for($i = 21;$i>=0;$i--){
 			if($this->cells[$n] != "")
 				$index = $i +1;
-				break;
+			break;
 		}
 		return $index;
 	}
@@ -174,7 +178,7 @@ class Pickup {
 		for($i=$startRow; $i< $this->rowCount; $i++){
 			for($j=0;$j< $this->beltCount;$j++){
 				$cellIndex = $i*5+$j;
-				print_r("<BR>I is $i, J is $j, Index is $index<BR>");
+				print_r("<BR> I is $i, J is $j, Index is $index<BR>");
 				if($this->cells[$i][$j+$index]!= '')
 					return false;
 			}
@@ -202,9 +206,9 @@ class Pickup {
 		$beltCount = $product['belt_count'];
 		if($beltCount > 3)
 			$beltCount = 5;
-		$cellsDepth = ceil((float)$product['widht']/$this->cellDepth);
-		if($product['directoin'] == "Left"){
-			for($i=0; $i< $cellDepth; $i++)
+		$cellsDepth = ceil((float)$product['width']/$this->cellDepth);
+		if($product['direction'] == "Left"){
+			for($i=0; $i< $cellsDepth; $i++)
 				for($j=$this->rowCount-1;$j>0 ; $j--)
 					for($k=0;$k< $beltCount;$k++)
 					{
