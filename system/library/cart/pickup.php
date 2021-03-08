@@ -66,6 +66,8 @@ class Pickup {
 		$time = $this->calculatTime($order);
 		$this->fillShelf($order);
 		print_r("Timing is $time.<br>.");
+		print_r($this->cells);
+
     }
 
     private function algorithm1(){
@@ -173,19 +175,7 @@ class Pickup {
 		return $firstBeltIndex > $thirdBeltIndex + $threeDepth ? 2 : 0;
 		return 2;
 	}
-	private function checkSpace($index,$product){
-		$startRow = $this->rowCount-ceil((float)$product['width']/$this->cellDepth);
-		for($i=$startRow; $i< $this->rowCount; $i++){
-			for($j=0;$j< $this->beltCount;$j++){
-				$cellIndex = $i*5+$j;
-				print_r("<BR> I is $i, J is $j, Index is $index<BR>");
-				if($this->cells[$i][$j+$index]!= '')
-					return false;
-			}
-		}
-		return true;
-		
-		/*
+	/*
 	checkSpace(startIndex, beltCount, cellsDepth) {
 		let startRow = this.state.cellsInBent - cellsDepth;
 		for (let i = startRow; i < this.state.cellsInBent; i++) {
@@ -197,8 +187,18 @@ class Pickup {
 		}
 		return true;
 	}
-		*/
-
+	*/
+	private function checkSpace($index,$product){
+		$startRow = $this->rowCount-ceil((float)$product['width']/$this->cellDepth);
+		for($i=$startRow; $i< $this->rowCount; $i++){
+			for($j=0;$j< $product['belt_count'];$j++){
+				$cellIndex = $i*5+$j;
+				if($this->cells[$i][$j+$index]!= '')
+					return false;
+			}
+		}
+		print_r("<BR>there is space in row $startRow, index $index<br>");
+		return true;
 	}
 	private function shiftCells($index,$product){
 		$cells = $this->cells;
@@ -212,7 +212,9 @@ class Pickup {
 				for($j=$this->rowCount-1;$j>0 ; $j--)
 					for($k=0;$k< $beltCount;$k++)
 					{
-						$index = $index+$k;// to be completed and tested not completed yet
+						$cIndex = $index+$k;// to be completed and tested not completed yet
+						$this->cells[$j][$cIndex] =$this->cells[$j-1][$cIndex];
+						$this->cells[$j-1][$cIndex] = $product['name'];
 					}
 		}
 	}
