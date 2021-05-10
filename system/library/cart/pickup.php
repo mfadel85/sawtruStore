@@ -51,22 +51,31 @@ class Pickup {
 	}
     public function start(){
 		$order = $this->getOrder();
+		print_r("<BR> Order Contents:<BR>");
 		foreach($order as $product){
 			print_r("<BR> PRODUCT<BR>");
 			print_r($product);
 			print_r("<br>");
 		}
+		print_r("Order Contents finished<br>");
 		usort($order,array($this,"sorterMain"));
+		print_r("<BR> Order Contents Sorted:<BR>");
 		foreach($order as $product){
 			print_r("<BR> PRODUCT<BR>");
 			print_r($product);
 			print_r("<br>");
 		}
+		print_r("Order Contents Sorted finished<br>");
+
 		$this->order = $order;
 		$time = $this->calculatTime($order);
-		$this->fillShelf($order);
+		$this->fillShelf($order);// fillshelf is no a good name :D
 		print_r("Timing is $time.<br>.");
-		print_r($this->cells);
+		foreach($this->cells as $line){
+		print_r("<br>");
+		print_r($line);
+
+		}
 
     }
 
@@ -79,6 +88,7 @@ class Pickup {
     }
 
    private  function sorterMain($a,$b){
+	   /// what about shelf sort ordre? should be included here I guess yes
         if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
             return $a["unit_sort_order"] - $b["unit_sort_order"];
         } else {
@@ -93,7 +103,7 @@ class Pickup {
 		$unPickedProducts = [];
 		$index = 0;
 		foreach ($order as $product) {
-			$index = $this->pickProduct($product,$index);
+			$index = $this->pickProduct($product,$index); // check the output of this function!!
 			print_r("this $index<BR>");
 
 			if($index == -1){
@@ -105,7 +115,7 @@ class Pickup {
 		}
 		print_r("<BR>UNPICKED PRODUCTS<BR>");
 		print_r($unPickedProducts);
-		print_r("<BR>UNPICKED PRODUCTS<BR>");
+		print_r("<BR>UNPICKED PRODUCTS Finished<BR>");
 	}
 
 	private function getStartIndex($index,$product){
@@ -135,7 +145,8 @@ class Pickup {
 	private function getBeltDepth($n){
 		$index = 0;
 		for($i = 21;$i>=0;$i--){
-			if($this->cells[$n] != "")
+
+			if($this->cells[$i][$n] != '')
 				$index = $i +1;
 			break;
 		}
@@ -172,6 +183,7 @@ class Pickup {
 			$fourDepth = 0;
 			$threeDepth = 0;
 		}*/
+		print_r("FBI: $firstBeltIndex TBI: $thirdBeltIndex Depth:$threeDepth<BR>");
 		return $firstBeltIndex > $thirdBeltIndex + $threeDepth ? 2 : 0;
 		return 2;
 	}
@@ -217,10 +229,13 @@ class Pickup {
 						$this->cells[$j-1][$cIndex] = $product['name'];
 					}
 		}
+		else if($product['direction'] == "Right"){
+			//go till the first empty cell in all the contained belts
+
+		}
 	}
 	private function pickProduct($product,$index){
-		$index = 0;
-		$originalIndex = $index;
+		$originalIndex = $index; // why are we making the original index  alawys?
 		$index = $this->getStartIndex($index,$product);
 		print_r("Index now is $index");
 		$available = $this->checkSpace($index,$product);
@@ -240,11 +255,13 @@ class Pickup {
 		foreach ($order as $product) {
 				$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
 				$time += 3 + $extra;
-				print_r("<BR> we will adddd $extra<br>");
+				print_r("<BR> It takes $extra sec to pickup this product!!<br>");
 				$prevUnit = $product['unit_sort_order'];
 		}
 		return $time;
     }
+
+	// those functions should be extracted to an outside class
 	private function getUnitInformation($productID,$quantity){
 		$positionQueryString = 
 		"SELECT
@@ -310,8 +327,11 @@ class Pickup {
 			}
 		}
 		return [$xPos,$yPos,$direction,$unitID,$unitSortOrder,$shelfSortOrder,$beltSortOrder,$beltID];
-	}    
-    public  function getOrder(){
+	}   
+	
+	
+
+    public  function getOrder(){ 
         $products = array();
         $cartContent = $this->db->query("
 			SELECT * FROM " . DB_PREFIX . "cart 
