@@ -74,9 +74,7 @@ class Pickup {
 		foreach($this->cells as $line){
 		print_r("<br>");
 		print_r($line);
-
 		}
-
     }
 
     private function algorithm1(){
@@ -88,7 +86,7 @@ class Pickup {
     }
 
    private  function sorterMain($a,$b){
-	   /// what about shelf sort ordre? should be included here I guess yes
+	   /// what about shelf sort order? should be included here I guess yes
         if(($a["belt_count"] < 4 && $b["belt_count"] < 4) || $a["belt_count"] != $b["belt_count"]){
             return $a["unit_sort_order"] - $b["unit_sort_order"];
         } else {
@@ -250,13 +248,14 @@ class Pickup {
 		return $index;
 	}
     private function calculatTime($order){
+		$pickUpTime = 3;
 		$time = 0;
 		$prevUnit = 1;
 		foreach ($order as $product) {
-				$extra = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
-				$time += 3 + $extra;
-				print_r("<BR> It takes $extra sec to pickup this product!!<br>");
-				$prevUnit = $product['unit_sort_order'];
+			$moveTime = $product['unit_sort_order'] - $prevUnit > 0 ? ($product['unit_sort_order'] - $prevUnit)*3 :1;
+			$time += $pickUpTime + $moveTime;// 3 sec time to pick up the product from the unit!!!
+			print_r("<BR> It takes $moveTime sec to pickup this product!!<br>");
+			$prevUnit = $product['unit_sort_order'];
 		}
 		return $time;
     }
