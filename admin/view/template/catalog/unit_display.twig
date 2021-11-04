@@ -97,10 +97,11 @@
 			"
           >
           {% if belt[1] > 0 %}
-           {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }} 
+           {{ belt[2] }}:  {{ belt[3] }} / {{ belt[5] }}  - {{ belt[7]}}
           {% else  %}
              No Product
           {% endif %}
+		  
 		    <span style='display:none;' class="CellComment rotate">{{ belt[9] }}  {{ belt[2] }}:  {{ belt[3] }} / 
 			{{ belt[5] }} - {{ belt[7] }} </span>
 
@@ -224,11 +225,13 @@
 				},
 				crossDomain: true,
 				success:function(json){
+					console.log('test-0');
 					console.log(json);
 					console.log('I am gonna kill all of you !!');
 					//location.reload();
 				}
 			}).done(function(json){
+				console.log('test0');
 				console.log(json);
 				if(json['error'] == 1)
 					alert('Not Allowed Operation');

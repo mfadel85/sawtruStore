@@ -144,9 +144,10 @@ class ControllerCatalogUnit extends Controller {
             'text' => $this->language->get('heading_title'),
             'href' => $this->url->link('catalog/unit', 'user_token=' . $this->session->data['user_token'] . $url, true),
         );
-        $unitID = $this->request->get['id'];
+        $unitID = $this->request->get['id']; // check the Unit ID if it exists in the UnitID if not do something
         // get product name
-        $productID = $this->request->get['product_id'];
+        $productID = $this->request->get['product_id']; // check the Product ID if it exists in the Product
+
         $data['productName'] = $this->model_catalog_product->getProductName($productID); /// get this from database get the name
 
         $productBeltCount = $this->request->get['beltCount'];

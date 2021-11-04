@@ -4,12 +4,19 @@
 class ModelCatalogPallet extends Model
 {
 
-    public function getPallet($beltID)
+    public function getPallet($barcode)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "pallet  WHERE barcode = $beltID");
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "pallet  WHERE barcode = $barcode");
         return $query->row;
     }
+    public function getPalletProductQuantity($productID){
+        /* SELECT * FROM `oc_pallet` where position in ( 'Start' ,'Single') and product_id = 51 and quantity> 0 ORDER BY `oc_pallet`.`product_id` ASC*/
+        $query = $this->db->query("SELECT sum(quantity) as quantity FROM `oc_pallet` 
+        where position in ( 'Start' ,'Single') and product_id = $productID and quantity> 0");
+        return $query->row['quantity'];
+;
 
+    }
     public function getBeltProduct($beltID, $productID)
     {
         $query = $this->db->query("SELECT count(start_pallet) as Count,product_id FROM " . DB_PREFIX . "product_to_position
@@ -122,7 +129,7 @@ class ModelCatalogPallet extends Model
 	public function getNextBeltID($beltID,$i=1){
 		// maxCol is the max column we can choose
 		$maxCol = 10;
-		error_log("Belt id is $beltID, the value of is $i");
+		//error_log("Belt id is $beltID, the value of is $i");
 		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
 		$row    = $beltInfo->row["shelf_id"];
 		if((int)$beltInfo->row["x_position"]>$maxCol)
@@ -139,7 +146,7 @@ class ModelCatalogPallet extends Model
         // check if a pallet is assigned or not
         // I need barcode hre :D
         $beltID = $this->getBeltID($beltBarcode);
-
+        print_r("Belt ID is".$beltID);
         $countQuery = $this->getBeltProduct($beltID, $productID);
         //var_dump($countQuery);
         $count = -1;
@@ -241,6 +248,38 @@ class ModelCatalogPallet extends Model
         error_log("Belt Status is : $beltStatus");
         return $beltStatus;
     }
+    public function getBeltsProduct($productID){
+        $belts = $this->db->query("SELECT count(start_pallet) as quantity,start_pallet FROM `oc_product_to_position` WHERE product_id=$productID and status = 'Ready' group by start_pallet ORDER BY `oc_product_to_position`.`product_id` ASC");
+        return $belts->rows;
+
+    }
+    private function updateNextBelts($beltID,$quantity){
+        $belt = $this->db->query("SELECT * FROM `oc_pallet`  WHERE pallet_id = $beltID");
+        //print_r($belt);
+        $beltCount = (int)$this->db->query("SELECT bent_count FROM oc_product where product_id =".$belt['product_id'])->bent_count;
+        $shelfID = $belt['shelf_id'];
+        $beltPos = $belt['x_position'];
+        $maxI = 10-(int)$belt['x_position'];
+        if($beltCount-1 <= $maxI && $belt['position']=='Start')
+        {
+            for($i=1;$i<$beltCount;$i++){
+                $nextBelt = $this->getNextPalletID($beltID, $i);
+                $this->db->query("Update `oc_pallet` set quantity = $quantity where pallet_id = $nextBelt");
+            }
+
+        }
+            
+    }
+    public function updateBeltQuantity($quantity, $beltID){
+        $this->db->query("Update `oc_pallet` set quantity = $quantity where pallet_id = $beltID");
+        print_r("<BR>".$beltID."<BR>");
+
+        $belt = $this->db->query("SELECT * FROM `oc_pallet`  WHERE pallet_id = $beltID");
+        print_r($belt);
+        if($belt->position =='Start')
+            $this->updateNextBelts($beltID,$quantity);
+        // also the next cells at the same time
+    }
     private function updateTillFirst($beltID)
     {
         $nextBeltID = $this->getPrevBeltID($beltID, 1);
@@ -250,8 +289,10 @@ class ModelCatalogPallet extends Model
         $this->db->query("DELETE from `oc_pallet_product` where start_pallet_id = $nextBeltID");
         return $beltStatus;
     }
-    private function updateAdjacentCells($beltID)
+    private function updateAdjacentCells($beltID)// it is looping and looping and never finished, has to be fixed !!
     {
+        //die();
+
         $status = $this->db->query("SELECT position from oc_pallet where pallet_id=$beltID")->row['position'];
         $beltStatus = $status;
 
@@ -286,23 +327,40 @@ class ModelCatalogPallet extends Model
 	public function getNextPalletID($beltID,$i=1){
 		// maxCol is the max column we can choose
 		$maxCol = 10;
-		error_log("Belt id is $beltID, the value of is $i");
 		$beltInfo = $this->db->query("SELECT shelf_id,x_position,unit_id from oc_pallet where pallet_id = $beltID");
 		$row    = $beltInfo->row["shelf_id"];
 		if((int)$beltInfo->row["x_position"]>$maxCol)
 			return -1;
 
 		$xPos   = (int)$beltInfo->row["x_position"]+$i;
+        error_log("Belt id is $beltID, the value of is $i, xPos is $xPos");
+
 		$unitID = $beltInfo->row["unit_id"];
 		$nextBeltID = $this->db->query("SELECT pallet_id FROM `oc_pallet` where shelf_id= $row and x_position= $xPos and unit_id = $unitID")->row['pallet_id'];
 		return $nextBeltID;
 	}
-
-    public function assignBeltProduct($beltBarcode, $productID, $beltCount, $update)
-    {
+	public function getProductQuantity($productID){
+		$quantity =  $this->db->query("SELECT count(*) as quantity FROM `oc_product_to_position` WHERE status='Ready' and product_id = $productID");
+        //print_r($quantity);
+		return $quantity->row['quantity'];
+	}
+    public function assignBeltProduct($beltBarcode, $productID, $beltCount, $update)// this has to be checked, maybe refactored, 
+    {   
+        print_r('test');
+        error_log("testo");
+        
+        // no need for bentCount should be taken from the database #mfhedit
+        $beltCount = $this->db->query("SELECT bent_count from oc_product where product_id= $productID ")->row['bent_count'];;
         error_log("Task 1: started here0 $beltCount update is $update");
+        
+
         $beltID = $this->getBeltID($beltBarcode);
+        error_log("Task 1: started here0  beltID is : $beltID ");
+
+        //die('die here?');
+
         $this->updateAdjacentCells($beltID);
+
 
         if ($update == 'false') {
             error_log("Task 1 not update: started here 1");

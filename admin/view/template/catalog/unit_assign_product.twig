@@ -108,6 +108,7 @@
 		return element;
 	}
     $(".cell").click(function(){
+
       const cell = $(this);
       const barcode = cell[0].getAttribute("data-barcode");
       const assignedProductID = cell[0].getAttribute("data-product-id");
@@ -123,7 +124,7 @@
 		  const col = id.substring(id.indexOf('c')+1,id.length);
 		  console.log("col",col,"row",row);
       let nextCells = [];
-      if(productBeltCount > 1 && productBeltCount < 10)
+      if(productBeltCount > 0 && productBeltCount < 10)
       {
         for(let j=1;j<productBeltCount;j++){
             let k = parseInt(col)+j;
@@ -141,10 +142,7 @@
         alert("This product is more than 10 belts can't be fit in this unit!!!!");
         return;
       }  
-		    cell.css({background:'yellow'}); 
-        nextCells.forEach(function(item){
-            $("#r"+row+"c"+item).css({background:'yellow'});
-        });
+		    
         // needed data: start pallet id, product id,  bentCount, created date, modified date
         // we will add the assign functionality
         // now we will send ajax request so these changes update in the database , unit_id
@@ -156,6 +154,7 @@
             update = false;
 
         console.log(assignedProductID,productID);
+        
         $.ajax({
 				    url: 'index.php?route=catalog/belt/assignBeltProduct&user_token={{user_token}}',
             async: false,
@@ -164,13 +163,25 @@
                 barcode: barcode, productID:productID,bentCount:productBeltCount,update:update
             },
             crossDomain: true,
-            success:function(){
-                location.reload();
+            success:function(json){
+              if(json['error'] != 1){
+                cell.css({background:'yellow'}); 
+                nextCells.forEach(function(item){
+                $("#r"+row+"c"+item).css({background:'yellow'});
+              });
+              }
+              console.log('test-0');
+              location.reload();
+            },
+            failure:function(json){
+              alert("yeter be 12",json);
+              console.log('test-5');
             }
         }).done(function(json){
-            console.log(json);
+            console.log('Result',json);
+            console.log('test1');
             if(json['error'] == 1)
-                alert('Not Allowed Operation');
+                alert('Not Allowed Operation, the height of the product could be more than the height of the shelf.');
             else 
                 location.reload();
         });            
@@ -262,12 +273,19 @@
 				},
 				crossDomain: true,
 				success:function(){
+          console.log('success?');
 					location.reload();
-				}
+				},
+        failure:function(){
+          console.log('failure?');
+        }
 			}).done(function(json){
 				console.log(json);
-				if(json['error'] == 1)
-					alert('Not Allowed Operation');
+        console.log('successer');
+				if(json['error'] == 1){
+          console.log('success?');
+          alert('Not Allowed Operation');
+        }
 				else 
 					location.reload();
 			});

@@ -65,8 +65,8 @@ class ControllerCatalogProduct extends Controller {
 			error_log($this->request->post['bent_count']);
 			//$beltCount = ceil(floatval($this->request->post['bent_count'])/7);	
 			$beltCount = $this->request->post['bent_count'];
-        /*widthVal = parseFloat(width);
-        var bentCount = Math.ceil(widthVal / 7) ;*/
+			/*widthVal = parseFloat(width);
+			var bentCount = Math.ceil(widthVal / 7) ;*/
 			$url .="&product_id=$productID&id=$unitID&beltCount=$beltCount";
 			$this->response->redirect($this->url->link('catalog/unit/displayUnitProduct', 'user_token=' . $this->session->data['user_token'] . $url, true));
 		}
@@ -733,6 +733,7 @@ class ControllerCatalogProduct extends Controller {
 				'model'      => $result['model'],
 				'price'      => $this->currency->format($result['price'], $this->config->get('config_currency')),
 				'special'    => $special,
+				'sku'        => $result['sku'],
 				'quantity'        => $result['quantity'],
 				'warningQuantity' => $result['warningQuantity'],
 				'bent_count'      => $result['bent_count'],

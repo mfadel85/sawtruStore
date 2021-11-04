@@ -37,7 +37,6 @@ class ControllerCatalogProductStock extends Controller {
 		$data['cancel'] = $this->url->link('catalog/product_stock', 'user_token=' . $this->session->data['user_token'] , true);
 
 		$this->response->setOutput($this->load->view('catalog/product_stock',$data));
-		//http://localhost/store/admin/index.php?route=catalog/product&user_token=vgoLLvgfOfDBMTYTVFvpWyNh6JPDMS8i
 		//$this->response->redirect($this->url->link('catalog/product', 'user_token=' . $this->session->data['user_token'] . $url, true));
 
 	}
