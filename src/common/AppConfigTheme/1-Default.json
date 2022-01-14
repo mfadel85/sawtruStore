@@ -1,0 +1,39 @@
+{
+  "Opencart": {
+    "url": "http://opencart-demo.mstore.io"
+  },
+  "HorizonLayout": [
+    {
+      "layout": "circleCategory"
+    },
+    {
+      "layout": "bannerHigh",
+      "category": 17
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142145/woman-large.png",
+      "layout": "bannerImage",
+      "height": 118,
+      "category": 20
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142102/MAN-large.png",
+      "layout": "bannerImage",
+      "height": 118,
+      "category": 24
+    },
+    {
+      "name": "featureProducts",
+      "image": "",
+      "layout": "threeColumn",
+      "category": 25
+    },
+    {
+      "name": "bagsCollections",
+      "image": "",
+      "layout": "twoColumn",
+      "category": 33
+    }
+  ],
+  "MainColor": "#3FC1BE"
+}

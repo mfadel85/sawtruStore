@@ -1,0 +1,19 @@
+{
+  "Opencart": {
+    "url": "http://opencart-demo.mstore.io"
+  },
+  "HorizonLayout": [
+    {
+      "layout": "circleCategory"
+    },
+    {
+      "layout": "bannerHigh",
+      "category": 17
+    }
+  ],
+  "VerticalLayout": {
+    "name": "Recents",
+    "layout": "twoColumn"
+  },
+  "MainColor": "#2196F3"
+}

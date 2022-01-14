@@ -1,0 +1,16 @@
+{
+  "Opencart": {
+    "url": "http://opencart-demo.mstore.io"
+  },
+  "HorizonLayout": [
+    {
+      "layout": "banner",
+      "category": 17
+    },
+    {
+      "layout": "circleCategory",
+      "column": 20
+    }
+  ],
+  "MainColor": "#E91E63"
+}

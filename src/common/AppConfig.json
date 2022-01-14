@@ -1,0 +1,29 @@
+{
+  "Opencart": {
+    "url": "https://sawtru.com.tr/"
+  },
+  "HorizonLayout": [
+    {
+      "layout": "bannerImage",
+      "category": 73,
+      "imageBanner": "https://sawtru.com.tr/image/banner.jpg"
+    },
+    {
+      "layout": "circleCategory"
+    },
+    {
+      "name": "Main",
+      "image": "",
+      "layout": "list",
+      "category": 71 
+    },
+    
+    {
+      "name": "promotion",
+      "image": "",
+      "layout": "twoColumn",
+      "category": 73
+    }
+  ],
+  "MainColor": "#8111be"
+}

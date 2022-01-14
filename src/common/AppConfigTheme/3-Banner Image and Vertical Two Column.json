@@ -1,0 +1,28 @@
+{
+  "Opencart": {
+    "url": "http://opencart-demo.mstore.io"
+  },
+  "HorizonLayout": [
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142018/collection.png",
+      "layout": "bannerImage",
+      "height": 160,
+      "imageMode": "cover",
+      "category": 17
+    },
+    {
+      "layout": "circleCategory"
+    },
+    {
+      "name": "featureProducts",
+      "image": "",
+      "layout": "threeColumn",
+      "category": 20
+    }
+  ],
+  "VerticalLayout": {
+    "name": "Recents",
+    "layout": "twoColumn"
+  },
+  "MainColor": "#607D8B"
+}

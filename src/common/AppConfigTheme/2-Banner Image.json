@@ -1,0 +1,66 @@
+{
+  "Opencart": {
+    "url": "http://opencart-demo.mstore.io"
+  },
+  "HorizonLayout": [
+    {
+      "layout": "circleCategory"
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25174258/sale2.png",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 17
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25174231/feature2.png",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 20
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142145/woman-large.png",
+      "layout": "bannerImage",
+      "height": 118,
+      "category": 24
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142102/MAN-large.png",
+      "layout": "bannerImage",
+      "height": 118,
+      "category": 25
+    },
+    {
+      "imageBanner": "https://inspireui.com/wp-content/uploads/2019/04/Preview_12.jpg",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 33
+    },
+    {
+      "imageBanner": "https://inspireui.com/wp-content/uploads/2019/04/Preview_11.jpg",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 34
+    },
+    {
+      "imageBanner": "https://inspireui.com/wp-content/uploads/2019/04/Preview_9.jpg",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 17
+    },
+    {
+      "imageBanner": "https://inspireui.com/wp-content/uploads/2019/04/Preview_10.jpg",
+      "column": 2,
+      "layout": "bannerImage",
+      "category": 20
+    },
+    {
+      "imageBanner": "http://s3-ap-southeast-1.amazonaws.com/mstore-bucket.io/wp-content/uploads/2019/02/25142018/collection.png",
+      "layout": "bannerImage",
+      "height": 160,
+      "imageMode": "cover",
+      "category": 25
+    }
+  ],
+  "MainColor": "#3FC1BE"
+}
